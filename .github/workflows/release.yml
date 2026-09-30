@@ -551,3 +551,63 @@ jobs:
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
+          
+  update-repos:
+    runs-on: ubuntu-latest
+    needs: [release-linux-flatpak, release-android-google-services]
+    steps:
+      - name: Update Repositorys on Remote Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "Waiting 15 Seconds to make sure files are available"
+            sleep 15
+
+            echo "Updating Flatpak"
+            echo "Downloading latest Flatpak Release..."
+            wget -q -O /tmp/commet.flatpak "https://github.com/StefanW279/commet/releases/latest/download/chat.commet.commetapp.flatpak"
+
+            if [ ! -f /tmp/commet.flatpak ]; then
+              echo "Error: File not found after Download"
+              exit 1
+            fi
+
+            echo "Importing to Flatpak..."
+            flatpak build-import-bundle \
+            --gpg-sign=B563CC2E6F221481 \
+            --gpg-args="--batch --passphrase ${{ secrets.GPG_PASSPHRASE }}" \
+            ${{ secrets.FLATPAK_PATH }} /tmp/commet.flatpak
+
+            echo "Updateing Repository Index..."
+            flatpak build-update-repo \
+            --gpg-sign=B563CC2E6F221481 \
+            --gpg-args="--batch --passphrase ${{ secrets.GPG_PASSPHRASE }}" \
+            --generate-static-deltas ${{ secrets.FLATPAK_PATH }}
+
+            # Setting Permissions Again
+            sudo chown -R ${{ secrets.VPS_USER }}:www-data ${{ secrets.FLATPAK_PATH }}
+            sudo chmod -R 755 ${{ secrets.FLATPAK_PATH }}
+
+            rm /tmp/commet.flatpak
+            echo "Flatpak Updated sucessfully"
+
+
+            echo "Updating F-Droid"
+
+            cd ${{ secrets.FDROID_PATH }}/repo
+
+            echo "Deleting old APK"
+            rm -f ${{ secrets.FDROID_PATH }}/repo/commet-android-google-services.apk
+
+            echo "Downloading latest APK Release..."
+            wget https://github.com/StefanW279/commet/releases/latest/download/commet-android-google-services.apk
+            
+            cd ${{ secrets.FDROID_PATH }}
+
+            echo "Updating Indexes"
+            fdroid update -c
+
+            echo "F-Droid Updated sucessfully"
