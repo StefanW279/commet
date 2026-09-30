@@ -114,3 +114,13 @@ When building, there are some additional command line arguments that must be use
 cd commet
 flutter run --dart-define BUILD_MODE=debug --dart-define PLATFORM=linux
 ```
+
+> [!WARNING]
+> On arch linux, do not use `flutter-bin (AUR)`, use `fvm` instead.
+>
+> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.41.9`) in order to select the flutter version of the project. 
+>
+> Then prefix every command with fvm.
+> - Downloading dependencies will become: `fvm flutter pub get`
+> - Running codegen will become: `fvm dart run scripts/codegen.dart`
+> - Building will become: `fvm flutter run --dart-define BUILD_MODE=debug --dart-define PLATFORM=linux`
