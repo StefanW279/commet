@@ -15,7 +15,7 @@ import 'package:path/path.dart' as path;
 
 import 'package:http/http.dart' as http;
 
-class UpdateChecker {
+class UpdateChecker { // TODO: Make it work for us
   static bool foundUpdate = false;
 
   static String get labelUpdateAvailable => Intl.message("Update Available",
