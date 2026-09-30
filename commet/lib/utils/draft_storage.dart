@@ -18,6 +18,10 @@ class DraftStorage {
   String? getDraft(String roomId, String? threadId) {
     return drafts[buildDraftId(roomId, threadId)];
   }
+
+  bool hasDraft(String roomId, String? threadId) {
+    return drafts.containsKey(buildDraftId(roomId, threadId));
+  }
 }
 
 final DraftStorage msgDrafts = DraftStorage();
