@@ -10,6 +10,7 @@ import 'package:commet/ui/molecules/typing_indicators_widget.dart';
 import 'package:commet/ui/organisms/chat/chat.dart';
 import 'package:commet/ui/organisms/particle_player/particle_player.dart';
 import 'package:commet/utils/autofill_utils.dart';
+import 'package:commet/utils/draft_storage.dart';
 import 'package:commet/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -120,6 +121,7 @@ class ChatView extends StatelessWidget {
           state.sendMessage(message, overrideClient: overrideClient);
           return MessageInputSendResult.success;
         },
+        initialText: msgDrafts.getDraft(state.room.identifier, state.threadId),
         onTextUpdated: state.onInputTextUpdated,
         addAttachment: state.addAttachment,
         removeAttachment: state.removeAttachment,
