@@ -44,6 +44,29 @@ String getFlutterPlatformName(String platform) {
   return platform;
 }
 
+int getGitCommitCount() {
+  final process = Process.runSync(
+    "git",
+    ["rev-list", "--count", "HEAD"],
+    runInShell: true,
+  );
+
+  if (process.exitCode != 0) {
+    throw Exception(
+      "Failed to determine Git commit count: ${process.stderr}",
+    );
+  }
+
+  final output = process.stdout.toString().trim();
+  final count = int.tryParse(output);
+
+  if (count == null) {
+    throw Exception("Invalid Git commit count: '$output'");
+  }
+
+  return count;
+}
+
 Future<void> main(List<String> args) async {
   String version = getVersionTag(args);
   String platform = getPlatform(args);
@@ -52,6 +75,7 @@ Future<void> main(List<String> args) async {
   String buildVersion = getBuildVersion(version);
   String flutterPlatform = getFlutterPlatformName(platform);
   String? buildDetail = getArg(args, "--build_detail");
+  int commitCount = getGitCommitCount();
   print("Building release:");
   print("Version:\t'$version'");
   print("Build Version:\t'$buildVersion'");
@@ -68,6 +92,7 @@ Future<void> main(List<String> args) async {
       "build",
       flutterPlatform,
       "--build-name=$buildVersion",
+      "--build-number=$commitCount",
       "--release",
       "--dart-define",
       "BUILD_MODE=release",
