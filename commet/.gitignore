@@ -51,3 +51,6 @@ app.*.map.json
 /linux/flatpak/commet/bundle
 /linux/flatpak/repo
 *.flatpak
+
+# FVM Version Cache
+.fvm/
