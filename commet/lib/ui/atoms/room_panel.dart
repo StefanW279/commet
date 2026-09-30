@@ -8,6 +8,7 @@ import 'package:commet/client/room.dart';
 import 'package:commet/ui/atoms/adaptive_context_menu.dart';
 import 'package:commet/ui/atoms/room_panel_view.dart';
 import 'package:commet/ui/atoms/room_text_button.dart';
+import 'package:commet/utils/draft_storage.dart';
 import 'package:commet/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 
@@ -98,6 +99,14 @@ class _RoomPanelState extends State<RoomPanel> {
       }
     }
 
+    String? textPreview;
+    if (msgDrafts.hasDraft(widget.room.identifier, null)) {
+      textPreview =
+          "Draft: " + msgDrafts.getDraft(widget.room.identifier, null)!;
+    } else {
+      textPreview = widget.room.lastMessage?.plainTextBody;
+    }
+
     return AdaptiveContextMenu(
       items: RoomTextButton.createRoomContextMenuItems(context, widget.room),
       child: RoomPanelView(
@@ -121,7 +130,7 @@ class _RoomPanelState extends State<RoomPanel> {
         recentEventSenderColor: widget.room.lastMessage != null
             ? widget.room.getColorOfUser(widget.room.lastMessage!.senderId)
             : null,
-        body: widget.room.lastMessage?.plainTextBody,
+        body: textPreview,
         notificationCount: widget.room.notificationCount,
         typingMembers: typingUsers,
         highlightNotificationCount:

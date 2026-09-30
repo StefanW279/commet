@@ -24,6 +24,7 @@ import 'package:commet/ui/navigation/adaptive_dialog.dart';
 import 'package:commet/ui/organisms/chat/chat_view.dart';
 import 'package:commet/utils/custom_uri.dart';
 import 'package:commet/utils/debounce.dart';
+import 'package:commet/utils/draft_storage.dart';
 import 'package:commet/utils/error_utils.dart';
 import 'package:commet/utils/event_bus.dart';
 import 'package:desktop_drop/desktop_drop.dart';
@@ -273,6 +274,7 @@ class ChatState extends State<Chat> {
     setInteractingEvent(null);
     clearAttachments();
     setMessageInputText.add("");
+    msgDrafts.setDraft(room.identifier, threadId, "");
   }
 
   Future<void> doCommand(
@@ -373,6 +375,8 @@ class ChatState extends State<Chat> {
   }
 
   void onInputTextUpdated(String currentText) {
+    msgDrafts.setDraft(room.identifier, threadId, currentText);
+
     if (isThread) {
       return;
     }
