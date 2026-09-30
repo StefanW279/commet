@@ -6,13 +6,15 @@ class Invitation {
   String? senderId;
   Color? color;
   ImageProvider? avatar;
+  bool isDirect;
 
   Invitation(
       {required this.roomId,
       this.displayName,
       this.color,
       this.avatar,
-      this.senderId});
+      this.senderId,
+      required this.isDirect});
 
   @override
   bool operator ==(Object other) {
