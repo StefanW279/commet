@@ -580,13 +580,11 @@ jobs:
             echo "Importing to Flatpak..."
             flatpak build-import-bundle \
             --gpg-sign=B563CC2E6F221481 \
-            --gpg-args="--batch --passphrase ${{ secrets.GPG_PASSPHRASE }}" \
             ${{ secrets.FLATPAK_PATH }} /tmp/commet.flatpak
 
             echo "Updateing Repository Index..."
             flatpak build-update-repo \
             --gpg-sign=B563CC2E6F221481 \
-            --gpg-args="--batch --passphrase ${{ secrets.GPG_PASSPHRASE }}" \
             --generate-static-deltas ${{ secrets.FLATPAK_PATH }}
 
             # Setting Permissions Again
