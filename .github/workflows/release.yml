@@ -554,9 +554,9 @@ jobs:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
           
-  update-repos:
+  update-flatpak:
     runs-on: ubuntu-latest
-    needs: [release-linux-flatpak, release-android-google-services]
+    needs: [release-linux-flatpak]
     steps:
       - name: Update Repositorys on Remote Server
         uses: appleboy/ssh-action@v1.0.3
@@ -592,6 +592,19 @@ jobs:
 
             echo "Flatpak Updated sucessfully"
 
+  update-fdroid:
+    runs-on: ubuntu-latest
+    needs: [release-android-google-services]
+    steps:
+      - name: Update Repositorys on Remote Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "Waiting 15 Seconds to make sure files are available"
+            sleep 15
 
             echo "Updating F-Droid"
 
