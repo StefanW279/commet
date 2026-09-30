@@ -587,11 +587,9 @@ jobs:
             --gpg-sign=B563CC2E6F221481 \
             --generate-static-deltas ${{ secrets.FLATPAK_PATH }}
 
-            # Setting Permissions Again
-            sudo chown -R ${{ secrets.VPS_USER }}:www-data ${{ secrets.FLATPAK_PATH }}
-            sudo chmod -R 755 ${{ secrets.FLATPAK_PATH }}
-
+            echo "Cleanup"
             rm /tmp/commet.flatpak
+
             echo "Flatpak Updated sucessfully"
 
 
