@@ -7,7 +7,7 @@ class GlobalConfig {
   static late Map<String, dynamic> data;
 
   static String get defaultHomeserver {
-    return data["default_homeserver"] ?? "matrix.org";
+    return data["default_homeserver"] ?? "kantengewichte.de";
   }
 
   static String get calendarWidgetHost {
