@@ -24,6 +24,11 @@ class MatrixInvitationComponent
   Future<void> acceptInvitation(Invitation invitation) async {
     var mx = client.getMatrixClient();
     await mx.joinRoom(invitation.roomId);
+    String sender = invitation.senderId ?? '';
+    if (invitation.isDirect && sender != '') {
+      var room = mx.getRoomById(invitation.roomId);
+      if (room != null) room.addToDirectChat(sender);
+    }
     invitations.remove(invitation);
   }
 
@@ -64,7 +69,8 @@ class MatrixInvitationComponent
           avatar: avatar,
           senderId: sender,
           color: MatrixPeer.hashColor(room.id),
-          displayName: room.getLocalizedDisplayname());
+          displayName: room.getLocalizedDisplayname(),
+          isDirect: room.isDirectChat);
 
       invitations.add(entry);
     }
