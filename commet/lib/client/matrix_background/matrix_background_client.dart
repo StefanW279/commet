@@ -168,18 +168,24 @@ class MatrixBackgroundClient implements Client {
   }
 
   @override
-  Room? getRoom(String identifier) {
-    var data = allRooms.firstWhere((e) => e.roomId == identifier);
-    var preload =
-        preloadRoomStates.where((e) => e.roomId == identifier).toList();
-    var nonPreload =
-        nonPreloadRoomStates.where((e) => e.roomId == identifier).toList();
+  Room? getRoom(String identifier, {bool reload = false}) {
+    final data = allRooms
+        .where((e) => e.roomId == identifier)
+        .firstOrNull;
+
+    if (data == null) {
+      Log.w('Room $identifier not found in local database');
+      return null;
+    }
+
     return MatrixBackgroundRoom(
       this,
       roomId: identifier,
       data: data,
-      preloadState: preload,
-      nonPreloadState: nonPreload,
+      preloadState:
+          preloadRoomStates.where((e) => e.roomId == identifier).toList(),
+      nonPreloadState:
+          nonPreloadRoomStates.where((e) => e.roomId == identifier).toList(),
     );
   }
 
