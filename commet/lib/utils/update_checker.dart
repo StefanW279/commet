@@ -1,21 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:commet/client/alert.dart';
 import 'package:commet/config/build_config.dart';
 import 'package:commet/config/platform_utils.dart';
 import 'package:commet/debug/log.dart';
 import 'package:commet/main.dart';
-import 'package:commet/ui/navigation/adaptive_dialog.dart';
-import 'package:commet/utils/error_utils.dart';
-import 'package:commet/utils/links/link_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart' as path;
 
 import 'package:http/http.dart' as http;
 
-class UpdateChecker { // TODO: Make it work for us
+class UpdateChecker {
   static bool foundUpdate = false;
 
   static String get labelUpdateAvailable => Intl.message("Update Available",
@@ -40,10 +34,10 @@ class UpdateChecker { // TODO: Make it work for us
       return;
     }
 
-    const key = "chat.commet.published_version";
+    const String key = "name";
 
     var url = Uri.parse(
-        "https://data.commet.chat/_matrix/federation/v1/query/profile?user_id=@updates:data.commet.chat");
+        "https://api.github.com/repos/StefanW279/commet/releases/latest");
 
     var response = await http.get(url);
 
@@ -56,22 +50,44 @@ class UpdateChecker { // TODO: Make it work for us
     var fields = jsonDecode(response.body) as Map<String, dynamic>;
 
     if (fields.containsKey(key)) {
-      var date = fields["chat.commet.build_date_ms"];
+      bool available = false;
 
-      var val = int.parse(date);
-      var time = DateTime.fromMillisecondsSinceEpoch(val);
+      String a_version = fields[key];
+      String b_version = BuildConfig.VERSION_TAG;
 
-      var canAutoUpdate = fields["chat.commet.auto_update"] == "true";
-      Log.i("Supports auto update: $canAutoUpdate");
-      if (time.isAfter(BuildConfig.BUILD_DATE)) {
+      final a_regex = RegExp(r'^v?(\d+)\.(\d+)\.(\d+)\.(\d+)$');
+      final a_match = a_regex.firstMatch(a_version);
+
+      final b_regex = RegExp(r'^v?(\d+)\.(\d+)\.(\d+)\.(\d+)$');
+      final b_match = b_regex.firstMatch(b_version);
+
+      if (a_match != null && b_match != null) {
+        int a_major = int.parse(a_match.group(1)!); 
+        int a_minor = int.parse(a_match.group(2)!); 
+        int a_patch = int.parse(a_match.group(3)!); 
+        int a_build = int.parse(a_match.group(4)!); 
+
+        int b_major = int.parse(b_match.group(1)!); 
+        int b_minor = int.parse(b_match.group(2)!); 
+        int b_patch = int.parse(b_match.group(3)!); 
+        int b_build = int.parse(b_match.group(4)!); 
+
+        if (a_major > b_major ||
+            a_minor > b_minor ||
+            a_patch > b_patch ||
+            a_build > b_build) {
+          available = true;
+        }
+      }
+
+      if (available) {
         var tag = fields[key];
         clientManager!.alertManager.addAlert(Alert(AlertType.info,
             messageGetter: () => descriptionUpdateAvailable(tag),
-            titleGetter: () => labelUpdateAvailable,
-            action: (context) => doUpdateAction(context, canAutoUpdate)));
+            titleGetter: () => labelUpdateAvailable));
       } else {
         Log.i(
-            "Found an update, but it's build date is not after the current build, current: ${BuildConfig.BUILD_DATE.toString()} remote: ${time.toString()}");
+            "Found an update, but it's version is not newer than the current one, current: ${b_version} remote: ${a_version}");
       }
 
       return;
@@ -88,67 +104,5 @@ class UpdateChecker { // TODO: Make it work for us
     }
 
     return true;
-  }
-
-  static doUpdateAction(BuildContext context, bool canAutoUpdate) async {
-    if (PlatformUtils.isWindows) {
-      windowsUpdateAction(context, canAutoUpdate);
-    }
-
-    if (PlatformUtils.isAndroid) {
-      LinkUtils.open(
-        Uri.parse("https://commet.chat/install/android/"),
-        context: context,
-      );
-    }
-
-    if (PlatformUtils.isLinux) {
-      LinkUtils.open(Uri.parse("https://commet.chat/install/linux/"),
-          context: context);
-    }
-  }
-
-  static windowsUpdateAction(BuildContext context, bool canAutoUpdate) async {
-    var exe = Platform.resolvedExecutable;
-
-    var installPath = path.dirname(exe);
-
-    var installerPath =
-        path.join(installPath, "installer", "commet-installer.exe");
-
-    Log.i("Installed at: $installerPath");
-
-    if (await File(installerPath).exists() && canAutoUpdate) {
-      var confirmation = await AdaptiveDialog.confirmation(context,
-          prompt: "Would you like to run the update installer?");
-
-      if (confirmation == true) {
-        await ErrorUtils.tryRun(context, () async {
-          Log.i("Found installer, doing automatic update");
-
-          for (var client in clientManager!.clients) {
-            await client.close();
-          }
-
-          Process.run(
-              installerPath,
-              [
-                "--command",
-                "update",
-              ],
-              runInShell: true);
-
-          // TODO: not this
-          await Future.delayed(Duration(seconds: 1));
-        });
-
-        exit(0);
-      }
-
-      if (confirmation == null) return;
-    }
-
-    LinkUtils.open(Uri.parse("https://commet.chat/install/windows/"),
-        context: context);
   }
 }
