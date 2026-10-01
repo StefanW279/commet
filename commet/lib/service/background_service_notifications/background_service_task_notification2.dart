@@ -133,27 +133,67 @@ class BackgroundNotificationsManager2 {
         return;
       }
 
-      var client = MatrixBackgroundClient(databaseId: localClientId);
+      MatrixBackgroundClient? client;
+      var room;
 
-      Log.i("Opening background matrix client: ${localClientId}");
-      await client.init(true, isBackgroundService: true);
+      const retryDelays = [
+        Duration(milliseconds: 500),
+        Duration(seconds: 1),
+        Duration(seconds: 2),
+        Duration(seconds: 3),
+        Duration(seconds: 5),
+        Duration(seconds: 5),
+      ];
 
-      var directMessages = client.getComponent<DirectMessagesComponent>();
+      for (var i = 0; i < retryDelays.length; i++) {
+        Log.i(
+          "Looking for room $roomId "
+          "(attempt ${i + 1}/${retryDelays.length})",
+        );
 
-      Log.i("Got direct messages component: ${directMessages}");
-      Log.i("Found client: ${client.identifier}");
-      var room = client.getRoom(roomId);
+        // IMPORTANT:
+        // Create a fresh client so init() reloads roomData from the DB.
+        client = MatrixBackgroundClient(databaseId: localClientId);
 
-      if (room is MatrixBackgroundRoom) {
-        await room.init();
+        try {
+          await client.init(true, isBackgroundService: true);
+
+          Log.i("Opening background matrix client: $localClientId");
+
+          room = client.getRoom(roomId);
+
+          if (room is MatrixBackgroundRoom) {
+            await room.init();
+          }
+
+          if (room != null) {
+            Log.i("Found room $roomId");
+            break;
+          }
+
+          Log.i(
+            "Room $roomId is not in the database yet. "
+            "Waiting ${retryDelays[i].inMilliseconds}ms...",
+          );
+        } catch (e, s) {
+          Log.onError(e, s);
+        }
+
+        await Future.delayed(retryDelays[i]);
       }
 
-      if (room == null) {
+      if (room == null || client == null) {
         NotificationManager.notify(ErrorNotificationContent(
             title: "An error occurred while processing notifications",
-            content: "Failed to find room: $roomId  ${data}"));
+            content: "Failed to find room: $roomId  $data"));
         return;
       }
+
+      final directMessages =
+          client.getComponent<DirectMessagesComponent>();
+
+      Log.i("Got direct messages component: $directMessages");
+      Log.i("Found client: ${client.identifier}");
 
       Log.i("Found room: ${room.displayName}");
 
