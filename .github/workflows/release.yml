@@ -53,12 +53,75 @@ jobs:
           asset_name: commet-windows.zip
           asset_content_type: application/zip
 
+      - name: Build MSI Installer
+        shell: pwsh
+        run: |
+          $tag = "${{ github.event.release.tag_name || 'v0.0.0.0' }}"
+
+          if ($tag -notmatch '^v?(\d+)\.(\d+)\.(\d+)\.(\d+)$') {
+            throw "Invalid version tag '$tag'. Expected a four-part tag like v0.5.0.3"
+          }
+
+          $major = [int]$Matches[1]
+          $minor = [int]$Matches[2]
+          $build = [int]$Matches[3]
+          $revision = [int]$Matches[4]
+
+          if ($major -gt 255 -or $minor -gt 255) {
+            throw "MSI major and minor versions must be 255 or lower."
+          }
+
+          if ($revision -ge 1000) {
+            throw "Revision must be below 1000."
+          }
+
+          $msiBuild = $build * 1000 + $revision
+
+          if ($msiBuild -gt 65535) {
+            throw "Encoded MSI build number exceeds 65535."
+          }
+
+          $msiVersion = "$major.$minor.$msiBuild"
+
+          Write-Host "GitHub tag: $tag"
+          Write-Host "MSI version: $msiVersion"
+
+          dotnet build .\commet\windows\installer\Installer.wixproj `
+            -c Release `
+            "-p:DefineConstants=ProductVersion=$msiVersion"
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "MSI build failed."
+          }
+
+          $msi = Get-ChildItem .\installer -Recurse -Filter commet-windows.msi |
+            Select-Object -First 1
+
+          if (-not $msi) {
+            throw "MSI file was not generated."
+          }
+
+          Copy-Item $msi.FullName .\commet-windows.msi -Force
+      
+      - name: Upload MSI to release
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: .\commet-windows.msi
+          asset_name: commet-windows.msi
+          asset_content_type: application/x-msi
+
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: commet-windows.zip
-          path: .\commet-windows.zip
+          name: commet-windows
+          path: |
+            .\commet-windows.zip
+            .\commet-windows.msi
 
 
   release-android:

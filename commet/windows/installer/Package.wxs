@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="Commet"
+    Manufacturer="Commet"
+    Version="$(var.ProductVersion)"
+    UpgradeCode="bbdb50a6-959b-4c1d-b116-64668599df1a"
+    Scope="perUser">
+
+    <MajorUpgrade
+      DowngradeErrorMessage="A newer version of Commet is already installed." />
+
+    <MediaTemplate />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="INSTALLFOLDER" Name="Commet">
+        <Files Include="../../build/windows/x64/runner/Release/**" />
+      </Directory>
+    </StandardDirectory>
+  </Package>
+</Wix>
