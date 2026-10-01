@@ -67,10 +67,6 @@ jobs:
           $build = [int]$Matches[3]
           $revision = [int]$Matches[4]
 
-          if ($major -gt 255 -or $minor -gt 255) {
-            throw "MSI major and minor versions must be 255 or lower."
-          }
-
           if ($revision -ge 1000) {
             throw "Revision must be below 1000."
           }
@@ -83,25 +79,19 @@ jobs:
 
           $msiVersion = "$major.$minor.$msiBuild"
 
+          $flutterBuildDir = (Resolve-Path ".\commet\build\windows\x64\runner\Release").Path
+
           Write-Host "GitHub tag: $tag"
           Write-Host "MSI version: $msiVersion"
+          Write-Host "Flutter files: $flutterBuildDir"
 
           dotnet build .\commet\windows\installer\Installer.wixproj `
             -c Release `
-            "-p:DefineConstants=ProductVersion=$msiVersion"
+            "-p:DefineConstants=ProductVersion=$msiVersion;FlutterBuildDir=$flutterBuildDir"
 
           if ($LASTEXITCODE -ne 0) {
             throw "MSI build failed."
           }
-
-          $msi = Get-ChildItem .\installer -Recurse -Filter commet-windows.msi |
-            Select-Object -First 1
-
-          if (-not $msi) {
-            throw "MSI file was not generated."
-          }
-
-          Copy-Item $msi.FullName .\commet-windows.msi -Force
       
       - name: Upload MSI to release
         if: github.event_name == 'release'

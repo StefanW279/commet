@@ -14,7 +14,13 @@
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="INSTALLFOLDER" Name="Commet">
-        <Files Include="../../build/windows/x64/runner/Release/**" />
+
+        <RemoveFolder
+          Id="RemoveInstallFolder"
+          On="uninstall" />
+
+        <Files Include="$(var.FlutterBuildDir)\**" />
+
       </Directory>
     </StandardDirectory>
   </Package>
