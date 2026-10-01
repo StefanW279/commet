@@ -87,7 +87,7 @@ jobs:
 
           dotnet build .\commet\windows\installer\Installer.wixproj `
             -c Release `
-            "-p:DefineConstants=ProductVersion=$msiVersion;FlutterBuildDir=$flutterBuildDir"
+            "-p:DefineConstants=ProductVersion=$msiVersion"
 
           if ($LASTEXITCODE -ne 0) {
             throw "MSI build failed."

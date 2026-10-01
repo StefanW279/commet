@@ -19,7 +19,7 @@
           Id="RemoveInstallFolder"
           On="uninstall" />
 
-        <Files Include="$(var.FlutterBuildDir)\**" />
+        <Files Include="..\..\..\build\windows\x64\runner\Release\**" />
 
       </Directory>
     </StandardDirectory>
