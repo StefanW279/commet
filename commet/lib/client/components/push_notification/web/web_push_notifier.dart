@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'dart:js_util' as js_util;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:commet/client/room.dart';
 import 'package:commet/client/components/push_notification/notifier.dart';
@@ -10,7 +11,7 @@ import 'package:commet/main.dart';
 class WebPushNotifier implements Notifier {
   bool _initialized = false;
 
-  dynamic get _global => js_util.globalThis;
+  JSObject get _global => globalContext;
 
   String get _server =>
       "https://${preferences.pushGateway}";
@@ -19,23 +20,23 @@ class WebPushNotifier implements Notifier {
     String function,
     List<Object?> args,
   ) async {
-    final promise = js_util.callMethod<dynamic>(
-      _global,
-      function,
-      args,
+    final List<JSAny?> jsArgs = args.map((e) => e?.jsify()).toList();
+    final promise = _global.callMethodVarArgs<JSPromise>(
+      function.toJS,
+      jsArgs,
     );
-
-    return js_util.promiseToFuture<dynamic>(promise);
+    final jsResult = await promise.toDart;
+    return jsResult?.dartify();
   }
 
   @override
   bool get hasPermission {
     try {
-      return js_util.getProperty<String>(
-            _global,
-            "commetWebPushPermission",
-          ) ==
-          "granted";
+      if (_global.hasProperty("commetWebPushPermission".toJS).toDart) {
+        final permission = _global.getProperty<JSString>("commetWebPushPermission".toJS).toDart;
+        return permission == "granted";
+      }
+      return false;
     } catch (_) {
       return false;
     }
