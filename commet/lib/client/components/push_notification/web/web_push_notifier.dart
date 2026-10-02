@@ -5,7 +5,6 @@ import 'dart:js_interop_unsafe';
 import 'package:commet/client/room.dart';
 import 'package:commet/client/components/push_notification/notifier.dart';
 import 'package:commet/client/components/push_notification/notification_content.dart';
-import 'package:commet/config/preferences.dart';
 import 'package:commet/main.dart';
 
 class WebPushNotifier implements Notifier {
