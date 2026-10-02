@@ -35,7 +35,58 @@ jobs:
       - name: Build Windows App
         run: |
           cd .\commet
-          flutter build windows --release --dart-define PLATFORM=windows
+          dart run scripts/build_release.dart --platform windows --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }}
+
+      - name: Archive 
+        run: tar -a -c -f commet-windows.zip -C .\commet\build\windows\x64\runner\ Release
+
+      - name: Build MSI Installer
+        shell: pwsh
+        run: |
+          $tag = 'v0.0.0.0'
+
+          if ($tag -notmatch '^v?(\d+)\.(\d+)\.(\d+)\.(\d+)$') {
+            throw "Invalid version tag '$tag'. Expected a four-part tag like v0.5.0.3"
+          }
+
+          $major = [int]$Matches[1]
+          $minor = [int]$Matches[2]
+          $build = [int]$Matches[3]
+          $revision = [int]$Matches[4]
+
+          if ($revision -ge 1000) {
+            throw "Revision must be below 1000."
+          }
+
+          $msiBuild = $build * 1000 + $revision
+
+          if ($msiBuild -gt 65535) {
+            throw "Encoded MSI build number exceeds 65535."
+          }
+
+          $msiVersion = "$major.$minor.$msiBuild"
+
+          $flutterBuildDir = (Resolve-Path ".\commet\build\windows\x64\runner\Release").Path
+
+          Write-Host "GitHub tag: $tag"
+          Write-Host "MSI version: $msiVersion"
+          Write-Host "Flutter files: $flutterBuildDir"
+
+          dotnet build .\commet\windows\installer\Installer.wixproj `
+            -c Release `
+            "-p:DefineConstants=ProductVersion=$msiVersion"
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "MSI build failed."
+          }
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commet-windows
+          path: |
+            .\commet-windows.zip
+            .\commet-windows.msi
 
   build-android:
     runs-on: ubuntu-latest
@@ -45,33 +96,33 @@ jobs:
         run: |
           # Remove .NET SDKs
           sudo rm -rf /usr/share/dotnet
-
+  
           # Remove Haskell (GHC)
           sudo rm -rf /usr/local/.ghcup
-
+  
           # Remove Julia
           sudo rm -rf /usr/local/julia*
-
+  
           # Remove Chromium (optional if not using for browser tests)
           sudo rm -rf /usr/local/share/chromium
-
+  
           # Remove Microsoft/Edge and Google Chrome builds
           sudo rm -rf /opt/microsoft /opt/google
-
+  
           # Remove Azure CLI
           sudo rm -rf /opt/az
-
+  
           # Remove CodeQL and other toolcaches
           sudo rm -rf /opt/hostedtoolcache
-
+  
           docker system prune -af || true
           docker builder prune -af || true
           df -h
-
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: 'true'
+          fetch-depth: 0
         
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
@@ -87,17 +138,28 @@ jobs:
       - name: Setup Tools
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg 
+          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg
         
       - name: Code Generation
         run: |
           cd $PROJECT_PATH
           dart run scripts/codegen.dart
 
+      - name: Setup Signatures
+        run: |
+          cd $PROJECT_PATH
+          dart run scripts/setup_android_release.dart --key_password ${{ secrets.ANDROID_KEY_PASSWORD }} --key_b64 ${{ secrets.ANDROID_KEY_STORE_B64 }}
+          
       - name: Build APK
         run: |
           cd $PROJECT_PATH
-          flutter build apk --debug --dart-define PLATFORM=android
+          dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commet-android.apk
+          path: commet/build/app/outputs/flutter-apk/app-release.apk
 
   build-android-google-services:
     runs-on: ubuntu-latest
@@ -129,11 +191,12 @@ jobs:
           docker system prune -af || true
           docker builder prune -af || true
           df -h
-
+      
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: 'true'
+          fetch-depth: 0
         
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
@@ -157,14 +220,52 @@ jobs:
           git apply scripts/apply_google_services.patch
           dart run scripts/codegen.dart
 
+      - name: Setup Signatures
+        run: |
+          cd $PROJECT_PATH
+          dart run scripts/setup_android_release.dart --key_password ${{ secrets.ANDROID_KEY_PASSWORD }} --key_b64 ${{ secrets.ANDROID_KEY_STORE_B64 }}
+          
       - name: Build APK
         run: |
           cd $PROJECT_PATH
-          flutter build apk --debug --dart-define ENABLE_GOOGLE_SERVICES=true --dart-define PLATFORM=android
+          dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }} --enable_google_services true --build_detail google_services
 
-  build-linux:
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commet-android-google-services.apk
+          path: commet/build/app/outputs/flutter-apk/app-release.apk
+
+  build-flatpak:
     runs-on: ubuntu-latest
     steps:
+      - name: Aggressive cleanup
+        run: |
+          # Remove .NET SDKs
+          sudo rm -rf /usr/share/dotnet
+  
+          # Remove Haskell (GHC)
+          sudo rm -rf /usr/local/.ghcup
+  
+          # Remove Julia
+          sudo rm -rf /usr/local/julia*
+  
+          # Remove Chromium (optional if not using for browser tests)
+          sudo rm -rf /usr/local/share/chromium
+  
+          # Remove Microsoft/Edge and Google Chrome builds
+          sudo rm -rf /opt/microsoft /opt/google
+  
+          # Remove Azure CLI
+          sudo rm -rf /opt/az
+  
+          # Remove CodeQL and other toolcaches
+          sudo rm -rf /opt/hostedtoolcache
+  
+          docker system prune -af || true
+          docker builder prune -af || true
+          df -h
+      
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -179,7 +280,7 @@ jobs:
       - name: Setup Tools
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev webkit2gtk-4.1 keybinder-3.0
+          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev flatpak-builder flatpak webkit2gtk-4.1 keybinder-3.0
         
       - name: Code Generation
         run: |
@@ -189,11 +290,27 @@ jobs:
       - name: Build Linux
         run: |
           cd $PROJECT_PATH
-          flutter build linux --release --dart-define PLATFORM=linux
+          dart run scripts/build_release.dart --platform linux --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }} --build_detail flatpak
 
-      - name: Run App
-        run: |
-          ldd $PROJECT_PATH/build/linux/x64/release/bundle/commet
+      - name: Create Flatpak
+        run: | 
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y flathub org.gnome.Platform//51 org.gnome.Sdk//51
+          mkdir -p commet/linux/flatpak/commet
+          cp -r $PROJECT_PATH/build/linux/x64/release/bundle $PROJECT_PATH/linux/flatpak/commet/bundle
+          version=$(echo 'v0.0.0-artifact' | grep -oP '[0-9]+([.][0-9]+)+')
+          echo $version
+          cd $PROJECT_PATH/linux/flatpak
+          sed -i "s/{{VERSION_TAG}}/$version/g" ./chat.commet.commetapp.desktop
+          sed -i "s/{{VERSION_TAG}}/$version/g" ./chat.commet.commetapp.metainfo.xml
+          flatpak-builder --force-clean build-dir chat.commet.commetapp.yaml --repo=repo
+          flatpak build-bundle repo chat.commet.commetapp.flatpak chat.commet.commetapp
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chat.commet.commetapp.flatpak
+          path: commet/linux/flatpak/chat.commet.commetapp.flatpak
 
   build-web:
     runs-on: ubuntu-latest
@@ -212,14 +329,33 @@ jobs:
       - name: Setup Tools
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg
+          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg webkit2gtk-4.1 
         
       - name: Code Generation
         run: |
           cd $PROJECT_PATH
           dart run scripts/codegen.dart
+      
+      - uses: moonrepo/setup-rust@v1
+      - run: rustup component add rust-src --toolchain nightly-x86_64-unknown-linux-gnu
+      
+      - name: Prepare web
+        run: |
+          cd $PROJECT_PATH
+          ./scripts/prepare-web.sh
 
       - name: Build Web
         run: |
           cd $PROJECT_PATH
-          flutter build web --release --dart-define PLATFORM=web
+          dart run scripts/build_release.dart --platform web --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }}
+      
+      - name: Create archive
+        run: |
+          cd $PROJECT_PATH/build
+          tar -czf commet-web.tar.gz web
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commet-web.tar.gz
+          path: commet/build/commet-web.tar.gz
