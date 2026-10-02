@@ -41,12 +41,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     });
 
     try {
-      final success =
-          await notifier.requestPermission();
+      final success = await notifier.requestPermission();
 
       if (success) {
-        await PushNotificationComponent
-            .updateAllPushers();
+        await PushNotificationComponent.updateAllPushers();
       }
     } finally {
       setState(() {
@@ -67,9 +65,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   bool get canConfigureNotifications =>
-    PlatformUtils.isWeb ||
-    PlatformUtils.isAndroid ||
-    PlatformUtils.isLinux;
+      PlatformUtils.isWeb || PlatformUtils.isAndroid || PlatformUtils.isLinux;
 
   @override
   Widget build(BuildContext context) {

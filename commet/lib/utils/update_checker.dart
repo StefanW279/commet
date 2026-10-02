@@ -62,15 +62,15 @@ class UpdateChecker {
       final b_match = b_regex.firstMatch(b_version);
 
       if (a_match != null && b_match != null) {
-        int a_major = int.parse(a_match.group(1)!); 
-        int a_minor = int.parse(a_match.group(2)!); 
-        int a_patch = int.parse(a_match.group(3)!); 
-        int a_build = int.parse(a_match.group(4)!); 
+        int a_major = int.parse(a_match.group(1)!);
+        int a_minor = int.parse(a_match.group(2)!);
+        int a_patch = int.parse(a_match.group(3)!);
+        int a_build = int.parse(a_match.group(4)!);
 
-        int b_major = int.parse(b_match.group(1)!); 
-        int b_minor = int.parse(b_match.group(2)!); 
-        int b_patch = int.parse(b_match.group(3)!); 
-        int b_build = int.parse(b_match.group(4)!); 
+        int b_major = int.parse(b_match.group(1)!);
+        int b_minor = int.parse(b_match.group(2)!);
+        int b_patch = int.parse(b_match.group(3)!);
+        int b_build = int.parse(b_match.group(4)!);
 
         if (a_major > b_major ||
             a_minor > b_minor ||

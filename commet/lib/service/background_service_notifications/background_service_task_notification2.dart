@@ -189,8 +189,7 @@ class BackgroundNotificationsManager2 {
         return;
       }
 
-      final directMessages =
-          client.getComponent<DirectMessagesComponent>();
+      final directMessages = client.getComponent<DirectMessagesComponent>();
 
       Log.i("Got direct messages component: $directMessages");
       Log.i("Found client: ${client.identifier}");

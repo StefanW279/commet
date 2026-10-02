@@ -169,9 +169,7 @@ class MatrixBackgroundClient implements Client {
 
   @override
   Room? getRoom(String identifier, {bool reload = false}) {
-    final data = allRooms
-        .where((e) => e.roomId == identifier)
-        .firstOrNull;
+    final data = allRooms.where((e) => e.roomId == identifier).firstOrNull;
 
     if (data == null) {
       Log.w('Room $identifier not found in local database');

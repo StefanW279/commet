@@ -12,8 +12,7 @@ class WebPushNotifier implements Notifier {
 
   JSObject get _global => globalContext;
 
-  String get _server =>
-      "https://${preferences.pushGateway}";
+  String get _server => "https://${preferences.pushGateway}";
 
   Future<dynamic> _call(
     String function,
@@ -32,7 +31,9 @@ class WebPushNotifier implements Notifier {
   bool get hasPermission {
     try {
       if (_global.hasProperty("commetWebPushPermission".toJS).toDart) {
-        final permission = _global.getProperty<JSString>("commetWebPushPermission".toJS).toDart;
+        final permission = _global
+            .getProperty<JSString>("commetWebPushPermission".toJS)
+            .toDart;
         return permission == "granted";
       }
       return false;
@@ -45,8 +46,7 @@ class WebPushNotifier implements Notifier {
   bool get needsToken => true;
 
   @override
-  bool get enabled =>
-      preferences.webPushKey.value != null;
+  bool get enabled => preferences.webPushKey.value != null;
 
   @override
   Future<void> init() async {
@@ -76,8 +76,7 @@ class WebPushNotifier implements Notifier {
       return null;
     }
 
-    final data =
-        jsonDecode(result as String) as Map<String, dynamic>;
+    final data = jsonDecode(result as String) as Map<String, dynamic>;
 
     final pushkey = data["pushkey"] as String?;
 
@@ -90,8 +89,7 @@ class WebPushNotifier implements Notifier {
 
   @override
   Future<String?> getToken() async {
-    final existing =
-        preferences.webPushKey.value;
+    final existing = preferences.webPushKey.value;
 
     if (existing != null) {
       return existing;
@@ -116,12 +114,9 @@ class WebPushNotifier implements Notifier {
         return false;
       }
 
-      final data =
-          jsonDecode(result as String)
-              as Map<String, dynamic>;
+      final data = jsonDecode(result as String) as Map<String, dynamic>;
 
-      final pushkey =
-          data["pushkey"] as String?;
+      final pushkey = data["pushkey"] as String?;
 
       if (pushkey == null) {
         return false;
@@ -144,8 +139,7 @@ class WebPushNotifier implements Notifier {
   }
 
   @override
-  Future<void> notify(
-      NotificationContent notification) async {
+  Future<void> notify(NotificationContent notification) async {
     // Notifications are displayed by the service worker.
   }
 

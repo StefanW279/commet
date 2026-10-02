@@ -142,15 +142,14 @@ class Preferences {
   }
 
   String get pushGateway {
-  if (BuildConfig.WEB) {
-    return "push.kantengewichte.de";
-  }
+    if (BuildConfig.WEB) {
+      return "push.kantengewichte.de";
+    }
 
-  return BuildConfig.ENABLE_GOOGLE_SERVICES
-      ? "push.kantengewichte.de"
-      : _preferences!.getString(_pushGateway) ??
-          "push.kantengewichte.de";
-}
+    return BuildConfig.ENABLE_GOOGLE_SERVICES
+        ? "push.kantengewichte.de"
+        : _preferences!.getString(_pushGateway) ?? "push.kantengewichte.de";
+  }
 
   Future<void> setExperimentEnabled(String experiment, bool value) async {
     var experiments = _preferences?.getStringList(_optedInExperiments) ??
@@ -562,7 +561,7 @@ class Preferences {
       NullableStringPreference("fcm_key", defaultValue: null);
 
   final NullableStringPreference webPushKey =
-    NullableStringPreference(_webPushKey, defaultValue: null);
+      NullableStringPreference(_webPushKey, defaultValue: null);
 
   NullableStringPreference unifiedPushEndpoint =
       NullableStringPreference("unified_push_endpoint", defaultValue: null);

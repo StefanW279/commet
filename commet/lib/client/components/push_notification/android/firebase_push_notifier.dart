@@ -105,7 +105,7 @@ class FirebasePushNotifier implements Notifier {
       token = event;
       Log.i("Got new token: $token");
       preferences.fcmKey.set(event);
-      preferences.setPushGateway("push.commet.chat");
+      preferences.setPushGateway("push.kantengewichte.de");
     });
 
     await FirebaseMessaging.instance.setAutoInitEnabled(true);

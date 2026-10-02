@@ -65,7 +65,7 @@ class SettingsCategoryAbout implements SettingsCategory {
                 text: "Source Code",
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => LinkUtils.open(
-                      Uri.parse("https://github.com/commetchat/commet"),
+                      Uri.parse("https://github.com/StefanW279/commet"),
                       context: context)),
           ),
           const tiamat.Text.label(" · "),
@@ -76,7 +76,7 @@ class SettingsCategoryAbout implements SettingsCategory {
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => LinkUtils.open(
                       Uri.parse(
-                          "https://github.com/commetchat/commet/blob/main/LICENSE"),
+                          "https://github.com/StefanW279/commet/blob/main/LICENSE"),
                       context: context)),
           ),
           const tiamat.Text.label(" · "),

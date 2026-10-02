@@ -25,8 +25,7 @@ class WebPushNotifier implements Notifier {
   Future<bool> requestPermission() async => false;
 
   @override
-  Map<String, dynamic>? extraRegistrationData() =>
-      {"type": "webpush"};
+  Map<String, dynamic>? extraRegistrationData() => {"type": "webpush"};
 
   @override
   Future<void> clearNotifications(Room room) async {}
