@@ -29,6 +29,32 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   GlobalKey pushGatewayKey = GlobalKey();
   bool isPushGatewayLoading = false;
 
+  Future<void> enableWebPush() async {
+    final notifier = NotificationManager.notifier;
+
+    if (notifier == null) {
+      return;
+    }
+
+    setState(() {
+      isPushGatewayLoading = true;
+    });
+
+    try {
+      final success =
+          await notifier.requestPermission();
+
+      if (success) {
+        await PushNotificationComponent
+            .updateAllPushers();
+      }
+    } finally {
+      setState(() {
+        isPushGatewayLoading = false;
+      });
+    }
+  }
+
   String get notificationSettingsNotSupported =>
       Intl.message("Push notifications are not supported on this system",
           name: "notificationSettingsNotSupported",
@@ -41,7 +67,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   bool get canConfigureNotifications =>
-      PlatformUtils.isAndroid || PlatformUtils.isLinux;
+    PlatformUtils.isWeb ||
+    PlatformUtils.isAndroid ||
+    PlatformUtils.isLinux;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +121,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   Widget buildNotificationSettings() {
     return Column(
       children: [
+        if (PlatformUtils.isWeb)
+          Column(
+            children: [
+              tiamat.Button(
+                text: notifier?.hasPermission == true
+                    ? "Web Push enabled"
+                    : "Enable Web Push",
+                onTap: enableWebPush,
+              ),
+              const SizedBox(height: 10),
+              tiamat.Text.labelLow(
+                "Allow browser notifications to receive messages when Commet is closed.",
+              ),
+            ],
+          ),
         if (PlatformUtils.isAndroid)
           BooleanPreferenceToggle(
             preference: preferences.silenceNotifications,

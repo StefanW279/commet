@@ -37,7 +37,7 @@ class MatrixPushNotificationComponent
     }
 
     var pusher = Pusher(
-        appId: "chat.commet.commetapp.android",
+        appId: BuildConfig.WEB ? "chat.commet.commetapp.web" : "chat.commet.commetapp.android",
         pushkey: pushKey,
         appDisplayName: BuildConfig.appName,
         data: data,
