@@ -113,8 +113,17 @@ class MatrixUserPresenceComponent
       {String? message, bool clearMessage = false}) async {
     final self = client.self!.identifier;
 
-    final current = await client.matrixClient.getPresence(self);
-
+    final current = await client.matrixClient.getPresence(self); /* TODO: fix this error, it is not a problem of the code, but of the network connection, only when running in background
+                                                                    ClientException with SocketException: Failed host lookup: 'matrix.kantengewichte.de' (OS Error: No address associated with hostname, errno = 7), uri=https://matrix.kantengewichte.de/_matrix/client/v3/presence/%40stefan%3Akantengewichte.de/status (IOClient.send)
+                                                                    #0      IOClient.send (package:http/src/io_client.dart:227)
+                                                                    <asynchronous suspension>
+                                                                    #1      TimeoutHttpClient.send (package:matrix/src/utils/http_timeout.dart:49)
+                                                                    <asynchronous suspension>
+                                                                    #2      Api.getPresence (package:matrix/matrix_api_lite/generated/api.dart:2824)
+                                                                    <asynchronous suspension>
+                                                                    #3      MatrixUserPresenceComponent.setStatus (package:commet/client/matrix/components/user_presence/matrix_user_presence.dart:116)
+                                                                    <asynchronous suspension>
+*/
     await client.matrixClient.setPresence(
         self,
         statusMsg: clearMessage ? null : message ?? current.statusMsg,

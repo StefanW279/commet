@@ -243,7 +243,17 @@ Future<void> initGuiRequirements() async {
       initializeMessages(locale.languageCode),
     if (preferences.debugTranslations.value) initializeMessagesDebug(),
     initializeDateFormatting(locale.languageCode),
-  ]);
+  ]); /* TODO: Fix this, happens when the app is started after being closed completly
+Info: Waiting for client to come online to sync calendar, current status: Instance of 'ClientConnectionStatusUpdate'
+Null check operator used on a null value (Future.wait)
+#0      Future.wait.<anonymous closure> (dart:async/future.dart:568)
+#1      SynchronousFuture.then (package:flutter/src/foundation/synchronous_future.dart:44)
+#2      Future.wait (dart:async/future.dart:546)
+#3      initGuiRequirements (package:commet/main.dart:240)
+#4      startGui (package:commet/main.dart:260)
+#5      appMain (package:commet/main.dart:188)
+<asynchronous suspension>
+*/
 
   tiamat.getAppScale = () {
     return preferences.appScale.value;
