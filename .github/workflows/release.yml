@@ -10,6 +10,11 @@ env:
   PROJECT_PATH: commet
   COMMET_PROD: 1
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   release-windows:
     runs-on: windows-2022
@@ -606,6 +611,17 @@ jobs:
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: 'commet/build/web'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
           
   update-flatpak:
     runs-on: ubuntu-latest
