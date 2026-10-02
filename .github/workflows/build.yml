@@ -81,7 +81,6 @@ jobs:
           }
 
       - name: Upload Artifact
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: commet-windows
@@ -157,7 +156,6 @@ jobs:
           dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }}
 
       - name: Upload Artifact
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: commet-android.apk
@@ -233,7 +231,6 @@ jobs:
           dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }} --enable_google_services true --build_detail google_services
 
       - name: Upload Artifact
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: commet-android-google-services.apk
@@ -310,7 +307,6 @@ jobs:
           flatpak build-bundle repo chat.commet.commetapp.flatpak chat.commet.commetapp
 
       - name: Upload Artifact
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: chat.commet.commetapp.flatpak
@@ -359,7 +355,6 @@ jobs:
           tar -czf commet-web.tar.gz web
 
       - name: Upload Artifact
-        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: commet-web.tar.gz
