@@ -1,3 +1,4 @@
+# to fix failure of this workflow run the following command from the 'commet' directory, then commit any files that got changed: 'dart format .'
 name: static-analysis
 on:
   pull_request:
