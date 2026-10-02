@@ -78,6 +78,8 @@ Commet requires some additional libraries to be built
 ```bash
 sudo apt-get install -y cmake clang ninja-build rustup libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev libwebkit2gtk-4.1-dev keybinder-3.0
 ```
+> [!NOTE]
+> On arch linux you can use  `sudo pacman -Syu cmake clang ninja rustup gtk3 mpv ffmpeg mimalloc webkit2gtk-4.1 libkeybinder3` to install all reqired packages
 
 ### 3. Fetch Dependencies
 You will need to change directory in to the project, then fetch dependencies
