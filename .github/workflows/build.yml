@@ -2,7 +2,13 @@
 name: build
 
 on:
-  pull_request:
+  pull_request_target:
+    types: 
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
   merge_group:
 
 env:
@@ -87,6 +93,7 @@ jobs:
           path: |
             .\commet-windows.zip
             .\commet-windows.msi
+          retention-days: 1
 
   build-android:
     runs-on: ubuntu-latest
@@ -148,7 +155,7 @@ jobs:
       - name: Setup Signatures
         run: |
           cd $PROJECT_PATH
-          dart run scripts/setup_android_release.dart --key_password ${{ secrets.ANDROID_KEY_PASSWORD }} --key_b64 ${{ secrets.ANDROID_KEY_STORE_B64 }}
+          dart run scripts/setup_android_release.dart --key_password ${{ secrets.ANDROID_KEY_PASSWORD_BETA }} --key_b64 ${{ secrets.ANDROID_KEY_STORE_B64_BETA }}
           
       - name: Build APK
         run: |
@@ -158,8 +165,9 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: commet-android.apk
+          name: commet-android-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 1
 
   build-android-google-services:
     runs-on: ubuntu-latest
@@ -223,7 +231,7 @@ jobs:
       - name: Setup Signatures
         run: |
           cd $PROJECT_PATH
-          dart run scripts/setup_android_release.dart --key_password ${{ secrets.ANDROID_KEY_PASSWORD }} --key_b64 ${{ secrets.ANDROID_KEY_STORE_B64 }}
+          dart run scripts/setup_android_release.dart --key_password ${{ secrets.ANDROID_KEY_PASSWORD_BETA }} --key_b64 ${{ secrets.ANDROID_KEY_STORE_B64_BETA }}
           
       - name: Build APK
         run: |
@@ -233,8 +241,9 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: commet-android-google-services.apk
+          name: commet-android-google-services-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 1
 
   build-flatpak:
     runs-on: ubuntu-latest
@@ -311,6 +320,7 @@ jobs:
         with:
           name: chat.commet.commetapp.flatpak
           path: commet/linux/flatpak/chat.commet.commetapp.flatpak
+          retention-days: 1
 
   build-web:
     runs-on: ubuntu-latest
@@ -359,3 +369,4 @@ jobs:
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
+          retention-days: 1

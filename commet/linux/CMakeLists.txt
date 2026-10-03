@@ -78,6 +78,7 @@ add_executable(${BINARY_NAME}
 # that need different build settings.
 apply_standard_settings(${BINARY_NAME})
 add_compile_options(-Wno-error=sometimes-uninitialized -Wno-sometimes-uninitialized -Wno-error)
+add_compile_options(-Wno-error=unused-but-set-global)
 
 # Add dependency libraries. Add any application-specific dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter)
