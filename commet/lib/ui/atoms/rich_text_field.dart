@@ -178,43 +178,52 @@ class RichTextEditingController extends TextEditingController {
           style = style.copyWith(color: Theme.of(context).colorScheme.primary);
           var href = node.attributes["href"];
           if (href != null) {
-            var result = MatrixClient.parseMatrixLink(Uri.parse(href));
-            if (result != null) {
-              var mxId = result.$2;
+            Uri? uri;
+            try {
+              uri = Uri.parse(href);
+            } on FormatException {
+              // The user may currently be typing an incomplete/malformed URL.
+              uri = null;
+            }
+            if (uri != null) {
+              var result = MatrixClient.parseMatrixLink(uri);
+              if (result != null) {
+                var mxId = result.$2;
 
-              for (var element in node.children!) {
-                if (result.$1 == MatrixLinkType.user) {
-                  var user = room?.getMember(mxId);
-                  if (user != null) {
-                    currentIndex = handleNode(
-                        context, currentIndex, text, children, style, element,
-                        overrideWidget: MentionWidget(
-                            displayName: user.displayName,
-                            avatar: user.avatar,
-                            style: style,
-                            placeholderColor: user.defaultColor));
-                    return currentIndex;
-                  }
-                } else if (result.$1 == MatrixLinkType.room) {
-                  var taggedRoom = client?.getRoom(mxId);
+                for (var element in node.children!) {
+                  if (result.$1 == MatrixLinkType.user) {
+                    var user = room?.getMember(mxId);
+                    if (user != null) {
+                      currentIndex = handleNode(
+                          context, currentIndex, text, children, style, element,
+                          overrideWidget: MentionWidget(
+                              displayName: user.displayName,
+                              avatar: user.avatar,
+                              style: style,
+                              placeholderColor: user.defaultColor));
+                      return currentIndex;
+                    }
+                  } else if (result.$1 == MatrixLinkType.room) {
+                    var taggedRoom = client?.getRoom(mxId);
 
-                  var vias =
-                      (client as MatrixClient).parseAddressToIdAndVia(href);
+                    var vias =
+                        (client as MatrixClient).parseAddressToIdAndVia(href);
 
-                  if (taggedRoom != null) {
-                    currentIndex = handleNode(
-                        context, currentIndex, text, children, style, element,
-                        overrideWidget: MentionWidget(
-                            fallbackIcon:
-                                preferences.usePlaceholderRoomAvatars.value
-                                    ? null
-                                    : taggedRoom.icon,
-                            displayName: taggedRoom.displayName,
-                            avatar: taggedRoom.avatar,
-                            vias: vias?.$2,
-                            style: style,
-                            placeholderColor: taggedRoom.defaultColor));
-                    return currentIndex;
+                    if (taggedRoom != null) {
+                      currentIndex = handleNode(
+                          context, currentIndex, text, children, style, element,
+                          overrideWidget: MentionWidget(
+                              fallbackIcon:
+                                  preferences.usePlaceholderRoomAvatars.value
+                                      ? null
+                                      : taggedRoom.icon,
+                              displayName: taggedRoom.displayName,
+                              avatar: taggedRoom.avatar,
+                              vias: vias?.$2,
+                              style: style,
+                              placeholderColor: taggedRoom.defaultColor));
+                      return currentIndex;
+                    }
                   }
                 }
               }
