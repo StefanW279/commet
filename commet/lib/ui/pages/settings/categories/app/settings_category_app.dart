@@ -101,7 +101,7 @@ class SettingsCategoryApp implements SettingsCategory {
                 return const WindowSettingsPage();
               }),
         // We really only need to configure on unified push
-        if (BuildConfig.LINUX || BuildConfig.ANDROID)
+        if (BuildConfig.LINUX || BuildConfig.ANDROID || BuildConfig.WEB)
           SettingsTab(
               label: labelSettingsAppNotifications,
               icon: m.Icons.notifications,

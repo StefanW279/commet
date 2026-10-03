@@ -27,6 +27,8 @@ class Preferences {
 
   static const String _pushGateway = "push_gateway";
 
+  static const String _webPushKey = "web_push_key";
+
   static const String _optedInExperiments = "opted_in_experiments";
 
   static const String _syncedCalendarUrls = "synced_calendar_urls";
@@ -139,9 +141,15 @@ class Preferences {
     await _preferences!.setString(_pushGateway, value);
   }
 
-  String get pushGateway => BuildConfig.ENABLE_GOOGLE_SERVICES
-      ? "push.commet.chat"
-      : _preferences!.getString(_pushGateway) ?? "push.commet.chat";
+  String get pushGateway {
+    if (BuildConfig.WEB) {
+      return "push.kantengewichte.de";
+    }
+
+    return BuildConfig.ENABLE_GOOGLE_SERVICES
+        ? "push.kantengewichte.de"
+        : _preferences!.getString(_pushGateway) ?? "push.kantengewichte.de";
+  }
 
   Future<void> setExperimentEnabled(String experiment, bool value) async {
     var experiments = _preferences?.getStringList(_optedInExperiments) ??
@@ -551,6 +559,9 @@ class Preferences {
 
   NullableStringPreference fcmKey =
       NullableStringPreference("fcm_key", defaultValue: null);
+
+  final NullableStringPreference webPushKey =
+      NullableStringPreference(_webPushKey, defaultValue: null);
 
   NullableStringPreference unifiedPushEndpoint =
       NullableStringPreference("unified_push_endpoint", defaultValue: null);

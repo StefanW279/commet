@@ -18,6 +18,7 @@ commet/.livekit/
 commet/web/e2ee.worker.dart.js.map
 commet/web/e2ee.worker.dart.js.deps
 commet/web/e2ee.worker.dart.js
+devtools_options.yaml
 
 # FVM Version Cache
 .fvm/

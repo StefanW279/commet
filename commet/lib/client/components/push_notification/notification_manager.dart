@@ -10,6 +10,8 @@ import 'package:commet/client/components/push_notification/modifiers/suppress_ot
 import 'package:commet/client/components/push_notification/notification_content.dart';
 import 'package:commet/client/components/push_notification/notifier.dart';
 import 'package:commet/client/components/push_notification/windows/windows_notifier.dart';
+import 'package:commet/client/components/push_notification/web_push_notifier.dart'
+    if (dart.library.html) 'package:commet/client/components/push_notification/web/web_push_notifier.dart';
 import 'package:commet/config/build_config.dart';
 import 'package:commet/config/platform_utils.dart';
 import 'package:commet/debug/log.dart';
@@ -74,6 +76,10 @@ class NotificationManager {
 
         return UnifiedPushNotifier();
       }
+    }
+
+    if (PlatformUtils.isWeb) {
+      return WebPushNotifier();
     }
 
     return null;
