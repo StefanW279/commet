@@ -72,7 +72,7 @@ index 235bb5c..e0eeee9 100644
  import 'package:flutter/foundation.dart'
      show defaultTargetPlatform, kIsWeb, TargetPlatform;
 @@ -61,5 +60,3 @@ class DefaultFirebaseOptions {
-     storageBucket: 'commet-16334.firebasestorage.app',
+     storageBucket: 'commet-35939.firebasestorage.app',
    );
  }
 -
