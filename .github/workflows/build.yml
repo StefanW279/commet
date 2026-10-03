@@ -130,6 +130,7 @@ jobs:
         with:
           submodules: 'true'
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
         
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
@@ -205,6 +206,7 @@ jobs:
         with:
           submodules: 'true'
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
         
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
