@@ -680,7 +680,7 @@ jobs:
             cd ${{ secrets.FDROID_PATH }}/repo
 
             echo "Downloading latest APK Release..."
-            wget -q -O ${{ secrets.FDROID_PATH }}/repo/commet/commet-android-google-services-${{ github.event.release.tag_name }}.apk https://github.com/StefanW279/commet/releases/latest/download/commet-android-google-services.apk
+            wget -q -O ${{ secrets.FDROID_PATH }}/repo/commet-android-google-services-${{ github.event.release.tag_name }}.apk https://github.com/StefanW279/commet/releases/latest/download/commet-android-google-services.apk
             
             cd ${{ secrets.FDROID_PATH }}
 
