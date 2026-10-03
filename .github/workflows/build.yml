@@ -3,6 +3,7 @@ name: build
 
 on:
   pull_request_target:
+    types: [opened, synchronize, reopened]
   merge_group:
 
 env:
