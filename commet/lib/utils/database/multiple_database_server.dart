@@ -55,36 +55,44 @@ final class MultiDatabaseServer {
 class DatabaseIsolate {
   static final receiveConnectPort = ReceivePort();
   static SendPort? connectToServer;
+  static Future<void>? _startFuture;
+
   static const isolateName = "chat.commet.commetapp.database_isolate";
 
-  static Future<void> start() async {
-    connectToServer = IsolateNameServer.lookupPortByName(isolateName);
-    if (connectToServer == null) {
-      Isolate.spawn(
-        (SendPort port) {
-          final server = MultiDatabaseServer();
-          port.send(server._receiveConnections.sendPort);
-        },
-        receiveConnectPort.sendPort,
-        debugName: "Database Isolate",
-      );
+  static Future<void> start() {
+    return _startFuture ??= _start();
+  }
 
-      connectToServer = await receiveConnectPort.first as SendPort;
-      IsolateNameServer.registerPortWithName(connectToServer!, isolateName);
+  static Future<void> _start() async {
+    connectToServer = IsolateNameServer.lookupPortByName(isolateName);
+    if (connectToServer != null) {
+      return;
     }
+
+    Isolate.spawn(
+      (SendPort port) {
+        final server = MultiDatabaseServer();
+        port.send(server._receiveConnections.sendPort);
+      },
+      receiveConnectPort.sendPort,
+      debugName: "Database Isolate",
+    );
+
+    connectToServer = await receiveConnectPort.first as SendPort;
+    IsolateNameServer.registerPortWithName(connectToServer!, isolateName);
   }
 
   static Future<DatabaseConnection> connect(String databaseName,
       {bool readOnly = false}) async {
-    if (connectToServer == null) {
-      await start();
-    }
+    await start();
 
     final response = ReceivePort();
 
     connectToServer!.send([databaseName, response.sendPort, readOnly]);
 
     final connectPort = await response.first as SendPort;
+    response.close();
+
     return DriftIsolate.fromConnectPort(connectPort, serialize: true).connect();
   }
 }
