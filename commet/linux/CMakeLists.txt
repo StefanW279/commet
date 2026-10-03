@@ -77,8 +77,16 @@ add_executable(${BINARY_NAME}
 # Apply the standard set of build settings. This can be removed for applications
 # that need different build settings.
 apply_standard_settings(${BINARY_NAME})
+
 add_compile_options(-Wno-error=sometimes-uninitialized -Wno-sometimes-uninitialized -Wno-error)
-add_compile_options(-Wno-error=unused-but-set-global)
+
+include(CheckCXXCompilerFlag)
+set(CMAKE_REQUIRED_FLAGS "-Werror")
+check_cxx_compiler_flag("-Wno-error=unused-but-set-global" COMMET_HAS_UNUSED_BUT_SET_GLOBAL)
+unset(CMAKE_REQUIRED_FLAGS)
+if(COMMET_HAS_UNUSED_BUT_SET_GLOBAL)
+  add_compile_options(-Wno-error=unused-but-set-global)
+endif()
 
 # Add dependency libraries. Add any application-specific dependencies here.
 target_link_libraries(${BINARY_NAME} PRIVATE flutter)
