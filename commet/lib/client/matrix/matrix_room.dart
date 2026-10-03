@@ -533,6 +533,46 @@ class MatrixRoom extends Room {
 
       event["m.mentions"] = mentions;
 
+      // Matrix events have a hard size limit. The Matrix SDK currently rejects
+      // client-server event bodies larger than 60,000 bytes. Leave some room
+      // for reply/edit metadata added by sendEvent().
+      const maxTextEventBytes = 50000;
+      var estimatedEventBytes = utf8.encode(jsonEncode(event)).length;
+
+      if (replaceEvent != null) {
+        // sendEvent() duplicates the content into m.new_content for edits.
+        estimatedEventBytes *= 2;
+      }
+
+      if (replyingTo != null) {
+        // sendEvent() embeds the replied-to message in the reply fallback.
+        estimatedEventBytes += utf8.encode(replyingTo.body).length;
+        estimatedEventBytes += utf8.encode(replyingTo.formattedText).length;
+      }
+
+      if (estimatedEventBytes > maxTextEventBytes) {
+        final file = matrix.MatrixFile(
+          bytes: Uint8List.fromList(utf8.encode(message)),
+          name: "message.txt",
+          mimeType: "text/plain; charset=utf-8",
+        );
+
+        final fileEventId = await _matrixRoom.sendFileEvent(
+          file,
+          inReplyTo: replyingTo,
+          editEventId: replaceEvent?.eventId,
+          threadLastEventId: threadLastEventId,
+          threadRootEventId: threadRootEventId,
+        );
+
+        if (fileEventId != null) {
+          final fileEvent = await _matrixRoom.getEventById(fileEventId);
+          return convertEvent(fileEvent!);
+        }
+
+        return null;
+      }
+
       var id = await _matrixRoom.sendEvent(event,
           inReplyTo: replyingTo,
           editEventId: replaceEvent?.eventId,
