@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "714066565492",
-    "project_id": "commet-16334",
-    "storage_bucket": "commet-16334.firebasestorage.app"
+    "project_number": "265203884074",
+    "project_id": "commet-35939",
+    "storage_bucket": "commet-35939.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:714066565492:android:5769795fa988f8abe5b421",
+        "mobilesdk_app_id": "1:265203884074:android:d9a0879f74ec5c52102353",
         "android_client_info": {
           "package_name": "chat.commet.commetapp"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB9p6VqktUpinkfK8AkBUvWtW7P9yebtCs"
+          "current_key": "AIzaSyCwhmOyXaJE8ifrngJAuahp4BSknwo0fzY"
         }
       ],
       "services": {
