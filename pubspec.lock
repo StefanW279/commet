@@ -403,12 +403,13 @@ packages:
     source: hosted
     version: "0.7.12"
   desktop_drop:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: desktop_drop
-      sha256: "47ded09c85909edfed644fd4cbb5051b040d0aed5c79e7e062ea4b3b7156dbe4"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/desktop_drop"
+      ref: drag-drop-linux-fix
+      resolved-ref: aa4542cf34353d74e075bfd7a232abc19436d8af
+      url: "https://github.com/commetchat/mixin-flutter-plugins.git"
+    source: git
     version: "0.8.4"
   desktop_notifications:
     dependency: transitive
