@@ -362,10 +362,15 @@ class MatrixClient extends Client {
     };
 
     await _matrixClient.setPresence(userId, presence);
+    _matrixClient.syncPresence = presence;
     _currentPresenceStatus = status;
+    await preferences.setPresenceStatus(_id, status.name);
   }
 
-  PresenceStatus _currentPresenceStatus = PresenceStatus.online;\n\n  @override\n  PresenceStatus get currentPresenceStatus => _currentPresenceStatus;
+  PresenceStatus _currentPresenceStatus = PresenceStatus.online;
+
+  @override
+  PresenceStatus get currentPresenceStatus => _currentPresenceStatus;
 
   @override
   bool isLoggedIn() => _matrixClient.isLogged();
