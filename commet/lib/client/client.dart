@@ -29,18 +29,18 @@ enum PresenceStatus {
 
 extension PresenceStatusLabel on PresenceStatus {
   String get label => switch (this) {
-    PresenceStatus.online => "Online",
-    PresenceStatus.idle => "Idle",
-    PresenceStatus.doNotDisturb => "Do Not Disturb",
-    PresenceStatus.invisible => "Invisible",
-  };
+        PresenceStatus.online => "Online",
+        PresenceStatus.idle => "Idle",
+        PresenceStatus.doNotDisturb => "Do Not Disturb",
+        PresenceStatus.invisible => "Invisible",
+      };
 
   IconData get icon => switch (this) {
-    PresenceStatus.online => Icons.circle,
-    PresenceStatus.idle => Icons.schedule,
-    PresenceStatus.doNotDisturb => Icons.remove_circle,
-    PresenceStatus.invisible => Icons.visibility_off,
-  };
+        PresenceStatus.online => Icons.circle,
+        PresenceStatus.idle => Icons.schedule,
+        PresenceStatus.doNotDisturb => Icons.remove_circle,
+        PresenceStatus.invisible => Icons.visibility_off,
+      };
 }
 
 enum LoginType { loginPassword, token }

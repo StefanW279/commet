@@ -73,7 +73,8 @@ class _CurrentSessionPanelState extends State<CurrentSessionPanel> {
     final presenceClient = clientManager!.clients.length == 1
         ? clientManager!.clients.first
         : clientManager!.clients
-            .where((client) => client.identifier == preferences.filterClient.value)
+            .where(
+                (client) => client.identifier == preferences.filterClient.value)
             .firstOrNull;
 
     return Padding(

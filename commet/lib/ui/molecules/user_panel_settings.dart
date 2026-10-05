@@ -62,7 +62,8 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                   } catch (_) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Unable to update presence")),
+                        const SnackBar(
+                            content: Text("Unable to update presence")),
                       );
                     }
                   }
