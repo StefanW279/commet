@@ -242,6 +242,14 @@ class Preferences {
     return HotKey.fromJson(jsonDecode(item));
   }
 
+  String getPresenceStatus(String clientId) {
+    return _preferences?.getString("presence_status:$clientId") ?? "online";
+  }
+
+  Future<void> setPresenceStatus(String clientId, String status) async {
+    await _preferences?.setString("presence_status:$clientId", status);
+  }
+
   Future<void> setVoipUserVolume(String userId, double volume) async {
     _preferences!.setDouble("call_user_volume:${userId}", volume);
   }
