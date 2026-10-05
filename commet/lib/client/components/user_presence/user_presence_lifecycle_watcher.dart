@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:commet/client/client.dart';
 import 'package:commet/client/components/user_presence/user_presence_component.dart';
 import 'package:commet/main.dart';
 import 'package:flutter/widgets.dart';
