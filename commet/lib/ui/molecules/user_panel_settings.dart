@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:commet/client/client.dart';
 import 'package:commet/client/components/widgets/widget_component.dart';
+import 'package:commet/debug/log.dart';
 import 'package:commet/ui/navigation/navigation_utils.dart';
 import 'package:commet/ui/pages/settings/app_settings_page.dart';
 import 'package:flutter/material.dart';
@@ -59,13 +60,9 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                   try {
                     await widget.client!.setPresence(status);
                     if (mounted) setState(() {});
-                  } catch (_) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Unable to update presence")),
-                      );
-                    }
+                  } catch (error, stackTrace) {
+                    Log.onError(error, stackTrace,
+                        content: "Unable to update presence");
                   }
                 },
                 itemBuilder: (context) => [
