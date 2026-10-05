@@ -48,6 +48,13 @@ class UserPresenceLifecycleWatcher {
 
     if (clientManager != null) {
       for (var client in clientManager!.clients) {
+        // Respect an explicitly selected Discord-style presence. Lifecycle
+        // events must not turn Idle, Do Not Disturb, or Invisible back to
+        // Online/Unavailable.
+        if (client.currentPresenceStatus != PresenceStatus.online) {
+          continue;
+        }
+
         final component = client.getComponent<UserPresenceComponent>();
         if (component != null) {
           component.setStatus(state);
