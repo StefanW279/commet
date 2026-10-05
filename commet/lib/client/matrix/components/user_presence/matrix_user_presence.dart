@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:commet/client/client.dart';
 import 'package:commet/client/components/user_presence/user_presence_component.dart';
 import 'package:commet/client/components/user_presence/user_presence_lifecycle_watcher.dart';
 import 'package:commet/client/matrix/components/read_receipts/matrix_read_receipt_component.dart';
@@ -103,22 +102,6 @@ class MatrixUserPresenceComponent
   }
 
   void changed(CachedPresence event) {
-    // Matrix servers/clients can mark a user online again as a side effect of
-    // activity. Keep the server-side presence aligned with the explicitly
-    // selected Discord-style presence.
-    if (event.userid == client.self?.identifier) {
-      final desired = switch (client.currentPresenceStatus) {
-        PresenceStatus.online => PresenceType.online,
-        PresenceStatus.idle => PresenceType.unavailable,
-        PresenceStatus.doNotDisturb => PresenceType.unavailable,
-        PresenceStatus.invisible => PresenceType.offline,
-      };
-
-      if (event.presence != desired) {
-        unawaited(client.setPresence(client.currentPresenceStatus));
-      }
-    }
-
     _controller.add((event.userid, convertPresence(event)));
   }
 
