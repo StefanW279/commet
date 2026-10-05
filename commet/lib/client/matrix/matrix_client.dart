@@ -266,6 +266,19 @@ class MatrixClient extends Client {
     bool loadingFromCache, {
     bool isBackgroundService = false,
   }) async {
+    final savedPresence = switch (preferences.getPresenceStatus(_id)) {
+      "idle" => PresenceStatus.idle,
+      "doNotDisturb" => PresenceStatus.doNotDisturb,
+      "invisible" => PresenceStatus.invisible,
+      _ => PresenceStatus.online,
+    };
+    _currentPresenceStatus = savedPresence;
+    _matrixClient.syncPresence = switch (savedPresence) {
+      PresenceStatus.online => matrix.PresenceType.online,
+      PresenceStatus.idle => matrix.PresenceType.unavailable,
+      PresenceStatus.doNotDisturb => matrix.PresenceType.unavailable,
+      PresenceStatus.invisible => matrix.PresenceType.offline,
+    };
     if (!_matrixClient.isLogged()) {
       await Diagnostics.general.timeAsync("Matrix client init", () async {
         await _matrixClient.init(
