@@ -14,6 +14,25 @@ on:
 env:
   PROJECT_PATH: commet
 
+
+permissions:
+  contents: read
+  id-token: none
+  actions: none
+  artifact-metadata: none
+  attestations: none
+  checks: none
+  code-quality: none
+  deployments: none
+  issues: none
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: read
+  security-events: none
+  statuses: none
+  vulnerability-alerts: none
+
 jobs:
   build-windows:
     runs-on: windows-2022
@@ -23,6 +42,7 @@ jobs:
         with:
           submodules: 'true'
           ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2.8.0
@@ -132,6 +152,7 @@ jobs:
           submodules: 'true'
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
         
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
@@ -208,6 +229,7 @@ jobs:
           submodules: 'true'
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
         
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
@@ -283,6 +305,7 @@ jobs:
         with:
           submodules: 'true'
           ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
@@ -334,6 +357,7 @@ jobs:
         with:
           submodules: 'true'
           ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.8.0
