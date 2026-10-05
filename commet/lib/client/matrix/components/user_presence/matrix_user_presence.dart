@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:commet/client/client.dart';
 import 'package:commet/client/components/user_presence/user_presence_component.dart';
 import 'package:commet/client/components/user_presence/user_presence_lifecycle_watcher.dart';
 import 'package:commet/client/matrix/components/read_receipts/matrix_read_receipt_component.dart';
