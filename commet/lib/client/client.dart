@@ -228,8 +228,13 @@ abstract class Client {
   /// Queries the server for information about a room which this client is not a member of
   Future<RoomPreview?> getRoomPreview(String address);
 
+  /// Set the current user's Discord-style presence status.
+  Future<void> setPresence(PresenceStatus status);
+
+  PresenceStatus get currentPresenceStatus;
+
   /// Update the current user avatar
-  /// Set the current user's Discord-style presence status.\n  Future<void> setPresence(PresenceStatus status);\n\n  PresenceStatus get currentPresenceStatus;\n\n  Future<void> setAvatar(Uint8List bytes, String mimeType);
+  Future<void> setAvatar(Uint8List bytes, String mimeType);
 
   /// Set the display name of the current user
   Future<void> setDisplayName(String name);
