@@ -187,6 +187,9 @@ class _CurrentSessionPanelState extends State<CurrentSessionPanel> {
                     ),
                     UserPanelSettings(
                       height: profileHeight,
+                      client: clientManager!.clients.length == 1
+                          ? clientManager!.clients.first
+                          : null,
                     )
                   ],
                 ),
