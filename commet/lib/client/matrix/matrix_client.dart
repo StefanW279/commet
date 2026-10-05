@@ -273,12 +273,10 @@ class MatrixClient extends Client {
       _ => PresenceStatus.online,
     };
     _currentPresenceStatus = savedPresence;
-    _matrixClient.syncPresence = switch (savedPresence) {
-      PresenceStatus.online => matrix.PresenceType.online,
-      PresenceStatus.idle => matrix.PresenceType.unavailable,
-      PresenceStatus.doNotDisturb => matrix.PresenceType.unavailable,
-      PresenceStatus.invisible => matrix.PresenceType.offline,
-    };
+    // Do not use Matrix's automatic /sync presence parameter here. Activity
+    // such as messages, typing, and receipts can otherwise overwrite an
+    // explicitly selected Discord-style presence.
+    _matrixClient.syncPresence = null;
     if (!_matrixClient.isLogged()) {
       await Diagnostics.general.timeAsync("Matrix client init", () async {
         await _matrixClient.init(
@@ -362,7 +360,7 @@ class MatrixClient extends Client {
     };
 
     await _matrixClient.setPresence(userId, presence);
-    _matrixClient.syncPresence = presence;
+    _matrixClient.syncPresence = null;
     _currentPresenceStatus = status;
     await preferences.setPresenceStatus(_id, status.name);
   }
