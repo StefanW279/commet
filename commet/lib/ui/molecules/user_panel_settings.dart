@@ -44,7 +44,7 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
       padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
       child: Row(
         children: [
-          if (client != null)
+          if (widget.client != null)
             SizedBox(
               width: height,
               height: height,
@@ -52,12 +52,12 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                 tooltip: "Set presence",
                 padding: EdgeInsets.zero,
                 icon: Icon(
-                  client!.currentPresenceStatus.icon,
+                  widget.client!.currentPresenceStatus.icon,
                   size: iconHeight,
                 ),
                 onSelected: (status) async {
                   try {
-                    await client!.setPresence(status);
+                    await widget.client!.setPresence(status);
                     if (mounted) setState(() {});
                   } catch (_) {
                     if (mounted) {
@@ -78,7 +78,7 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                           const SizedBox(width: 12),
                           Text(status.label),
                           const Spacer(),
-                          if (status == client!.currentPresenceStatus)
+                          if (status == widget.client!.currentPresenceStatus)
                             const Icon(Icons.check, size: 18),
                         ],
                       ),
