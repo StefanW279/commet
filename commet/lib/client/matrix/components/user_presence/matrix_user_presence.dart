@@ -102,6 +102,22 @@ class MatrixUserPresenceComponent
   }
 
   void changed(CachedPresence event) {
+    // Matrix servers/clients can mark a user online again as a side effect of
+    // activity. Keep the server-side presence aligned with the explicitly
+    // selected Discord-style presence.
+    if (event.userid == client.self?.identifier) {
+      final desired = switch (client.currentPresenceStatus) {
+        PresenceStatus.online => PresenceType.online,
+        PresenceStatus.idle => PresenceType.unavailable,
+        PresenceStatus.doNotDisturb => PresenceType.unavailable,
+        PresenceStatus.invisible => PresenceType.offline,
+      };
+
+      if (event.presence != desired) {
+        unawaited(client.setPresence(client.currentPresenceStatus));
+      }
+    }
+
     _controller.add((event.userid, convertPresence(event)));
   }
 
