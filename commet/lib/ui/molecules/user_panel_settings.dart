@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:commet/client/components/widgets/widget_component.dart';
+import 'package:commet/client/client.dart';\nimport 'package:commet/client/components/widgets/widget_component.dart';
 import 'package:commet/ui/navigation/navigation_utils.dart';
 import 'package:commet/ui/pages/settings/app_settings_page.dart';
 import 'package:flutter/material.dart';
@@ -42,16 +42,58 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
       padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
       child: Row(
         children: [
-          SizedBox(
+          if (client != null)
+            SizedBox(
               width: height,
               height: height,
-              child: tiamat.IconButton(
-                icon: Icons.settings,
-                size: iconHeight,
-                onPressed: () {
-                  NavigationUtils.navigateTo(context, const AppSettingsPage());
+              child: PopupMenuButton<PresenceStatus>(
+                tooltip: "Set presence",
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  client!.currentPresenceStatus.icon,
+                  size: iconHeight,
+                ),
+                onSelected: (status) async {
+                  try {
+                    await client!.setPresence(status);
+                    if (mounted) setState(() {});
+                  } catch (_) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Unable to update presence")),
+                      );
+                    }
+                  }
                 },
-              ))
+                itemBuilder: (context) => [
+                  for (final status in PresenceStatus.values)
+                    PopupMenuItem<PresenceStatus>(
+                      value: status,
+                      child: Row(
+                        children: [
+                          Icon(status.icon, size: 18),
+                          const SizedBox(width: 12),
+                          Text(status.label),
+                          const Spacer(),
+                          if (status == client!.currentPresenceStatus)
+                            const Icon(Icons.check, size: 18),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          SizedBox(
+            width: height,
+            height: height,
+            child: tiamat.IconButton(
+              icon: Icons.settings,
+              size: iconHeight,
+              onPressed: () {
+                NavigationUtils.navigateTo(context, const AppSettingsPage());
+              },
+            ),
+          )
         ],
       ),
     );
