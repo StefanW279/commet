@@ -336,6 +336,24 @@ class MatrixClient extends Client {
     }
   }
 
+  /// Sets this account's Matrix presence and keeps the Discord-style selection local.
+  Future<void> setPresence(PresenceStatus status) async {
+    final userId = _matrixClient.userID;
+    if (userId == null) return;
+
+    final presence = switch (status) {
+      PresenceStatus.online => matrix.PresenceType.online,
+      PresenceStatus.idle => matrix.PresenceType.unavailable,
+      PresenceStatus.doNotDisturb => matrix.PresenceType.unavailable,
+      PresenceStatus.invisible => matrix.PresenceType.offline,
+    };
+
+    await _matrixClient.setPresence(userId, presence);
+    currentPresenceStatus = status;
+  }
+
+  PresenceStatus currentPresenceStatus = PresenceStatus.online;
+
   @override
   bool isLoggedIn() => _matrixClient.isLogged();
 
