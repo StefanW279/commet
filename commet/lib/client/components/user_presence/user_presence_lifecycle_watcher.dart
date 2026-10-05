@@ -52,7 +52,9 @@ class UserPresenceLifecycleWatcher {
         // Respect an explicitly selected Discord-style presence. Lifecycle
         // events must not turn Idle, Do Not Disturb, or Invisible back to
         // Online/Unavailable.
-        if (client.currentPresenceStatus != PresenceStatus.online) {
+        final savedPresence = preferences.getPresenceStatus(client.identifier);
+        if (client.currentPresenceStatus != PresenceStatus.online ||
+            (savedPresence.isNotEmpty && savedPresence != "online")) {
           continue;
         }
 
