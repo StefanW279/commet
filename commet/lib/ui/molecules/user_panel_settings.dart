@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:commet/client/client.dart';\nimport 'package:commet/client/components/widgets/widget_component.dart';
+import 'package:commet/client/client.dart';
+import 'package:commet/client/components/widgets/widget_component.dart';
 import 'package:commet/ui/navigation/navigation_utils.dart';
 import 'package:commet/ui/pages/settings/app_settings_page.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
 
 class UserPanelSettings extends StatefulWidget {
-  const UserPanelSettings({this.height = 30, super.key});
+  const UserPanelSettings({this.height = 30, this.client, super.key});
   final double height;
+  final Client? client;
 
   @override
   State<UserPanelSettings> createState() => _UserPanelSettingsState();
