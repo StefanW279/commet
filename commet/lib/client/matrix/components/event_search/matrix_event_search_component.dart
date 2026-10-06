@@ -155,6 +155,7 @@ class MatrixSearchParameters {
   bool requireVideo;
 
   bool requireAttachment;
+  bool requireFile;
 
   bool requireAudio;
 
@@ -174,6 +175,7 @@ class MatrixSearchParameters {
     this.requireImage = false,
     this.requireVideo = false,
     this.requireAttachment = false,
+    this.requireFile = false,
     this.requireAudio = false,
     this.requireMedia = false,
     this.requireLink = false,
@@ -210,6 +212,7 @@ class MatrixSearchParameters {
     bool requireImage = words.contains(hasImageString);
     bool requireVideo = words.contains(hasVideoString);
     bool requireAttachment = words.contains(hasFileString);
+    bool requireFile = words.contains(hasFileString);
     bool requireAudio = words.contains(hasAudioString);
     bool requireMedia = words.contains(hasMediaString);
 
@@ -226,6 +229,7 @@ class MatrixSearchParameters {
       requireImage: requireImage,
       requireVideo: requireVideo,
       requireAttachment: requireAttachment,
+      requireFile: requireFile,
       requireAudio: requireAudio,
       requireMedia: requireMedia,
       requireLink: requireUrl,
@@ -272,6 +276,13 @@ class MatrixServerEventSearchSession extends EventSearchSession {
     if (params.requireAttachment && !event.hasAttachment) {
       return false;
     }
+    if (params.requireFile &&
+        (!event.hasAttachment ||
+            Mime.imageTypes.contains(event.attachmentMimetype) ||
+            Mime.videoTypes.contains(event.attachmentMimetype) ||
+            event.attachmentMimetype.startsWith('audio/'))) {
+      return false;
+    }
     return true;
   }
 
@@ -298,7 +309,7 @@ class MatrixServerEventSearchSession extends EventSearchSession {
     }
 
     var criteria = matrix.RoomEventsCriteria(
-      searchTerm: parameters.words.join(" "),
+      searchTerm: parameters.words.isEmpty ? '*' : parameters.words.join(" "),
       orderBy: matrix.SearchOrder.recent,
       filter: matrix.SearchFilter(
           rooms: [timeline.room.identifier],
