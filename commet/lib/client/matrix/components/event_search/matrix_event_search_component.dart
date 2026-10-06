@@ -269,9 +269,9 @@ class MatrixServerEventSearchSession extends EventSearchSession {
         url.isNotEmpty ||
         file != null;
 
-    String mimeType = content['info'] is Map
-        ? (content['info']['mimetype']?.toString() ?? '')
-        : '';
+    final info = content['info'];
+    final infoMap = info is Map ? info : const <String, Object?>{};
+    final mimeType = infoMap['mimetype']?.toString() ?? '';
 
     if (params.requireImage && !Mime.imageTypes.contains(mimeType)) {
       return false;
