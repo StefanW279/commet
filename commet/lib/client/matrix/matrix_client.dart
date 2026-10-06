@@ -394,7 +394,7 @@ class MatrixClient extends Client {
     await _matrixClient.setPresence(
       userId,
       _presenceTypeFor(status),
-      statusMsg: statusMessage.isEmpty ? null : statusMessage,
+      statusMsg: statusMessage?.isEmpty == true ? null : statusMessage,
     );
   }
 
