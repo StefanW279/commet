@@ -5,7 +5,6 @@ import 'package:commet/client/matrix/matrix_client.dart';
 import 'package:commet/client/matrix/matrix_room.dart';
 import 'package:commet/client/matrix/matrix_timeline.dart';
 import 'package:commet/client/timeline_events/timeline_event.dart';
-import 'package:commet/debug/log.dart';
 import 'package:commet/ui/molecules/timeline_events/timeline_view_entry.dart';
 import 'package:commet/utils/mime.dart';
 import 'package:commet/utils/notifying_list.dart';
