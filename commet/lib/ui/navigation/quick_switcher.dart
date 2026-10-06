@@ -552,19 +552,21 @@ class _QuickSwitcherState extends State<QuickSwitcher> {
         try {
           final timeline = await room.getTimeline();
 
-          await for (final batch
-              in timeline.startSearch(searchTerm: filters.text, limit: 100)) {
-            for (final event in batch.$1) {
-              if (event is! TimelineEventMessage) continue;
-              if (!filters.matches(room, event)) continue;
-              if (!seen.add(event.eventId)) continue;
+          final timeline = await room.getTimeline();
+          final query = filters.text.toLowerCase();
 
-              results.add(
-                QuickSwitcherMessageSearchItem(room, event),
-              );
-
-              if (results.length >= 50) return;
+          for (final event in timeline.events) {
+            if (event is! TimelineEventMessage) continue;
+            if (query.isNotEmpty &&
+                !event.plainTextBody.toLowerCase().contains(query)) {
+              continue;
             }
+            if (!filters.matches(room, event)) continue;
+            if (!seen.add(event.eventId)) continue;
+
+            results.add(
+              QuickSwitcherMessageSearchItem(room, event),
+            );
 
             if (results.length >= 50) return;
           }
