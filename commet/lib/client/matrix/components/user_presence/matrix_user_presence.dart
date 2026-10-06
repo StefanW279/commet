@@ -65,18 +65,21 @@ class MatrixUserPresenceComponent
   }
 
   UserPresence convertPresence(CachedPresence presence) {
-    final status = presence.statusMsg == commetDndPresenceMarker
-        ? UserPresenceStatus.doNotDisturb
-        : switch (presence.presence) {
+    final status = switch (presence.statusMsg) {
+      commetDndPresenceMarker => UserPresenceStatus.doNotDisturb,
+      commetIdlePresenceMarker => UserPresenceStatus.unavailable,
+      _ => switch (presence.presence) {
             PresenceType.offline => UserPresenceStatus.offline,
             PresenceType.online => UserPresenceStatus.online,
             PresenceType.unavailable => UserPresenceStatus.unavailable,
-          };
+          },
+    };
 
     UserPresenceMessage? message = null;
 
     if (presence.statusMsg != null &&
-        presence.statusMsg != commetDndPresenceMarker) {
+        presence.statusMsg != commetDndPresenceMarker &&
+        presence.statusMsg != commetIdlePresenceMarker) {
       message = UserPresenceMessage(
           presence.statusMsg!, PresenceMessageType.userCustom);
     }
