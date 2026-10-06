@@ -6,6 +6,7 @@ import 'package:commet/debug/log.dart';
 import 'package:commet/ui/navigation/navigation_utils.dart';
 import 'package:commet/ui/pages/settings/app_settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:tiamat/tiamat.dart' as tiamat;
 
@@ -56,7 +57,8 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
               width: height,
               height: height,
               child: PopupMenuButton<PresenceStatus>(
-                tooltip: "Set presence",
+                tooltip:
+                    Intl.message("Set presence", name: "presenceSetTooltip"),
                 padding: EdgeInsets.zero,
                 icon: Icon(
                   widget.client!.currentPresenceStatus.icon,

@@ -2,6 +2,7 @@ import 'package:commet/client/client.dart';
 import 'package:commet/client/components/push_notification/modifiers/notification_modifiers.dart';
 import 'package:commet/client/components/push_notification/notification_content.dart';
 import 'package:commet/main.dart';
+import 'package:intl/intl.dart';
 
 class NotificationModifierSuppressDnd implements NotificationModifier {
   @override
@@ -29,8 +30,9 @@ class NotificationModifierSuppressDnd implements NotificationModifier {
       return content;
     }
 
-    onNotificationRejected
-        ?.call("Notifications are suppressed while Do Not Disturb is enabled");
+    onNotificationRejected?.call(Intl.message(
+        "Notifications are suppressed while Do Not Disturb is enabled",
+        name: "notificationsSuppressedDoNotDisturb"));
     return null;
   }
 }

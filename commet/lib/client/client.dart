@@ -12,6 +12,7 @@ import 'package:commet/utils/notifying_list.dart';
 import 'package:commet/utils/notifying_list_filter.dart';
 import 'package:commet/utils/stored_stream_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'peer.dart';
 
@@ -29,10 +30,12 @@ enum PresenceStatus {
 
 extension PresenceStatusLabel on PresenceStatus {
   String get label => switch (this) {
-        PresenceStatus.online => "Online",
-        PresenceStatus.idle => "Idle",
-        PresenceStatus.doNotDisturb => "Do Not Disturb",
-        PresenceStatus.invisible => "Invisible",
+        PresenceStatus.online => Intl.message("Online", name: "presenceOnline"),
+        PresenceStatus.idle => Intl.message("Idle", name: "presenceIdle"),
+        PresenceStatus.doNotDisturb =>
+          Intl.message("Do Not Disturb", name: "presenceDoNotDisturb"),
+        PresenceStatus.invisible =>
+          Intl.message("Invisible", name: "presenceInvisible"),
       };
 
   IconData get icon => switch (this) {

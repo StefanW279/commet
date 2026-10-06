@@ -11,6 +11,7 @@ import 'package:commet/ui/atoms/room_text_button.dart';
 import 'package:commet/utils/draft_storage.dart';
 import 'package:commet/utils/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RoomPanel extends StatefulWidget {
   const RoomPanel(this.room,
@@ -101,8 +102,12 @@ class _RoomPanelState extends State<RoomPanel> {
 
     String? textPreview;
     if (msgDrafts.hasDraft(widget.room.identifier, null)) {
-      textPreview =
-          "Draft: " + msgDrafts.getDraft(widget.room.identifier, null)!;
+      final text = msgDrafts.getDraft(widget.room.identifier, null)!;
+      textPreview = Intl.message(
+        "Draft: $text",
+        name: "draftPreview",
+        args: [text],
+      );
     } else {
       textPreview = widget.room.lastMessage?.plainTextBody;
     }
