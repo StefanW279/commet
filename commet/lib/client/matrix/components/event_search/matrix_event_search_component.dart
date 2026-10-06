@@ -295,7 +295,8 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
       events.addAll(
         converted.where(
-          (event) => !events.any((existing) => existing.eventId == event.eventId),
+          (event) =>
+              !events.any((existing) => existing.eventId == event.eventId),
         ),
       );
       events.sort((a, b) => b.originServerTs.compareTo(a.originServerTs));
@@ -325,8 +326,7 @@ class MatrixServerEventSearchSession extends EventSearchSession {
         !Mime.videoTypes.contains(event.attachmentMimetype)) {
       return false;
     }
-    if (params.requireAudio &&
-        !event.attachmentMimetype.startsWith('audio/')) {
+    if (params.requireAudio && !event.attachmentMimetype.startsWith('audio/')) {
       return false;
     }
     if (params.requireMedia &&

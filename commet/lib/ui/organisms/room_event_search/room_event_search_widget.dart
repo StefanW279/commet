@@ -32,7 +32,13 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 700));
 
   static const _filterSuggestions = <String>[
-    'image', 'video', 'media', 'file', 'audio', 'link', 'attachment'
+    'image',
+    'video',
+    'media',
+    'file',
+    'audio',
+    'link',
+    'attachment'
   ];
   List<String> suggestions = const [];
 
@@ -236,7 +242,10 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
     final token = tokens.isNotEmpty ? tokens.last : '';
 
     final nextValue = token.toLowerCase().startsWith('has:')
-        ? value.substring(0, value.length - token.length) + 'has:' + suggestion + ' '
+        ? value.substring(0, value.length - token.length) +
+            'has:' +
+            suggestion +
+            ' '
         : (value.trim().isEmpty
             ? 'has:' + suggestion + ' '
             : value.trim() + ' has:' + suggestion + ' ');
