@@ -254,53 +254,6 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   String? nextBatchToken;
 
-  bool _matchesParameters(
-    MatrixSearchParameters params,
-    matrix.MatrixEvent event,
-  ) {
-    final content = event.content;
-    final msgType = content['msgtype']?.toString() ?? '';
-    final url = content['url']?.toString() ?? '';
-    final file = content['file'];
-    final hasAttachment = msgType == 'm.image' ||
-        msgType == 'm.video' ||
-        msgType == 'm.audio' ||
-        msgType == 'm.file' ||
-        url.isNotEmpty ||
-        file != null;
-
-    final info = content['info'];
-    final infoMap = info is Map ? info : const <String, Object?>{};
-    final mimeType = infoMap['mimetype']?.toString() ?? '';
-
-    if (params.requireImage && !Mime.imageTypes.contains(mimeType)) {
-      return false;
-    }
-    if (params.requireVideo && !Mime.videoTypes.contains(mimeType)) {
-      return false;
-    }
-    if (params.requireAudio && !mimeType.startsWith('audio/')) {
-      return false;
-    }
-    if (params.requireMedia &&
-        !Mime.imageTypes.contains(mimeType) &&
-        !Mime.videoTypes.contains(mimeType) &&
-        !mimeType.startsWith('audio/')) {
-      return false;
-    }
-    if (params.requireAttachment && !hasAttachment) {
-      return false;
-    }
-    if (params.requireFile &&
-        (!hasAttachment ||
-            Mime.imageTypes.contains(mimeType) ||
-            Mime.videoTypes.contains(mimeType) ||
-            mimeType.startsWith('audio/'))) {
-      return false;
-    }
-    return true;
-  }
-
   @override
   bool get canContinueSearch => nextBatchToken != null;
 
@@ -311,66 +264,93 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   @override
   Stream<List<TimelineEvent<Client>>> startSearch(String searchTerm,
-      {String? nextBatch}) {
+      {String? nextBatch}) async* {
     currentSearchTerm = searchTerm;
-    var client = (timeline.client as MatrixClient).matrixClient;
-
-    var parameters = MatrixSearchParameters.parse(searchTerm);
-
+    final params = MatrixSearchParameters.parse(searchTerm);
     currentlySearching = true;
 
     if (nextBatch == null) {
       events = NotifyingList.empty(growable: true);
     }
 
-    var criteria = matrix.RoomEventsCriteria(
-      searchTerm: parameters.words.join(" "),
-      orderBy: matrix.SearchOrder.recent,
-      filter: matrix.SearchFilter(
-          rooms: [timeline.room.identifier],
-          limit: 20,
-          senders: parameters.requiredSender != null
-              ? [parameters.requiredSender!]
-              : null,
-          containsUrl: parameters.requireUrl == true ? true : null),
-      includeState: false,
+    final search = timeline.matrixTimeline!.startSearch(
+      searchTerm: params.words.join(' '),
+      prevBatch: nextBatch,
+      searchFunc: (event) => _matchesParameters(params, event),
     );
 
-    Log.i("Criteria: ${criteria.toJson()}");
-
-    client
-        .search(matrix.Categories(roomEvents: criteria), nextBatch: nextBatch)
-        .then((result) {
-      currentlySearching = false;
-
-      var resultEvents = result.searchCategories.roomEvents?.results;
-      nextBatchToken = result.searchCategories.roomEvents?.nextBatch;
-
-      events.clear();
-
-      if (resultEvents != null) {
-        events.addAll(resultEvents
-            .where((i) => i.result != null)
-            .where((i) => _matchesParameters(
-                  parameters,
-                  i.result!,
-                ))
-            .sorted((a, b) =>
-                b.result!.originServerTs.compareTo(a.result!.originServerTs))
-            .map((i) => (timeline.room as MatrixRoom).convertEvent(matrix.Event(
-                content: i.result!.content,
-                type: i.result!.type,
-                eventId: i.result!.eventId,
-                senderId: i.result!.senderId,
-                originServerTs: i.result!.originServerTs,
-                room: timeline.matrixTimeline!.room))));
+    await for (final chunk in search) {
+      if (chunk.$2 != null) {
+        nextBatchToken = chunk.$2;
+      } else if (nextBatch == null) {
+        nextBatchToken = null;
       }
 
-      events.update();
-      Log.i("Got events: ${resultEvents}");
-    });
+      final converted = chunk.$1
+          .map((event) => (timeline.room as MatrixRoom).convertEvent(event))
+          .where((event) =>
+              TimelineViewEntryState.eventToDisplayType(event) !=
+              TimelineEventWidgetDisplayType.hidden)
+          .toList();
 
-    return events.onListUpdated.map((i) => events);
+      events.addAll(
+        converted.where(
+          (event) => !events.any((existing) => existing.eventId == event.eventId),
+        ),
+      );
+      events.sort((a, b) => b.originServerTs.compareTo(a.originServerTs));
+      events.update();
+      yield events;
+    }
+
+    currentlySearching = false;
+    yield events;
+  }
+
+  bool _matchesParameters(MatrixSearchParameters params, matrix.Event event) {
+    final body = event.plaintextBody.toLowerCase();
+
+    if (params.words.any((word) => !body.contains(word.toLowerCase()))) {
+      return false;
+    }
+
+    if (params.requireAttachment && !event.hasAttachment) {
+      return false;
+    }
+    if (params.requireImage &&
+        !Mime.imageTypes.contains(event.attachmentMimetype)) {
+      return false;
+    }
+    if (params.requireVideo &&
+        !Mime.videoTypes.contains(event.attachmentMimetype)) {
+      return false;
+    }
+    if (params.requireAudio &&
+        !event.attachmentMimetype.startsWith('audio/')) {
+      return false;
+    }
+    if (params.requireMedia &&
+        !Mime.imageTypes.contains(event.attachmentMimetype) &&
+        !Mime.videoTypes.contains(event.attachmentMimetype) &&
+        !event.attachmentMimetype.startsWith('audio/')) {
+      return false;
+    }
+    if (params.requireUrl &&
+        !(event.plaintextBody.contains('https://') ||
+            event.plaintextBody.contains('http://'))) {
+      return false;
+    }
+    if (params.requiredType != null &&
+        event.type != params.requiredType &&
+        event.messageType != params.requiredType) {
+      return false;
+    }
+    if (params.requiredSender != null &&
+        event.senderId != params.requiredSender) {
+      return false;
+    }
+
+    return true;
   }
 }
 
