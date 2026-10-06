@@ -303,7 +303,7 @@ class MatrixClient extends Client {
       try {
         final serverPresence =
             await _matrixClient.getPresence(_matrixClient.userID!);
-        final serverStatus = _presenceStatusFromServer(serverPresence.presence);
+        final serverStatus = _presenceStatusFromServer(serverPresence);
 
         if (serverStatus != null) {
           _currentPresenceStatus = serverStatus;
@@ -416,7 +416,7 @@ class MatrixClient extends Client {
     );
   }
 
-  PresenceStatus? _presenceStatusFromServer(matrix.PresenceContent presence) {
+  PresenceStatus? _presenceStatusFromServer(matrix.GetPresenceResponse presence) {
     return switch (presence.statusMsg) {
       commetDndPresenceMarker => PresenceStatus.doNotDisturb,
       commetIdlePresenceMarker => PresenceStatus.idle,
