@@ -249,10 +249,12 @@ class Preferences {
   Future<void> setPresenceStatus(String clientId, String status) async {
     await _preferences?.setString("presence_status:$clientId", status);
   }
-\n  String getPresenceStatusMessage(String clientId) {
+
+  String getPresenceStatusMessage(String clientId) {
     return _preferences?.getString("presence_status_message:$clientId") ?? "";
   }
-\n  Future<void> setPresenceStatusMessage(String clientId, String message) async {
+
+  Future<void> setPresenceStatusMessage(String clientId, String message) async {
     await _preferences?.setString("presence_status_message:$clientId", message);
   }
 
