@@ -254,7 +254,7 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   String? nextBatchToken;
 
-  bool _matchesParameters(MatrixSearchParameters params, matrix.Event event) {
+  bool _matchesParameters(MatrixSearchParameters params, matrix.MatrixEvent event) {
     if (params.requireImage &&
         !Mime.imageTypes.contains(event.attachmentMimetype)) {
       return false;
