@@ -37,8 +37,8 @@ extension PresenceStatusLabel on PresenceStatus {
 
   IconData get icon => switch (this) {
         PresenceStatus.online => Icons.circle,
-        PresenceStatus.idle => Icons.schedule,
-        PresenceStatus.doNotDisturb => Icons.circle,
+        PresenceStatus.idle => Icons.nightlight_round,
+        PresenceStatus.doNotDisturb => Icons.do_not_disturb_on,
         PresenceStatus.invisible => Icons.visibility_off,
       };
 }
