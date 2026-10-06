@@ -42,6 +42,7 @@ import 'matrix_space.dart';
 import 'package:vodozemac/vodozemac.dart' as vod;
 
 const String commetDndPresenceMarker = "commet:dnd";
+const String commetIdlePresenceMarker = "commet:idle";
 
 class MatrixClient extends Client {
   late matrix.Client _matrixClient;
@@ -370,8 +371,13 @@ class MatrixClient extends Client {
 
     final current = await _matrixClient.getPresence(userId);
 
-    if (status == PresenceStatus.doNotDisturb) {
-      if (current.statusMsg != commetDndPresenceMarker) {
+    if (status == PresenceStatus.doNotDisturb ||
+        status == PresenceStatus.idle) {
+      final marker = status == PresenceStatus.doNotDisturb
+          ? commetDndPresenceMarker
+          : commetIdlePresenceMarker;
+      if (current.statusMsg != commetDndPresenceMarker &&
+          current.statusMsg != commetIdlePresenceMarker) {
         final existingMessage = current.statusMsg;
         if (existingMessage != null && existingMessage.isNotEmpty) {
           await preferences.setPresenceStatusMessage(_id, existingMessage);
@@ -381,15 +387,17 @@ class MatrixClient extends Client {
       await _matrixClient.setPresence(
         userId,
         matrix.PresenceType.unavailable,
-        statusMsg: commetDndPresenceMarker,
+        statusMsg: marker,
       );
       return;
     }
 
     final savedMessage = preferences.getPresenceStatusMessage(_id);
-    final statusMessage = current.statusMsg == commetDndPresenceMarker
-        ? savedMessage
-        : current.statusMsg;
+    final statusMessage =
+        current.statusMsg == commetDndPresenceMarker ||
+                current.statusMsg == commetIdlePresenceMarker
+            ? savedMessage
+            : current.statusMsg;
 
     await _matrixClient.setPresence(
       userId,
