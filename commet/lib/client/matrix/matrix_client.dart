@@ -41,6 +41,8 @@ import 'matrix_room.dart';
 import 'matrix_space.dart';
 import 'package:vodozemac/vodozemac.dart' as vod;
 
+const String commetDndPresenceMarker = "commet:dnd";
+
 class MatrixClient extends Client {
   late matrix.Client _matrixClient;
   late final List<Component<MatrixClient>> componentsInternal;
@@ -296,6 +298,14 @@ class MatrixClient extends Client {
       config = value;
     });
 
+    if (_matrixClient.isLogged()) {
+      try {
+        await _applyPresence(savedPresence);
+      } catch (error, trace) {
+        Log.onError(error, trace, content: "Unable to restore presence");
+      }
+    }
+
     _updateRoomslist();
     _updateSpacesList();
   }
@@ -344,11 +354,47 @@ class MatrixClient extends Client {
     }
   }
 
-  /// Sets this account's Matrix presence and keeps the Discord-style selection local.
+  /// Sets the Discord-style presence and publishes DND separately from
+  /// Matrix's server-managed online/unavailable state.
   Future<void> setPresence(PresenceStatus status) async {
-    _matrixClient.syncPresence = _presenceTypeFor(status);
+    await _applyPresence(status);
     _currentPresenceStatus = status;
     await preferences.setPresenceStatus(_id, status.name);
+  }
+
+  Future<void> _applyPresence(PresenceStatus status) async {
+    _matrixClient.syncPresence = _presenceTypeFor(status);
+
+    final userId = _matrixClient.userID;
+    if (userId == null) return;
+
+    final current = await _matrixClient.getPresence(userId);
+
+    if (status == PresenceStatus.doNotDisturb) {
+      if (current.statusMsg != commetDndPresenceMarker) {
+        final existingMessage = current.statusMsg;
+        if (existingMessage != null && existingMessage.isNotEmpty) {
+          await preferences.setPresenceStatusMessage(_id, existingMessage);
+        }
+      }
+
+      await _matrixClient.setPresence(
+        userId,
+        matrix.PresenceType.unavailable,
+        statusMsg: commetDndPresenceMarker,
+      );
+      return;
+    }
+
+    final savedMessage = preferences.getPresenceStatusMessage(_id);
+    final statusMessage =
+        current.statusMsg == commetDndPresenceMarker ? savedMessage : current.statusMsg;
+
+    await _matrixClient.setPresence(
+      userId,
+      _presenceTypeFor(status),
+      statusMsg: statusMessage.isEmpty ? null : statusMessage,
+    );
   }
 
   matrix.PresenceType _presenceTypeFor(PresenceStatus status) {
