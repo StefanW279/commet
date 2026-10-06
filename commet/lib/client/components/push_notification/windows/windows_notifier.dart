@@ -257,8 +257,8 @@ class WindowsNotifier implements Notifier {
 
     final tag = content.eventId;
     _notificationTagsByRoom.putIfAbsent(content.roomId, () => {}).add(tag);
-    await WinToast.instance().showCustomToast(
-        xml: xml, tag: tag, group: content.roomId);
+    await WinToast.instance()
+        .showCustomToast(xml: xml, tag: tag, group: content.roomId);
   }
 
   @override

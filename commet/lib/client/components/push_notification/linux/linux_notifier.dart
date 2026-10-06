@@ -228,8 +228,7 @@ class LinuxNotifier implements Notifier {
     final id = notificationId++;
     _notificationIdsByRoom.putIfAbsent(content.roomId, () => {}).add(id);
 
-    await flutterLocalNotificationsPlugin?.show(
-        id, title, notificationBody,
+    await flutterLocalNotificationsPlugin?.show(id, title, notificationBody,
         notificationDetails: details, payload: jsonEncode(payload));
   }
 
