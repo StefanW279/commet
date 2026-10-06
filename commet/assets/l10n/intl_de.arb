@@ -1950,4 +1950,8 @@
     "type": "text",
     "placeholders": {}
   }
+  "searchNoResultsFound": "Keine Ergebnisse gefunden",
+  "@searchNoResultsFound": {"description": "Meldung, wenn eine Raumnachrichtensuche keine Ergebnisse liefert","type":"text","placeholders":{}},
+  "searchNext": "Weiter",
+  "@searchNext": {"description": "Schaltfläche zum Laden der nächsten Seite der Suchergebnisse","type":"text","placeholders":{}}
 }
