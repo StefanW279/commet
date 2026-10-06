@@ -470,9 +470,7 @@ class UserProfileViewState extends State<UserProfileView> {
     final l = localTime!;
     var t = DateTime(l.year, l.month, l.day, l.hour, l.minute, l.second);
 
-    var use24 = PlatformUtils.isAndroid
-        ? MediaQuery.of(context).alwaysUse24HourFormat
-        : false;
+    var use24 = preferences.use24HourTime.value;
     var localDay = DateFormat(DateFormat.WEEKDAY).format(DateTime.now());
     var day = DateFormat(DateFormat.WEEKDAY).format(t);
     var time = MaterialLocalizations.of(context).formatTimeOfDay(
