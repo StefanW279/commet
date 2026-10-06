@@ -29,7 +29,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   StreamSubscription? currentSubscription;
   List<TimelineEvent>? currentResults;
 
-  Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 350));
+  Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 700));
 
   bool loading = false;
 
@@ -185,30 +185,38 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
 
   void onTextChanged(String value) {
     final nextSuggestions = _getSuggestions(value);
+    final suggestionsChanged =
+        nextSuggestions.length != suggestions.length ||
+        nextSuggestions.asMap().entries.any(
+              (entry) => suggestions[entry.key] != entry.value,
+            );
 
-    setState(() {
-      suggestions = nextSuggestions;
-      currentResults = null;
-      currentSubscription?.cancel();
-      searchSession = null;
-      currentStream = null;
-    });
+    // Cancel the old search without rebuilding the results widget on every
+    // keystroke. Rebuilding the animated result list here was the main source
+    // of input lag.
+    currentSubscription?.cancel();
+    currentSubscription = null;
+    searchSession = null;
+    debouncer.cancel();
 
-    if (value.trim().isEmpty) {
-      debouncer.cancel();
-      setState(() => loading = false);
+    if (suggestionsChanged) {
+      setState(() {
+        suggestions = nextSuggestions;
+      });
+    }
+
+    if (value.trim().isEmpty || nextSuggestions.isNotEmpty || _isIncompleteFilter(value)) {
+      if (loading) {
+        setState(() => loading = false);
+      }
       return;
     }
 
-    // Don't send incomplete filter expressions to the server.
-    if (nextSuggestions.isNotEmpty || _isIncompleteFilter(value)) {
-      debouncer.cancel();
-      setState(() => loading = false);
-      return;
-    }
-
+    // Search only after the user pauses typing.
     debouncer.run(() => startSearch(value));
-    setState(() => loading = debouncer.running);
+    if (!loading) {
+      setState(() => loading = true);
+    }
   }
 
   List<String> _getSuggestions(String value) {
