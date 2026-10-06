@@ -116,6 +116,7 @@ class MatrixUserPresenceComponent
           UserPresenceStatus.unknown => PresenceType.offline,
           UserPresenceStatus.online => PresenceType.online,
           UserPresenceStatus.unavailable => PresenceType.unavailable,
+          UserPresenceStatus.doNotDisturb => PresenceType.unavailable,
         });
   }
 
