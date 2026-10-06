@@ -387,8 +387,9 @@ class MatrixClient extends Client {
     }
 
     final savedMessage = preferences.getPresenceStatusMessage(_id);
-    final statusMessage =
-        current.statusMsg == commetDndPresenceMarker ? savedMessage : current.statusMsg;
+    final statusMessage = current.statusMsg == commetDndPresenceMarker
+        ? savedMessage
+        : current.statusMsg;
 
     await _matrixClient.setPresence(
       userId,
