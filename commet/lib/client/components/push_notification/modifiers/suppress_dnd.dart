@@ -2,6 +2,7 @@ import 'package:commet/client/client.dart';
 import 'package:commet/client/components/push_notification/modifiers/notification_modifiers.dart';
 import 'package:commet/client/components/push_notification/notification_content.dart';
 import 'package:commet/main.dart';
+import 'package:intl/intl.dart';
 
 class NotificationModifierSuppressDnd implements NotificationModifier {
   @override
