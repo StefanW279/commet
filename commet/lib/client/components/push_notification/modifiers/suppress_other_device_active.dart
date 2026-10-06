@@ -65,8 +65,8 @@ class NotificationModifierSuppressOtherActiveDevice
           Log.i(
               "Suppressing this notification because there is another device which has been active recently!\nThe device which was active is: ${device.displayName} : ${device.deviceId}");
 
-          onNotificationRejected?.call(
-              "Another device has been active within the last minute");
+          onNotificationRejected
+              ?.call("Another device has been active within the last minute");
           return null;
         }
       }
