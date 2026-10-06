@@ -19,6 +19,12 @@ class UserPanelSettings extends StatefulWidget {
 }
 
 class _UserPanelSettingsState extends State<UserPanelSettings> {
+  Color _presenceColor(PresenceStatus status) => switch (status) {
+        PresenceStatus.online => const Color(0xFF23A55A),
+        PresenceStatus.idle => const Color(0xFFF0B232),
+        PresenceStatus.doNotDisturb => const Color(0xFFF23F42),
+        PresenceStatus.invisible => const Color(0xFF80848E),
+      };
   StreamSubscription? sub;
 
   @override
@@ -55,6 +61,7 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                 icon: Icon(
                   widget.client!.currentPresenceStatus.icon,
                   size: iconHeight,
+                  color: _presenceColor(widget.client!.currentPresenceStatus),
                 ),
                 onSelected: (status) async {
                   try {
@@ -71,7 +78,7 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                       value: status,
                       child: Row(
                         children: [
-                          Icon(status.icon, size: 18),
+                          Icon(status.icon, size: 18, color: _presenceColor(status)),
                           const SizedBox(width: 12),
                           Text(status.label),
                           const Spacer(),
