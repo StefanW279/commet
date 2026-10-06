@@ -113,6 +113,8 @@ class WindowsNotifier implements Notifier {
     }
   }
 
+  static final Map<String, Set<String>> _notificationTagsByRoom = {};
+
   static void onDismissed(DismissedEvent event) {
     print("Notification dismissed");
     print("event: ${event.toString()} ");
@@ -190,7 +192,7 @@ class WindowsNotifier implements Notifier {
 </toast>
   """;
 
-    WinToast.instance().showCustomToast(xml: xml);
+    await WinToast.instance().showCustomToast(xml: xml);
   }
 
   Future<void> displayMessageNotification(
@@ -253,7 +255,10 @@ class WindowsNotifier implements Notifier {
     var player = NotificationManager.getSoundPlayer();
     player.open(Media("asset:///assets/sound/message.ogg"));
 
-    WinToast.instance().showCustomToast(xml: xml);
+    final tag = content.eventId;
+    _notificationTagsByRoom.putIfAbsent(content.roomId, () => {}).add(tag);
+    await WinToast.instance().showCustomToast(
+        xml: xml, tag: tag, group: content.roomId);
   }
 
   @override
@@ -267,7 +272,14 @@ class WindowsNotifier implements Notifier {
   }
 
   @override
-  Future<void> clearNotifications(Room room) async {}
+  Future<void> clearNotifications(Room room) async {
+    final tags = _notificationTagsByRoom.remove(room.identifier);
+    if (tags == null) return;
+
+    for (final tag in tags) {
+      await WinToast.instance().dismiss(tag: tag, group: room.identifier);
+    }
+  }
 
   @override
   Future<void> disableBadges() {
