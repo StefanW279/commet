@@ -4,7 +4,6 @@ import 'package:commet/client/components/event_search/event_search_component.dar
 import 'package:commet/client/matrix/matrix_client.dart';
 import 'package:commet/client/matrix/matrix_room.dart';
 import 'package:commet/client/matrix/matrix_timeline.dart';
-import 'package:commet/client/matrix/timeline_events/matrix_timeline_event.dart';
 import 'package:commet/client/timeline_events/timeline_event.dart';
 import 'package:commet/debug/log.dart';
 import 'package:commet/ui/molecules/timeline_events/timeline_view_entry.dart';
@@ -251,29 +250,26 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   String? nextBatchToken;
 
-  bool _matchesParameters(MatrixSearchParameters params, TimelineEvent event) {
-    final matrixEvent = event is MatrixTimelineEvent ? event.event : null;
-    if (matrixEvent == null) return false;
-
+  bool _matchesParameters(MatrixSearchParameters params, matrix.Event event) {
     if (params.requireImage &&
-        !Mime.imageTypes.contains(matrixEvent.attachmentMimetype)) {
+        !Mime.imageTypes.contains(event.attachmentMimetype)) {
       return false;
     }
     if (params.requireVideo &&
-        !Mime.videoTypes.contains(matrixEvent.attachmentMimetype)) {
+        !Mime.videoTypes.contains(event.attachmentMimetype)) {
       return false;
     }
     if (params.requireAudio &&
-        !matrixEvent.attachmentMimetype.startsWith('audio/')) {
+        !event.attachmentMimetype.startsWith('audio/')) {
       return false;
     }
     if (params.requireMedia &&
-        !Mime.imageTypes.contains(matrixEvent.attachmentMimetype) &&
-        !Mime.videoTypes.contains(matrixEvent.attachmentMimetype) &&
-        !matrixEvent.attachmentMimetype.startsWith('audio/')) {
+        !Mime.imageTypes.contains(event.attachmentMimetype) &&
+        !Mime.videoTypes.contains(event.attachmentMimetype) &&
+        !event.attachmentMimetype.startsWith('audio/')) {
       return false;
     }
-    if (params.requireAttachment && !matrixEvent.hasAttachment) {
+    if (params.requireAttachment && !event.hasAttachment) {
       return false;
     }
     return true;
