@@ -122,13 +122,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             children: [
               tiamat.Button(
                 text: notifier?.hasPermission == true
-                    ? "Web Push enabled"
-                    : "Enable Web Push",
+                    ? Intl.message("Web Push enabled", name: "webPushEnabled")
+                    : Intl.message("Enable Web Push", name: "enableWebPush"),
                 onTap: enableWebPush,
               ),
               const SizedBox(height: 10),
               tiamat.Text.labelLow(
-                "Allow browser notifications to receive messages when Commet is closed.",
+                Intl.message(
+                  "Allow browser notifications to receive messages when Commet is closed.",
+                  name: "webPushDescription",
+                ),
               ),
             ],
           ),
