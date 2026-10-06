@@ -205,7 +205,7 @@ class MessageInputState extends State<MessageInput> {
     // Focus changes are applied asynchronously, so insert the key ourselves
     // after focusing instead of losing the first character.
     input.textFocus.requestFocus();
-    scheduleMicrotask(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!input.mounted || !input.textFocus.hasFocus) {
         return;
       }
