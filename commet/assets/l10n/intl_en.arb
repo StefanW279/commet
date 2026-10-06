@@ -2364,4 +2364,8 @@
     "type": "text",
     "placeholders": {}
   }
+  "searchNoResultsFound": "No results found",
+  "@searchNoResultsFound": {"description": "Message shown when a room event search returns no results","type":"text","placeholders":{}},
+  "searchNext": "Next",
+  "@searchNext": {"description": "Button to load the next page of room search results","type":"text","placeholders":{}}
 }
