@@ -23,7 +23,6 @@ import 'package:commet/ui/molecules/timeline_events/layouts/timeline_event_layou
 import 'package:commet/ui/molecules/timeline_events/timeline_event_layout.dart';
 import 'package:commet/ui/molecules/user_list.dart';
 import 'package:commet/ui/organisms/user_profile/user_profile.dart';
-import 'package:commet/utils/text_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
