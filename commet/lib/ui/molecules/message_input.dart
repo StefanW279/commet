@@ -143,6 +143,9 @@ class MessageInput extends StatefulWidget {
 }
 
 class MessageInputState extends State<MessageInput> {
+  static MessageInputState? _activeInstance;
+  static bool _hardwareKeyboardHandlerRegistered = false;
+
   late FocusNode textFocus;
   FocusNode emojiSearchFocus = FocusNode();
   FocusNode stickerSearchFocus = FocusNode();
@@ -177,6 +180,47 @@ class MessageInputState extends State<MessageInput> {
     textFocus.requestFocus();
   }
 
+  static bool _handleUnfocusedKey(KeyEvent event) {
+    final input = _activeInstance;
+
+    if (input == null ||
+        !input.mounted ||
+        input.textFocus.hasFocus ||
+        !input.widget.enabled ||
+        input.widget.isProcessing ||
+        !BuildConfig.DESKTOP ||
+        event is! KeyDownEvent) {
+      return false;
+    }
+
+    final character = event.character;
+    if (character == null ||
+        character.isEmpty ||
+        HardwareKeyboard.instance.isControlPressed ||
+        HardwareKeyboard.instance.isAltPressed ||
+        HardwareKeyboard.instance.isMetaPressed) {
+      return false;
+    }
+
+    // Focus changes are applied asynchronously, so insert the key ourselves
+    // after focusing instead of losing the first character.
+    input.textFocus.requestFocus();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!input.mounted || !input.textFocus.hasFocus) {
+        return;
+      }
+
+      final selection = input.controller.selection;
+      final value = input.controller.value;
+      input.controller.value = value.replaced(selection, character);
+      input.onTextfieldUpdated(input.controller.text);
+    });
+
+    // We inserted the character ourselves; don't let the unfocused widget
+    // handle the same key event as well.
+    return true;
+  }
+
   void onSetInputText(String newText) {
     controller.text = newText;
     controller.selection =
@@ -187,6 +231,12 @@ class MessageInputState extends State<MessageInput> {
 
   @override
   void dispose() {
+    if (identical(_activeInstance, this)) {
+      _activeInstance = null;
+      HardwareKeyboard.instance.removeHandler(_handleUnfocusedKey);
+      _hardwareKeyboardHandlerRegistered = false;
+    }
+
     keyboardFocusSubscription?.cancel();
     setInputTextSubscription?.cancel();
     preferencesSubscription?.cancel();
@@ -198,6 +248,12 @@ class MessageInputState extends State<MessageInput> {
 
   @override
   void initState() {
+    _activeInstance = this;
+    if (!_hardwareKeyboardHandlerRegistered) {
+      HardwareKeyboard.instance.addHandler(_handleUnfocusedKey);
+      _hardwareKeyboardHandlerRegistered = true;
+    }
+
     controller = RichTextEditingController(
         client: widget.client, room: widget.room, text: widget.initialText);
     controller.addListener(controllerListener);
