@@ -29,7 +29,18 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   StreamSubscription? currentSubscription;
   List<TimelineEvent>? currentResults;
 
-  Debouncer debouncer = Debouncer(delay: const Duration(seconds: 1));
+  Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 700));
+
+  static const _filterSuggestions = <String>[
+    'image',
+    'video',
+    'media',
+    'file',
+    'audio',
+    'link',
+    'attachment'
+  ];
+  List<String> suggestions = const [];
 
   bool loading = false;
 
@@ -80,6 +91,27 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
             ],
           ),
         ),
+        if (suggestions.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
+            child: Material(
+              elevation: 2,
+              borderRadius: BorderRadius.circular(8),
+              color: Theme.of(context).colorScheme.surfaceContainer,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final suggestion in suggestions)
+                    ListTile(
+                      dense: true,
+                      leading: Icon(_suggestionIcon(suggestion), size: 18),
+                      title: Text('has:$suggestion'),
+                      onTap: () => _selectSuggestion(suggestion),
+                    ),
+                ],
+              ),
+            ),
+          ),
         if (currentResults?.isNotEmpty == true)
           Flexible(
             child: ClipRect(
@@ -160,25 +192,82 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   }
 
   void onTextChanged(String value) {
+    final nextSuggestions = _getSuggestions(value);
+
+    currentSubscription?.cancel();
+    currentSubscription = null;
+    debouncer.cancel();
+
     setState(() {
       currentResults = null;
-      currentSubscription?.cancel();
       searchSession = null;
       currentStream = null;
-      currentResults = null;
+      suggestions = nextSuggestions;
+      loading = false;
     });
 
-    if (value.trim().isEmpty) {
-      setState(() {
-        debouncer.cancel();
-        loading = false;
-      });
-    } else {
-      debouncer.run(() => startSearch(value));
-      setState(() {
-        loading = debouncer.running;
-      });
+    if (value.trim().isEmpty || _isIncompleteFilter(value)) {
+      return;
     }
+
+    debouncer.run(() => startSearch(value));
+    setState(() {
+      loading = true;
+    });
+  }
+
+  List<String> _getSuggestions(String value) {
+    final parts = value.trim().split(RegExp(r'\\s+'));
+    final token = parts.isEmpty ? '' : parts.last.toLowerCase();
+    if (!token.startsWith('has:')) return const [];
+
+    final partial = token.substring(4);
+    return _filterSuggestions
+        .where((item) => item.startsWith(partial))
+        .toList(growable: false);
+  }
+
+  bool _isIncompleteFilter(String value) {
+    final parts = value.trim().split(RegExp(r'\\s+'));
+    final token = parts.isEmpty ? '' : parts.last.toLowerCase();
+    if (!token.startsWith('has:')) return false;
+
+    final partial = token.substring(4);
+    return partial.isEmpty || !_filterSuggestions.contains(partial);
+  }
+
+  void _selectSuggestion(String suggestion) {
+    final value = controller.text;
+    final tokens = value.split(RegExp(r'\\s+'));
+    final token = tokens.isNotEmpty ? tokens.last : '';
+
+    final nextValue = token.toLowerCase().startsWith('has:')
+        ? value.substring(0, value.length - token.length) +
+            'has:' +
+            suggestion +
+            ' '
+        : (value.trim().isEmpty
+            ? 'has:' + suggestion + ' '
+            : value.trim() + ' has:' + suggestion + ' ');
+
+    controller.value = TextEditingValue(
+      text: nextValue,
+      selection: TextSelection.collapsed(offset: nextValue.length),
+    );
+    onTextChanged(nextValue);
+  }
+
+  IconData _suggestionIcon(String suggestion) {
+    return switch (suggestion) {
+      'image' => Icons.image_outlined,
+      'video' => Icons.video_file_outlined,
+      'media' => Icons.perm_media_outlined,
+      'file' => Icons.attach_file,
+      'audio' => Icons.audio_file_outlined,
+      'link' => Icons.link,
+      'attachment' => Icons.attachment_outlined,
+      _ => Icons.filter_alt_outlined,
+    };
   }
 
   void startSearch(String value) async {

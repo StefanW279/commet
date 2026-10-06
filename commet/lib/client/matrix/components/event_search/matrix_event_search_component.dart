@@ -5,7 +5,6 @@ import 'package:commet/client/matrix/matrix_client.dart';
 import 'package:commet/client/matrix/matrix_room.dart';
 import 'package:commet/client/matrix/matrix_timeline.dart';
 import 'package:commet/client/timeline_events/timeline_event.dart';
-import 'package:commet/debug/log.dart';
 import 'package:commet/ui/molecules/timeline_events/timeline_view_entry.dart';
 import 'package:commet/utils/mime.dart';
 import 'package:commet/utils/notifying_list.dart';
@@ -95,6 +94,20 @@ class MatrixEncryptedRoomEventSearchSession extends EventSearchSession {
       }
     }
 
+    if (params.requireAudio) {
+      if (!event.attachmentMimetype.startsWith('audio/')) {
+        return false;
+      }
+    }
+
+    if (params.requireMedia) {
+      if (!Mime.imageTypes.contains(event.attachmentMimetype) &&
+          !Mime.videoTypes.contains(event.attachmentMimetype) &&
+          !event.attachmentMimetype.startsWith('audio/')) {
+        return false;
+      }
+    }
+
     if (params.requireUrl) {
       if (!(event.plaintextBody.contains("https://") ||
           event.plaintextBody.contains("http://"))) {
@@ -141,6 +154,13 @@ class MatrixSearchParameters {
   bool requireVideo;
 
   bool requireAttachment;
+  bool requireFile;
+
+  bool requireAudio;
+
+  bool requireMedia;
+
+  bool requireLink;
 
   List<String> words;
 
@@ -154,6 +174,10 @@ class MatrixSearchParameters {
     this.requireImage = false,
     this.requireVideo = false,
     this.requireAttachment = false,
+    this.requireFile = false,
+    this.requireAudio = false,
+    this.requireMedia = false,
+    this.requireLink = false,
     this.requiredSender,
     this.requiredType,
   });
@@ -162,6 +186,8 @@ class MatrixSearchParameters {
   static const String hasImageString = 'has:image';
   static const String hasVideoString = 'has:video';
   static const String hasFileString = 'has:file';
+  static const String hasAudioString = 'has:audio';
+  static const String hasMediaString = 'has:media';
 
   static MatrixSearchParameters parse(String query) {
     var words = query.split(' ');
@@ -185,9 +211,14 @@ class MatrixSearchParameters {
     bool requireImage = words.contains(hasImageString);
     bool requireVideo = words.contains(hasVideoString);
     bool requireAttachment = words.contains(hasFileString);
+    bool requireFile = words.contains(hasFileString);
+    bool requireAudio = words.contains(hasAudioString);
+    bool requireMedia = words.contains(hasMediaString);
 
     words.remove(hasLinkString);
     words.remove(hasFileString);
+    words.remove(hasAudioString);
+    words.remove(hasMediaString);
     words.remove(hasImageString);
     words.remove(hasVideoString);
 
@@ -197,6 +228,10 @@ class MatrixSearchParameters {
       requireImage: requireImage,
       requireVideo: requireVideo,
       requireAttachment: requireAttachment,
+      requireFile: requireFile,
+      requireAudio: requireAudio,
+      requireMedia: requireMedia,
+      requireLink: requireUrl,
       requiredSender: requiredSender,
       requiredType: requiredType,
     );
@@ -228,62 +263,93 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   @override
   Stream<List<TimelineEvent<Client>>> startSearch(String searchTerm,
-      {String? nextBatch}) {
+      {String? nextBatch}) async* {
     currentSearchTerm = searchTerm;
-    var client = (timeline.client as MatrixClient).matrixClient;
-
-    var parameters = MatrixSearchParameters.parse(searchTerm);
-
+    final params = MatrixSearchParameters.parse(searchTerm);
     currentlySearching = true;
 
     if (nextBatch == null) {
       events = NotifyingList.empty(growable: true);
     }
 
-    var criteria = matrix.RoomEventsCriteria(
-      searchTerm: parameters.words.join(" "),
-      orderBy: matrix.SearchOrder.recent,
-      filter: matrix.SearchFilter(
-          rooms: [timeline.room.identifier],
-          limit: 20,
-          senders: parameters.requiredSender != null
-              ? [parameters.requiredSender!]
-              : null,
-          containsUrl: parameters.requireUrl == true ? true : null),
-      includeState: false,
+    final search = timeline.matrixTimeline!.startSearch(
+      searchTerm: params.words.join(' '),
+      prevBatch: nextBatch,
+      searchFunc: (event) => _matchesParameters(params, event),
     );
 
-    Log.i("Criteria: ${criteria.toJson()}");
-
-    client
-        .search(matrix.Categories(roomEvents: criteria), nextBatch: nextBatch)
-        .then((result) {
-      currentlySearching = false;
-
-      var resultEvents = result.searchCategories.roomEvents?.results;
-      nextBatchToken = result.searchCategories.roomEvents?.nextBatch;
-
-      events.clear();
-
-      if (resultEvents != null) {
-        events.addAll(resultEvents
-            .where((i) => i.result != null)
-            .sorted((a, b) =>
-                b.result!.originServerTs.compareTo(a.result!.originServerTs))
-            .map((i) => (timeline.room as MatrixRoom).convertEvent(matrix.Event(
-                content: i.result!.content,
-                type: i.result!.type,
-                eventId: i.result!.eventId,
-                senderId: i.result!.senderId,
-                originServerTs: i.result!.originServerTs,
-                room: timeline.matrixTimeline!.room))));
+    await for (final chunk in search) {
+      if (chunk.$2 != null) {
+        nextBatchToken = chunk.$2;
+      } else if (nextBatch == null) {
+        nextBatchToken = null;
       }
 
-      events.update();
-      Log.i("Got events: ${resultEvents}");
-    });
+      final converted = chunk.$1
+          .map((event) => (timeline.room as MatrixRoom).convertEvent(event))
+          .where((event) =>
+              TimelineViewEntryState.eventToDisplayType(event) !=
+              TimelineEventWidgetDisplayType.hidden)
+          .toList();
 
-    return events.onListUpdated.map((i) => events);
+      events.addAll(
+        converted.where(
+          (event) =>
+              !events.any((existing) => existing.eventId == event.eventId),
+        ),
+      );
+      events.sort((a, b) => b.originServerTs.compareTo(a.originServerTs));
+      events.update();
+      yield events;
+    }
+
+    currentlySearching = false;
+    yield events;
+  }
+
+  bool _matchesParameters(MatrixSearchParameters params, matrix.Event event) {
+    final body = event.plaintextBody.toLowerCase();
+
+    if (params.words.any((word) => !body.contains(word.toLowerCase()))) {
+      return false;
+    }
+
+    if (params.requireAttachment && !event.hasAttachment) {
+      return false;
+    }
+    if (params.requireImage &&
+        !Mime.imageTypes.contains(event.attachmentMimetype)) {
+      return false;
+    }
+    if (params.requireVideo &&
+        !Mime.videoTypes.contains(event.attachmentMimetype)) {
+      return false;
+    }
+    if (params.requireAudio && !event.attachmentMimetype.startsWith('audio/')) {
+      return false;
+    }
+    if (params.requireMedia &&
+        !Mime.imageTypes.contains(event.attachmentMimetype) &&
+        !Mime.videoTypes.contains(event.attachmentMimetype) &&
+        !event.attachmentMimetype.startsWith('audio/')) {
+      return false;
+    }
+    if (params.requireUrl &&
+        !(event.plaintextBody.contains('https://') ||
+            event.plaintextBody.contains('http://'))) {
+      return false;
+    }
+    if (params.requiredType != null &&
+        event.type != params.requiredType &&
+        event.messageType != params.requiredType) {
+      return false;
+    }
+    if (params.requiredSender != null &&
+        event.senderId != params.requiredSender) {
+      return false;
+    }
+
+    return true;
   }
 }
 
@@ -315,7 +381,15 @@ class MatrixEventSearchComponent implements EventSearchComponent<MatrixClient> {
         "from:@user:example.com"
       ];
     } else {
-      return ["from:@user:example.com"];
+      return [
+        MatrixSearchParameters.hasLinkString,
+        MatrixSearchParameters.hasFileString,
+        MatrixSearchParameters.hasImageString,
+        MatrixSearchParameters.hasVideoString,
+        MatrixSearchParameters.hasAudioString,
+        MatrixSearchParameters.hasMediaString,
+        "from:@user:example.com",
+      ];
     }
   }
 }
