@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:commet/client/components/profile/profile_component.dart';
 import 'package:commet/client/components/user_presence/user_presence_component.dart';
 import 'package:commet/config/layout_config.dart';
-import 'package:commet/config/platform_utils.dart';
 import 'package:commet/main.dart';
 import 'package:commet/ui/atoms/adaptive_context_menu.dart';
 import 'package:commet/ui/atoms/scaled_safe_area.dart';
@@ -470,9 +469,7 @@ class UserProfileViewState extends State<UserProfileView> {
     final l = localTime!;
     var t = DateTime(l.year, l.month, l.day, l.hour, l.minute, l.second);
 
-    var use24 = PlatformUtils.isAndroid
-        ? MediaQuery.of(context).alwaysUse24HourFormat
-        : false;
+    var use24 = preferences.use24HourTime.value;
     var localDay = DateFormat(DateFormat.WEEKDAY).format(DateTime.now());
     var day = DateFormat(DateFormat.WEEKDAY).format(t);
     var time = MaterialLocalizations.of(context).formatTimeOfDay(

@@ -376,6 +376,9 @@ class Preferences {
   BoolPreference shouldFollowSystemColors =
       BoolPreference("should_follow_system_colors", defaultValue: false);
 
+  BoolPreference use24HourTime =
+      BoolPreference("use_24_hour_time", defaultValue: true);
+
   BoolPreference minimizeOnClose =
       BoolPreference("minimize_on_close", defaultValue: false);
 
