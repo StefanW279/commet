@@ -35,6 +35,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:matrix/matrix.dart' as matrix;
 import 'package:pasteboard/pasteboard.dart';
+import 'package:path/path.dart' as path;
 import 'package:tiamat/tiamat.dart' as tiamat;
 import '../../client/attachment.dart';
 import '../../client/components/emoticon/emoticon.dart';
@@ -635,7 +636,7 @@ class MessageInputState extends State<MessageInput> {
     if (HardwareKeyboard.instance
         .isLogicalKeyPressed(LogicalKeyboardKey.keyV)) {
       if (HardwareKeyboard.instance.isControlPressed) {
-        readImageFromClipboard();
+        readClipboard();
         return KeyEventResult.ignored;
       }
     }
@@ -1416,17 +1417,12 @@ class MessageInputState extends State<MessageInput> {
       onCut: () =>
           editableTextState.cutSelection(SelectionChangedCause.toolbar),
       onPaste: () async {
-        var clipboard = await Clipboard.getData("text/plain");
-
-        if (clipboard != null) {
-          return editableTextState.pasteText(SelectionChangedCause.toolbar);
+        if (BuildConfig.DESKTOP && await readClipboard()) {
+          editableTextState.hideToolbar();
+          return;
         }
 
-        editableTextState.hideToolbar();
-
-        if (BuildConfig.DESKTOP) {
-          await readImageFromClipboard();
-        }
+        return editableTextState.pasteText(SelectionChangedCause.toolbar);
       },
       // to apply the normal behavior when click on select all
       onSelectAll: () =>
@@ -1436,10 +1432,25 @@ class MessageInputState extends State<MessageInput> {
     );
   }
 
-  Future<void> readImageFromClipboard() async {
+  Future<bool> readClipboard() async {
+    if (!BuildConfig.DESKTOP) {
+      return false;
+    }
+
+    final files = await Pasteboard.files();
+    if (files.isNotEmpty) {
+      for (final file in files) {
+        await handlePickedAttachment(PendingFileAttachment(
+          name: path.basename(file),
+          path: file,
+        ));
+      }
+      return true;
+    }
+
     var image = await Pasteboard.image;
     if (image == null) {
-      return;
+      return false;
     }
 
     var processedAttachment =
@@ -1455,6 +1466,8 @@ class MessageInputState extends State<MessageInput> {
         widget.addAttachment?.call(processedAttachment);
       });
     }
+
+    return true;
   }
 
   void onPopped(ScopePopped event) {
