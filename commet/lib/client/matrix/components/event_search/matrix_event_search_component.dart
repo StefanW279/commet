@@ -95,6 +95,20 @@ class MatrixEncryptedRoomEventSearchSession extends EventSearchSession {
       }
     }
 
+    if (params.requireAudio) {
+      if (!event.attachmentMimetype.startsWith('audio/')) {
+        return false;
+      }
+    }
+
+    if (params.requireMedia) {
+      if (!Mime.imageTypes.contains(event.attachmentMimetype) &&
+          !Mime.videoTypes.contains(event.attachmentMimetype) &&
+          !event.attachmentMimetype.startsWith('audio/')) {
+        return false;
+      }
+    }
+
     if (params.requireUrl) {
       if (!(event.plaintextBody.contains("https://") ||
           event.plaintextBody.contains("http://"))) {
@@ -142,6 +156,12 @@ class MatrixSearchParameters {
 
   bool requireAttachment;
 
+  bool requireAudio;
+
+  bool requireMedia;
+
+  bool requireLink;
+
   List<String> words;
 
   String? requiredSender;
@@ -154,6 +174,9 @@ class MatrixSearchParameters {
     this.requireImage = false,
     this.requireVideo = false,
     this.requireAttachment = false,
+    this.requireAudio = false,
+    this.requireMedia = false,
+    this.requireLink = false,
     this.requiredSender,
     this.requiredType,
   });
@@ -162,6 +185,8 @@ class MatrixSearchParameters {
   static const String hasImageString = 'has:image';
   static const String hasVideoString = 'has:video';
   static const String hasFileString = 'has:file';
+  static const String hasAudioString = 'has:audio';
+  static const String hasMediaString = 'has:media';
 
   static MatrixSearchParameters parse(String query) {
     var words = query.split(' ');
@@ -185,9 +210,13 @@ class MatrixSearchParameters {
     bool requireImage = words.contains(hasImageString);
     bool requireVideo = words.contains(hasVideoString);
     bool requireAttachment = words.contains(hasFileString);
+    bool requireAudio = words.contains(hasAudioString);
+    bool requireMedia = words.contains(hasMediaString);
 
     words.remove(hasLinkString);
     words.remove(hasFileString);
+    words.remove(hasAudioString);
+    words.remove(hasMediaString);
     words.remove(hasImageString);
     words.remove(hasVideoString);
 
@@ -197,6 +226,9 @@ class MatrixSearchParameters {
       requireImage: requireImage,
       requireVideo: requireVideo,
       requireAttachment: requireAttachment,
+      requireAudio: requireAudio,
+      requireMedia: requireMedia,
+      requireLink: requireUrl,
       requiredSender: requiredSender,
       requiredType: requiredType,
     );
