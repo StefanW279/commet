@@ -232,13 +232,14 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
 
   void _selectSuggestion(String suggestion) {
     final value = controller.text;
-    final match = RegExp(r'has:\\S*\\$').firstMatch(value);
+    final tokens = value.split(RegExp(r'\\s+'));
+    final token = tokens.isNotEmpty ? tokens.last : '';
 
-    final nextValue = match == null
-        ? (value.trim().isEmpty
-            ? 'has:$suggestion '
-            : '${value.trim()} has:$suggestion ')
-        : '${value.substring(0, match.start)}has:$suggestion ';
+    final nextValue = token.toLowerCase().startsWith('has:')
+        ? value.substring(0, value.length - token.length) + 'has:' + suggestion + ' '
+        : (value.trim().isEmpty
+            ? 'has:' + suggestion + ' '
+            : value.trim() + ' has:' + suggestion + ' ');
 
     controller.value = TextEditingValue(
       text: nextValue,
