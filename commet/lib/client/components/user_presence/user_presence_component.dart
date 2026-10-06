@@ -7,6 +7,7 @@ enum UserPresenceStatus {
   unknown,
   online,
   unavailable,
+  doNotDisturb,
 }
 
 enum PresenceMessageType {
@@ -33,6 +34,7 @@ extension UserPresenceColor on UserPresenceStatus {
       UserPresenceStatus.offline => Colors.grey,
       UserPresenceStatus.online => Colors.lightGreen,
       UserPresenceStatus.unavailable => Colors.amber,
+      UserPresenceStatus.doNotDisturb => Colors.red,
       UserPresenceStatus.unknown => Colors.grey,
     };
   }

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+
 import 'package:commet/client/components/profile/profile_component.dart';
 import 'package:commet/client/components/widgets/widget_component.dart';
 import 'package:commet/config/layout_config.dart';
@@ -67,6 +69,13 @@ class _CurrentSessionPanelState extends State<CurrentSessionPanel> {
     if (clientManager!.clients.length == 1) {
       current = clientManager!.clients.first.self;
     }
+
+    final presenceClient = clientManager!.clients.length == 1
+        ? clientManager!.clients.first
+        : clientManager!.clients
+            .where(
+                (client) => client.identifier == preferences.filterClient.value)
+            .firstOrNull;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 0, 0, 0),
@@ -187,6 +196,7 @@ class _CurrentSessionPanelState extends State<CurrentSessionPanel> {
                     ),
                     UserPanelSettings(
                       height: profileHeight,
+                      client: presenceClient,
                     )
                   ],
                 ),

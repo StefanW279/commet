@@ -20,6 +20,29 @@ export 'package:commet/client/space.dart';
 export 'package:commet/client/peer.dart';
 export 'package:commet/client/timeline.dart';
 
+enum PresenceStatus {
+  online,
+  idle,
+  doNotDisturb,
+  invisible,
+}
+
+extension PresenceStatusLabel on PresenceStatus {
+  String get label => switch (this) {
+        PresenceStatus.online => "Online",
+        PresenceStatus.idle => "Idle",
+        PresenceStatus.doNotDisturb => "Do Not Disturb",
+        PresenceStatus.invisible => "Invisible",
+      };
+
+  IconData get icon => switch (this) {
+        PresenceStatus.online => Icons.circle,
+        PresenceStatus.idle => Icons.nightlight_round,
+        PresenceStatus.doNotDisturb => Icons.do_not_disturb_on,
+        PresenceStatus.invisible => Icons.visibility_off,
+      };
+}
+
 enum LoginType { loginPassword, token }
 
 class ClientConnectionStatusUpdate {
@@ -204,6 +227,11 @@ abstract class Client {
 
   /// Queries the server for information about a room which this client is not a member of
   Future<RoomPreview?> getRoomPreview(String address);
+
+  /// Set the current user's Discord-style presence status.
+  Future<void> setPresence(PresenceStatus status);
+
+  PresenceStatus get currentPresenceStatus;
 
   /// Update the current user avatar
   Future<void> setAvatar(Uint8List bytes, String mimeType);

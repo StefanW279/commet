@@ -294,4 +294,10 @@ class MatrixBackgroundClient implements Client {
   // TODO: implement onTimelineEvent
   Stream<(Room, TimelineEvent)> get onTimelineEvent =>
       throw UnimplementedError();
+
+  @override
+  PresenceStatus get currentPresenceStatus => PresenceStatus.online;
+
+  @override
+  Future<void> setPresence(PresenceStatus status) async {}
 }

@@ -6,6 +6,7 @@ import 'package:commet/client/components/push_notification/linux/linux_notifier.
 import 'package:commet/client/components/push_notification/modifiers/linux_notification_formatting.dart';
 import 'package:commet/client/components/push_notification/modifiers/notification_modifiers.dart';
 import 'package:commet/client/components/push_notification/modifiers/suppress_active_room.dart';
+import 'package:commet/client/components/push_notification/modifiers/suppress_dnd.dart';
 import 'package:commet/client/components/push_notification/modifiers/suppress_other_device_active.dart';
 import 'package:commet/client/components/push_notification/notification_content.dart';
 import 'package:commet/client/components/push_notification/notifier.dart';
@@ -44,6 +45,7 @@ class NotificationManager {
 
     _modifiers.clear();
     addModifier(NotificationModifierSuppressActiveRoom());
+    addModifier(NotificationModifierSuppressDnd());
     if (BuildConfig.ANDROID) {
       addModifier(NotificationModifierSuppressOtherActiveDevice());
     }

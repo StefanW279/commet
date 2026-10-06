@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:commet/client/client.dart';
 import 'package:commet/client/components/user_presence/user_presence_component.dart';
 import 'package:commet/main.dart';
 import 'package:flutter/widgets.dart';
@@ -48,6 +49,15 @@ class UserPresenceLifecycleWatcher {
 
     if (clientManager != null) {
       for (var client in clientManager!.clients) {
+        // Respect an explicitly selected Discord-style presence. Lifecycle
+        // events must not turn Idle, Do Not Disturb, or Invisible back to
+        // Online/Unavailable.
+        final savedPresence = preferences.getPresenceStatus(client.identifier);
+        if (client.currentPresenceStatus != PresenceStatus.online ||
+            (savedPresence.isNotEmpty && savedPresence != "online")) {
+          continue;
+        }
+
         final component = client.getComponent<UserPresenceComponent>();
         if (component != null) {
           component.setStatus(state);

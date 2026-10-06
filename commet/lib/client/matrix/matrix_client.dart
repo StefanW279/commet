@@ -41,6 +41,9 @@ import 'matrix_room.dart';
 import 'matrix_space.dart';
 import 'package:vodozemac/vodozemac.dart' as vod;
 
+const String commetDndPresenceMarker = "commet:dnd";
+const String commetIdlePresenceMarker = "commet:idle";
+
 class MatrixClient extends Client {
   late matrix.Client _matrixClient;
   late final List<Component<MatrixClient>> componentsInternal;
@@ -266,6 +269,14 @@ class MatrixClient extends Client {
     bool loadingFromCache, {
     bool isBackgroundService = false,
   }) async {
+    final savedPresence = switch (preferences.getPresenceStatus(_id)) {
+      "idle" => PresenceStatus.idle,
+      "doNotDisturb" => PresenceStatus.doNotDisturb,
+      "invisible" => PresenceStatus.invisible,
+      _ => PresenceStatus.online,
+    };
+    _currentPresenceStatus = savedPresence;
+    _matrixClient.syncPresence = _presenceTypeFor(savedPresence);
     if (!_matrixClient.isLogged()) {
       await Diagnostics.general.timeAsync("Matrix client init", () async {
         await _matrixClient.init(
@@ -287,6 +298,24 @@ class MatrixClient extends Client {
     _matrixClient.getConfig().then((value) {
       config = value;
     });
+
+    if (_matrixClient.isLogged()) {
+      try {
+        final serverPresence =
+            await _matrixClient.getPresence(_matrixClient.userID!);
+        final serverStatus = _presenceStatusFromServer(serverPresence);
+
+        if (serverStatus != null) {
+          _currentPresenceStatus = serverStatus;
+          await preferences.setPresenceStatus(_id, serverStatus.name);
+          _matrixClient.syncPresence = _presenceTypeFor(serverStatus);
+        } else {
+          await _applyPresence(savedPresence);
+        }
+      } catch (error, trace) {
+        Log.onError(error, trace, content: "Unable to restore presence");
+      }
+    }
 
     _updateRoomslist();
     _updateSpacesList();
@@ -335,6 +364,84 @@ class MatrixClient extends Client {
       }
     }
   }
+
+  /// Sets the Discord-style presence and publishes DND separately from
+  /// Matrix's server-managed online/unavailable state.
+  Future<void> setPresence(PresenceStatus status) async {
+    await _applyPresence(status);
+    _currentPresenceStatus = status;
+    await preferences.setPresenceStatus(_id, status.name);
+  }
+
+  Future<void> _applyPresence(PresenceStatus status) async {
+    _matrixClient.syncPresence = _presenceTypeFor(status);
+
+    final userId = _matrixClient.userID;
+    if (userId == null) return;
+
+    final current = await _matrixClient.getPresence(userId);
+
+    if (status == PresenceStatus.doNotDisturb ||
+        status == PresenceStatus.idle) {
+      final marker = status == PresenceStatus.doNotDisturb
+          ? commetDndPresenceMarker
+          : commetIdlePresenceMarker;
+
+      if (current.statusMsg != commetDndPresenceMarker &&
+          current.statusMsg != commetIdlePresenceMarker) {
+        final existingMessage = current.statusMsg;
+        if (existingMessage != null && existingMessage.isNotEmpty) {
+          await preferences.setPresenceStatusMessage(_id, existingMessage);
+        }
+      }
+
+      await _matrixClient.setPresence(
+        userId,
+        matrix.PresenceType.unavailable,
+        statusMsg: marker,
+      );
+      return;
+    }
+
+    final savedMessage = preferences.getPresenceStatusMessage(_id);
+    final statusMessage = current.statusMsg == commetDndPresenceMarker ||
+            current.statusMsg == commetIdlePresenceMarker
+        ? savedMessage
+        : current.statusMsg;
+
+    await _matrixClient.setPresence(
+      userId,
+      _presenceTypeFor(status),
+      statusMsg: statusMessage?.isEmpty == true ? null : statusMessage,
+    );
+  }
+
+  PresenceStatus? _presenceStatusFromServer(
+      matrix.GetPresenceResponse presence) {
+    return switch (presence.statusMsg) {
+      commetDndPresenceMarker => PresenceStatus.doNotDisturb,
+      commetIdlePresenceMarker => PresenceStatus.idle,
+      _ => switch (presence.presence) {
+          matrix.PresenceType.online => PresenceStatus.online,
+          matrix.PresenceType.offline => PresenceStatus.invisible,
+          matrix.PresenceType.unavailable => PresenceStatus.idle,
+        },
+    };
+  }
+
+  matrix.PresenceType _presenceTypeFor(PresenceStatus status) {
+    return switch (status) {
+      PresenceStatus.online => matrix.PresenceType.online,
+      PresenceStatus.idle => matrix.PresenceType.unavailable,
+      PresenceStatus.doNotDisturb => matrix.PresenceType.unavailable,
+      PresenceStatus.invisible => matrix.PresenceType.offline,
+    };
+  }
+
+  PresenceStatus _currentPresenceStatus = PresenceStatus.online;
+
+  @override
+  PresenceStatus get currentPresenceStatus => _currentPresenceStatus;
 
   @override
   bool isLoggedIn() => _matrixClient.isLogged();
