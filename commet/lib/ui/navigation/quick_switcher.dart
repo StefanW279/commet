@@ -311,7 +311,8 @@ class _SearchFilters {
               a is! VideoAttachment,
         ),
       'audio' => attachments.any(
-          (a) => a.mimeType?.startsWith('audio/') == true,
+          (a) => a is FileAttachment &&
+              a.mimeType?.startsWith('audio/') == true,
         ),
       'attachment' || 'attachments' => attachments.isNotEmpty,
       _ => false,
@@ -553,8 +554,6 @@ class _QuickSwitcherState extends State<QuickSwitcher> {
         }
 
         try {
-          final timeline = await room.getTimeline();
-
           final timeline = await room.getTimeline();
           final query = filters.text.toLowerCase();
 
