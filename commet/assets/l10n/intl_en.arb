@@ -2291,5 +2291,14 @@
     "placeholders": {
       "roomName": {}
     }
+  },
+  "notificationSenderViaProfile": "{profileName} via {sender}",
+  "@notificationSenderViaProfile": {
+    "description": "Sender of a notification for a message which was sent with a per-message profile",
+    "type": "text",
+    "placeholders": {
+      "profileName": {},
+      "sender": {}
+    }
   }
 }
