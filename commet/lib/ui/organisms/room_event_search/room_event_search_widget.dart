@@ -7,6 +7,7 @@ import 'package:commet/ui/molecules/timeline_events/timeline_event_view_single.d
 import 'package:commet/utils/common_strings.dart';
 import 'package:commet/utils/debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:implicitly_animated_list/implicitly_animated_list.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
 
@@ -149,7 +150,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
             searchSession != null &&
             loading == false)
           Flexible(
-              child: Center(child: tiamat.Text.labelLow("No results found"))),
+              child: Center(child: tiamat.Text.labelLow(Intl.message("No results found", name: "searchNoResultsFound")))),
         if (loading ||
             (currentResults?.isNotEmpty == true &&
                 searchSession?.canContinueSearch == true))
@@ -167,7 +168,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
                     ? Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
                         child: tiamat.TextButton(
-                          "Next",
+                          Intl.message("Next", name: "searchNext"),
                           icon: Icons.search,
                           highlighted: true,
                           highlightColor:
