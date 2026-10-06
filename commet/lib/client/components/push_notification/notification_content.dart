@@ -26,8 +26,13 @@ class ErrorNotificationContent extends NotificationContent {
 }
 
 class GenericRoomInviteNotificationContent extends NotificationContent {
-  GenericRoomInviteNotificationContent(
-      {required super.title, required super.content});
+  String? clientId;
+
+  GenericRoomInviteNotificationContent({
+    required super.title,
+    required super.content,
+    this.clientId,
+  });
 }
 
 class MessageNotificationContent extends NotificationContent {
