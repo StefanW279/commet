@@ -254,33 +254,48 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   String? nextBatchToken;
 
-  bool _matchesParameters(MatrixSearchParameters params, matrix.MatrixEvent event) {
-    if (params.requireImage &&
-        !Mime.imageTypes.contains(event.attachmentMimetype)) {
+  bool _matchesParameters(
+    MatrixSearchParameters params,
+    matrix.MatrixEvent event,
+  ) {
+    final content = event.content;
+    final msgType = content['msgtype']?.toString() ?? '';
+    final url = content['url']?.toString() ?? '';
+    final file = content['file'];
+    final hasAttachment = msgType == 'm.image' ||
+        msgType == 'm.video' ||
+        msgType == 'm.audio' ||
+        msgType == 'm.file' ||
+        url.isNotEmpty ||
+        file != null;
+
+    String mimeType = content['info'] is Map
+        ? (content['info']['mimetype']?.toString() ?? '')
+        : '';
+
+    if (params.requireImage && !Mime.imageTypes.contains(mimeType)) {
       return false;
     }
-    if (params.requireVideo &&
-        !Mime.videoTypes.contains(event.attachmentMimetype)) {
+    if (params.requireVideo && !Mime.videoTypes.contains(mimeType)) {
       return false;
     }
-    if (params.requireAudio &&
-        !event.attachmentMimetype.startsWith('audio/')) {
+    if (params.requireAudio && !mimeType.startsWith('audio/')) {
       return false;
     }
     if (params.requireMedia &&
-        !Mime.imageTypes.contains(event.attachmentMimetype) &&
-        !Mime.videoTypes.contains(event.attachmentMimetype) &&
-        !event.attachmentMimetype.startsWith('audio/')) {
+        !Mime.imageTypes.contains(mimeType) &&
+        !Mime.videoTypes.contains(mimeType) &&
+        !mimeType.startsWith('audio/')) {
       return false;
     }
-    if (params.requireAttachment && !event.hasAttachment) {
+    if (params.requireAttachment && !hasAttachment) {
       return false;
     }
     if (params.requireFile &&
-        (!event.hasAttachment ||
-            Mime.imageTypes.contains(event.attachmentMimetype) ||
-            Mime.videoTypes.contains(event.attachmentMimetype) ||
-            event.attachmentMimetype.startsWith('audio/'))) {
+        (!hasAttachment ||
+            Mime.imageTypes.contains(mimeType) ||
+            Mime.videoTypes.contains(mimeType) ||
+            mimeType.startsWith('audio/'))) {
       return false;
     }
     return true;
