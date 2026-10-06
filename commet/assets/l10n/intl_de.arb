@@ -1878,4 +1878,76 @@
         "type": "text",
         "placeholders": {}
     }
+  "draftPreview": "Entwurf: {text}",
+  "@draftPreview": {
+    "description": "Vorschau in der Raumliste, wenn ein Nachrichtenentwurf vorhanden ist",
+    "type": "text",
+    "placeholders": {"text": {}}
+  },
+  "use24HourTime": "24-Stunden-Format verwenden",
+  "@use24HourTime": {
+    "description": "Bezeichnung für die Einstellung zur 24-Stunden-Zeitdarstellung",
+    "type": "text",
+    "placeholders": {}
+  },
+  "use24HourTimeDescription": "Zeiten im 24-Stunden-Format statt im 12-Stunden-Format anzeigen",
+  "@use24HourTimeDescription": {
+    "description": "Beschreibung der Einstellung für das 24-Stunden-Format",
+    "type": "text",
+    "placeholders": {}
+  },
+  "webPushEnabled": "Web-Push aktiviert",
+  "@webPushEnabled": {
+    "description": "Schaltflächenbezeichnung, wenn Web-Push-Benachrichtigungen aktiviert sind",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enableWebPush": "Web-Push aktivieren",
+  "@enableWebPush": {
+    "description": "Schaltflächenbezeichnung zum Aktivieren von Web-Push-Benachrichtigungen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "webPushDescription": "Browser-Benachrichtigungen zulassen, um Nachrichten zu erhalten, wenn Commet geschlossen ist.",
+  "@webPushDescription": {
+    "description": "Beschreibung für Web-Push-Benachrichtigungen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "presenceSetTooltip": "Präsenz festlegen",
+  "@presenceSetTooltip": {
+    "description": "Tooltip für das Steuerelement zur Auswahl des aktuellen Präsenzstatus",
+    "type": "text",
+    "placeholders": {}
+  },
+  "presenceOnline": "Online",
+  "@presenceOnline": {
+    "description": "Bezeichnung für einen Präsenzstatus",
+    "type": "text",
+    "placeholders": {}
+  },
+  "presenceIdle": "Inaktiv",
+  "@presenceIdle": {
+    "description": "Bezeichnung für einen Präsenzstatus",
+    "type": "text",
+    "placeholders": {}
+  },
+  "presenceDoNotDisturb": "Nicht stören",
+  "@presenceDoNotDisturb": {
+    "description": "Bezeichnung für einen Präsenzstatus",
+    "type": "text",
+    "placeholders": {}
+  },
+  "presenceInvisible": "Unsichtbar",
+  "@presenceInvisible": {
+    "description": "Bezeichnung für einen Präsenzstatus",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notificationsSuppressedDoNotDisturb": "Benachrichtigungen werden unterdrückt, solange „Nicht stören“ aktiviert ist",
+  "@notificationsSuppressedDoNotDisturb": {
+    "description": "Grund, der angezeigt wird, wenn eine Benachrichtigung wegen „Nicht stören“ unterdrückt wird",
+    "type": "text",
+    "placeholders": {}
+  }
 }
