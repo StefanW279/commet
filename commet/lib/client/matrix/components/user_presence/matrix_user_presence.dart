@@ -69,10 +69,10 @@ class MatrixUserPresenceComponent
       commetDndPresenceMarker => UserPresenceStatus.doNotDisturb,
       commetIdlePresenceMarker => UserPresenceStatus.unavailable,
       _ => switch (presence.presence) {
-            PresenceType.offline => UserPresenceStatus.offline,
-            PresenceType.online => UserPresenceStatus.online,
-            PresenceType.unavailable => UserPresenceStatus.unavailable,
-          },
+          PresenceType.offline => UserPresenceStatus.offline,
+          PresenceType.online => UserPresenceStatus.online,
+          PresenceType.unavailable => UserPresenceStatus.unavailable,
+        },
     };
 
     UserPresenceMessage? message = null;
