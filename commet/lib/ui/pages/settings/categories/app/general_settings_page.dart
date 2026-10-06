@@ -144,6 +144,11 @@ class GeneralSettingsPageState extends State<GeneralSettingsPage> {
           mode: TileType.surfaceContainerLow,
           child: Column(children: [
             BooleanPreferenceToggle(
+              preference: preferences.use24HourTime,
+              title: "Use 24-hour time",
+              description: "Display times using the 24-hour clock instead of the 12-hour clock",
+            ),
+            BooleanPreferenceToggle(
               preference: preferences.askBeforeDeletingMessageEnabled,
               title: labelAskBeforeDeletingMessageToggle,
               description: labelAskBeforeDeletingMessageDescription,
