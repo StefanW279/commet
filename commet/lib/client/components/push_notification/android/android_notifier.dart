@@ -95,6 +95,7 @@ class AndroidNotifier implements Notifier {
       var content = GenericRoomInviteNotificationContent(
         content: "You received an invitation to chat!",
         title: "Room Invite",
+        clientId: client.identifier,
       );
 
       await NotificationManager.notify(content);
