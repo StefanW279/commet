@@ -20,15 +20,17 @@ class NotificationModifierSuppressDnd implements NotificationModifier {
     }
 
     final client = clientManager?.getClient(clientId);
-    final isDnd = client?.currentPresenceStatus == PresenceStatus.doNotDisturb ||
-        preferences.getPresenceStatus(clientId) == PresenceStatus.doNotDisturb.name;
+    final isDnd =
+        client?.currentPresenceStatus == PresenceStatus.doNotDisturb ||
+            preferences.getPresenceStatus(clientId) ==
+                PresenceStatus.doNotDisturb.name;
 
     if (!isDnd) {
       return content;
     }
 
-    onNotificationRejected?.call(
-        "Notifications are suppressed while Do Not Disturb is enabled");
+    onNotificationRejected
+        ?.call("Notifications are suppressed while Do Not Disturb is enabled");
     return null;
   }
 }
