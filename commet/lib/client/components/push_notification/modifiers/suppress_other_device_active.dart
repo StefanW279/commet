@@ -61,12 +61,12 @@ class NotificationModifierSuppressOtherActiveDevice
 
         var diff = DateTime.now().difference(time);
 
-        if (diff.inMinutes < 10) {
+        if (diff.inMinutes < 1) {
           Log.i(
               "Suppressing this notification because there is another device which has been active recently!\nThe device which was active is: ${device.displayName} : ${device.deviceId}");
 
           onNotificationRejected?.call(
-              "Another device has been active within the last 10 minutes");
+              "Another device has been active within the last minute");
           return null;
         }
       }
