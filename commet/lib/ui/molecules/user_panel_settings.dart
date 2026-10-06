@@ -57,7 +57,8 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
               width: height,
               height: height,
               child: PopupMenuButton<PresenceStatus>(
-                tooltip: Intl.message("Set presence", name: "presenceSetTooltip"),
+                tooltip:
+                    Intl.message("Set presence", name: "presenceSetTooltip"),
                 padding: EdgeInsets.zero,
                 icon: Icon(
                   widget.client!.currentPresenceStatus.icon,

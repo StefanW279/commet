@@ -32,8 +32,10 @@ extension PresenceStatusLabel on PresenceStatus {
   String get label => switch (this) {
         PresenceStatus.online => Intl.message("Online", name: "presenceOnline"),
         PresenceStatus.idle => Intl.message("Idle", name: "presenceIdle"),
-        PresenceStatus.doNotDisturb => Intl.message("Do Not Disturb", name: "presenceDoNotDisturb"),
-        PresenceStatus.invisible => Intl.message("Invisible", name: "presenceInvisible"),
+        PresenceStatus.doNotDisturb =>
+          Intl.message("Do Not Disturb", name: "presenceDoNotDisturb"),
+        PresenceStatus.invisible =>
+          Intl.message("Invisible", name: "presenceInvisible"),
       };
 
   IconData get icon => switch (this) {

@@ -30,8 +30,9 @@ class NotificationModifierSuppressDnd implements NotificationModifier {
       return content;
     }
 
-    onNotificationRejected
-        ?.call(Intl.message("Notifications are suppressed while Do Not Disturb is enabled", name: "notificationsSuppressedDoNotDisturb"));
+    onNotificationRejected?.call(Intl.message(
+        "Notifications are suppressed while Do Not Disturb is enabled",
+        name: "notificationsSuppressedDoNotDisturb"));
     return null;
   }
 }

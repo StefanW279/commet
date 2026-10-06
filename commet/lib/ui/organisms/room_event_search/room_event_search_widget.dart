@@ -150,7 +150,9 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
             searchSession != null &&
             loading == false)
           Flexible(
-              child: Center(child: tiamat.Text.labelLow(Intl.message("No results found", name: "searchNoResultsFound")))),
+              child: Center(
+                  child: tiamat.Text.labelLow(Intl.message("No results found",
+                      name: "searchNoResultsFound")))),
         if (loading ||
             (currentResults?.isNotEmpty == true &&
                 searchSession?.canContinueSearch == true))
