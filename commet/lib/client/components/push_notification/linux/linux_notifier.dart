@@ -46,6 +46,10 @@ class LinuxNotifier implements Notifier {
 
   static int notificationId = 0;
 
+  // Keep track of notification IDs so a read room can dismiss only its
+  // notifications instead of affecting notifications from other rooms.
+  static final Map<String, Set<int>> _notificationIdsByRoom = {};
+
   late LinuxServerCapabilities capabilities;
 
   final service = LauncherEntryService(
@@ -221,8 +225,11 @@ class LinuxNotifier implements Notifier {
     var player = NotificationManager.getSoundPlayer();
     player.open(Media("asset:///assets/sound/message.ogg"));
 
-    flutterLocalNotificationsPlugin?.show(
-        notificationId++, title, notificationBody,
+    final id = notificationId++;
+    _notificationIdsByRoom.putIfAbsent(content.roomId, () => {}).add(id);
+
+    await flutterLocalNotificationsPlugin?.show(
+        id, title, notificationBody,
         notificationDetails: details, payload: jsonEncode(payload));
   }
 
@@ -300,7 +307,14 @@ class LinuxNotifier implements Notifier {
   bool get needsToken => false;
 
   @override
-  Future<void> clearNotifications(Room room) async {}
+  Future<void> clearNotifications(Room room) async {
+    final ids = _notificationIdsByRoom.remove(room.identifier);
+    if (ids == null) return;
+
+    for (final id in ids) {
+      await flutterLocalNotificationsPlugin?.cancel(id);
+    }
+  }
 
   @override
   Future<void> disableBadges() async {
