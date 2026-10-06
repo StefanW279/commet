@@ -35,6 +35,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
 
   static const _filterSuggestions = <String>['image', 'video', 'media', 'file', 'audio', 'link', 'attachment'];
   List<String> suggestions = const [];
+  int _searchGeneration = 0;
 
   @override
   void initState() {
@@ -184,6 +185,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   }
 
   void onTextChanged(String value) {
+    final generation = ++_searchGeneration;
     final nextSuggestions = _getSuggestions(value);
     final suggestionsChanged =
         nextSuggestions.length != suggestions.length ||
@@ -205,7 +207,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
       });
     }
 
-    if (value.trim().isEmpty || nextSuggestions.isNotEmpty || _isIncompleteFilter(value)) {
+    if (value.trim().isEmpty || _isIncompleteFilter(value)) {
       if (loading) {
         setState(() => loading = false);
       }
@@ -213,14 +215,17 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
     }
 
     // Search only after the user pauses typing.
-    debouncer.run(() => startSearch(value));
+    debouncer.run(() async {
+      if (generation != _searchGeneration) return;
+      await startSearch(value, generation);
+    });
     if (!loading) {
       setState(() => loading = true);
     }
   }
 
   List<String> _getSuggestions(String value) {
-    final token = value.trim().split(RegExp(r'\\s+')).last.toLowerCase();
+    final token = value.trim().split(RegExp(r'\s+')).last.toLowerCase();
     if (!token.startsWith('has:')) return const [];
 
     final partial = token.substring(4);
@@ -231,13 +236,58 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
 
   bool _isIncompleteFilter(String value) {
     final token = value.trim().split(RegExp(r'\\s+')).last.toLowerCase();
-    return token == 'has:' ||
-        (token.startsWith('has:') && suggestions.isNotEmpty);
+    if (!token.startsWith('has:')) return false;
+    final partial = token.substring(4);
+    return partial.isEmpty ||
+        !_filterSuggestions.contains(partial);
   }
 
   void _selectSuggestion(String suggestion) {
     final value = controller.text;
-    final match = RegExp(r'has:[^\\s]*$', caseSensitive: false).firstMatch(value);
+    final match = RegExp(r'has:[^\s]*
+    final nextValue = match == null
+        ? (value.trim().isEmpty
+            ? 'has:' + suggestion + ' '
+            : value.trim() + ' has:' + suggestion + ' ')
+        : value.substring(0, match.start) + 'has:' + suggestion + ' ';
+
+    controller.value = TextEditingValue(
+      text: nextValue,
+      selection: TextSelection.collapsed(offset: nextValue.length),
+    );
+    onTextChanged(nextValue);
+  }
+
+  IconData _suggestionIcon(String suggestion) {
+    return switch (suggestion) {
+      'image' => Icons.image_outlined,
+      'video' => Icons.video_file_outlined,
+      'media' => Icons.perm_media_outlined,
+      'file' => Icons.attach_file,
+      'audio' => Icons.audio_file_outlined,
+      'link' => Icons.link,
+      'attachment' => Icons.attachment_outlined,
+      _ => Icons.filter_alt_outlined,
+    };
+  }
+  Future<void> startSearch(String value, int generation) async {
+    var search = widget.room.client.getComponent<EventSearchComponent>()!;
+
+    final session = await search.createSearchSession(widget.room);
+    if (generation != _searchGeneration) return;
+    searchSession = session;
+    var stream = searchSession!.startSearch(value);
+    currentSubscription = stream.listen(onResultsChanged);
+  }
+
+  void onResultsChanged(List<TimelineEvent<Client>> results) {
+    setState(() {
+      loading = searchSession?.currentlySearching == true;
+      currentResults = results;
+    });
+  }
+}
+, caseSensitive: false).firstMatch(value);
     final nextValue = match == null
         ? (value.trim().isEmpty
             ? 'has:' + suggestion + ' '
