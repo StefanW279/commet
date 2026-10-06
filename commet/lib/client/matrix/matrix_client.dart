@@ -301,7 +301,17 @@ class MatrixClient extends Client {
 
     if (_matrixClient.isLogged()) {
       try {
-        await _applyPresence(savedPresence);
+        final serverPresence =
+            await _matrixClient.getPresence(_matrixClient.userID!);
+        final serverStatus = _presenceStatusFromServer(serverPresence);
+
+        if (serverStatus != null) {
+          _currentPresenceStatus = serverStatus;
+          await preferences.setPresenceStatus(_id, serverStatus.name);
+          _matrixClient.syncPresence = _presenceTypeFor(serverStatus);
+        } else {
+          await _applyPresence(savedPresence);
+        }
       } catch (error, trace) {
         Log.onError(error, trace, content: "Unable to restore presence");
       }
@@ -404,6 +414,18 @@ class MatrixClient extends Client {
       _presenceTypeFor(status),
       statusMsg: statusMessage?.isEmpty == true ? null : statusMessage,
     );
+  }
+
+  PresenceStatus? _presenceStatusFromServer(matrix.Presence presence) {
+    return switch (presence.statusMsg) {
+      commetDndPresenceMarker => PresenceStatus.doNotDisturb,
+      commetIdlePresenceMarker => PresenceStatus.idle,
+      _ => switch (presence.presence) {
+          matrix.PresenceType.online => PresenceStatus.online,
+          matrix.PresenceType.offline => PresenceStatus.invisible,
+          matrix.PresenceType.unavailable => PresenceStatus.idle,
+        },
+    };
   }
 
   matrix.PresenceType _presenceTypeFor(PresenceStatus status) {
