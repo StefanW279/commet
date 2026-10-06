@@ -250,6 +250,34 @@ class MatrixServerEventSearchSession extends EventSearchSession {
 
   String? nextBatchToken;
 
+  bool _matchesParameters(MatrixSearchParameters params, TimelineEvent event) {
+    final matrixEvent = event is MatrixTimelineEvent ? event.event : null;
+    if (matrixEvent == null) return false;
+
+    if (params.requireImage &&
+        !Mime.imageTypes.contains(matrixEvent.attachmentMimetype)) {
+      return false;
+    }
+    if (params.requireVideo &&
+        !Mime.videoTypes.contains(matrixEvent.attachmentMimetype)) {
+      return false;
+    }
+    if (params.requireAudio &&
+        !matrixEvent.attachmentMimetype.startsWith('audio/')) {
+      return false;
+    }
+    if (params.requireMedia &&
+        !Mime.imageTypes.contains(matrixEvent.attachmentMimetype) &&
+        !Mime.videoTypes.contains(matrixEvent.attachmentMimetype) &&
+        !matrixEvent.attachmentMimetype.startsWith('audio/')) {
+      return false;
+    }
+    if (params.requireAttachment && !matrixEvent.hasAttachment) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   bool get canContinueSearch => nextBatchToken != null;
 
