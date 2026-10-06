@@ -416,7 +416,8 @@ class MatrixClient extends Client {
     );
   }
 
-  PresenceStatus? _presenceStatusFromServer(matrix.GetPresenceResponse presence) {
+  PresenceStatus? _presenceStatusFromServer(
+      matrix.GetPresenceResponse presence) {
     return switch (presence.statusMsg) {
       commetDndPresenceMarker => PresenceStatus.doNotDisturb,
       commetIdlePresenceMarker => PresenceStatus.idle,
