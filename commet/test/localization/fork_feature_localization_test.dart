@@ -13,7 +13,9 @@ void main() {
   });
 
   test('fork feature localization resolves German translations', () {
-    expect(Intl.message('Draft: ${'Hallo'}', name: 'draftPreview', args: ['Hallo']),
+    expect(
+        Intl.message('Draft: ${'Hallo'}',
+            name: 'draftPreview', args: ['Hallo']),
         'Entwurf: Hallo');
     expect(Intl.message('Use 24-hour time', name: 'use24HourTime'),
         '24-Stunden-Format verwenden');
