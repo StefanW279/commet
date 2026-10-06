@@ -31,11 +31,12 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
 
   Debouncer debouncer = Debouncer(delay: const Duration(milliseconds: 700));
 
-  bool loading = false;
-
-  static const _filterSuggestions = <String>['image', 'video', 'media', 'file', 'audio', 'link', 'attachment'];
+  static const _filterSuggestions = <String>[
+    'image', 'video', 'media', 'file', 'audio', 'link', 'attachment'
+  ];
   List<String> suggestions = const [];
-  int _searchGeneration = 0;
+
+  bool loading = false;
 
   @override
   void initState() {
@@ -98,7 +99,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
                     ListTile(
                       dense: true,
                       leading: Icon(_suggestionIcon(suggestion), size: 18),
-                      title: Text('has:' + suggestion),
+                      title: Text('has:$suggestion'),
                       onTap: () => _selectSuggestion(suggestion),
                     ),
                 ],
@@ -185,47 +186,33 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   }
 
   void onTextChanged(String value) {
-    final generation = ++_searchGeneration;
     final nextSuggestions = _getSuggestions(value);
-    final suggestionsChanged =
-        nextSuggestions.length != suggestions.length ||
-        nextSuggestions.asMap().entries.any(
-              (entry) => suggestions[entry.key] != entry.value,
-            );
 
-    // Cancel the old search without rebuilding the results widget on every
-    // keystroke. Rebuilding the animated result list here was the main source
-    // of input lag.
     currentSubscription?.cancel();
     currentSubscription = null;
-    searchSession = null;
     debouncer.cancel();
 
-    if (suggestionsChanged) {
-      setState(() {
-        suggestions = nextSuggestions;
-      });
-    }
+    setState(() {
+      currentResults = null;
+      searchSession = null;
+      currentStream = null;
+      suggestions = nextSuggestions;
+      loading = false;
+    });
 
     if (value.trim().isEmpty || _isIncompleteFilter(value)) {
-      if (loading) {
-        setState(() => loading = false);
-      }
       return;
     }
 
-    // Search only after the user pauses typing.
-    debouncer.run(() async {
-      if (generation != _searchGeneration) return;
-      await startSearch(value, generation);
+    debouncer.run(() => startSearch(value));
+    setState(() {
+      loading = true;
     });
-    if (!loading) {
-      setState(() => loading = true);
-    }
   }
 
   List<String> _getSuggestions(String value) {
-    final token = value.trim().split(RegExp(r'\s+')).last.toLowerCase();
+    final parts = value.trim().split(RegExp(r'\\s+'));
+    final token = parts.isEmpty ? '' : parts.last.toLowerCase();
     if (!token.startsWith('has:')) return const [];
 
     final partial = token.substring(4);
@@ -235,21 +222,23 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
   }
 
   bool _isIncompleteFilter(String value) {
-    final token = value.trim().split(RegExp(r'\\s+')).last.toLowerCase();
+    final parts = value.trim().split(RegExp(r'\\s+'));
+    final token = parts.isEmpty ? '' : parts.last.toLowerCase();
     if (!token.startsWith('has:')) return false;
+
     final partial = token.substring(4);
-    return partial.isEmpty ||
-        !_filterSuggestions.contains(partial);
+    return partial.isEmpty || !_filterSuggestions.contains(partial);
   }
 
   void _selectSuggestion(String suggestion) {
     final value = controller.text;
-    final match = RegExp(r'has:[^\s]*
+    final match = RegExp(r'has:\\S*\\$').firstMatch(value);
+
     final nextValue = match == null
         ? (value.trim().isEmpty
-            ? 'has:' + suggestion + ' '
-            : value.trim() + ' has:' + suggestion + ' ')
-        : value.substring(0, match.start) + 'has:' + suggestion + ' ';
+            ? 'has:$suggestion '
+            : '${value.trim()} has:$suggestion ')
+        : '${value.substring(0, match.start)}has:$suggestion ';
 
     controller.value = TextEditingValue(
       text: nextValue,
@@ -270,49 +259,7 @@ class _RoomEventSearchWidgetState extends State<RoomEventSearchWidget> {
       _ => Icons.filter_alt_outlined,
     };
   }
-  Future<void> startSearch(String value, int generation) async {
-    var search = widget.room.client.getComponent<EventSearchComponent>()!;
 
-    final session = await search.createSearchSession(widget.room);
-    if (generation != _searchGeneration) return;
-    searchSession = session;
-    var stream = searchSession!.startSearch(value);
-    currentSubscription = stream.listen(onResultsChanged);
-  }
-
-  void onResultsChanged(List<TimelineEvent<Client>> results) {
-    setState(() {
-      loading = searchSession?.currentlySearching == true;
-      currentResults = results;
-    });
-  }
-}
-, caseSensitive: false).firstMatch(value);
-    final nextValue = match == null
-        ? (value.trim().isEmpty
-            ? 'has:' + suggestion + ' '
-            : value.trim() + ' has:' + suggestion + ' ')
-        : value.substring(0, match.start) + 'has:' + suggestion + ' ';
-
-    controller.value = TextEditingValue(
-      text: nextValue,
-      selection: TextSelection.collapsed(offset: nextValue.length),
-    );
-    onTextChanged(nextValue);
-  }
-
-  IconData _suggestionIcon(String suggestion) {
-    return switch (suggestion) {
-      'image' => Icons.image_outlined,
-      'video' => Icons.video_file_outlined,
-      'media' => Icons.perm_media_outlined,
-      'file' => Icons.attach_file,
-      'audio' => Icons.audio_file_outlined,
-      'link' => Icons.link,
-      'attachment' => Icons.attachment_outlined,
-      _ => Icons.filter_alt_outlined,
-    };
-  }
   void startSearch(String value) async {
     var search = widget.room.client.getComponent<EventSearchComponent>()!;
 
