@@ -309,7 +309,7 @@ class MatrixServerEventSearchSession extends EventSearchSession {
     }
 
     var criteria = matrix.RoomEventsCriteria(
-      searchTerm: parameters.words.isEmpty ? '*' : parameters.words.join(" "),
+      searchTerm: parameters.words.join(" "),
       orderBy: matrix.SearchOrder.recent,
       filter: matrix.SearchFilter(
           rooms: [timeline.room.identifier],
@@ -336,6 +336,10 @@ class MatrixServerEventSearchSession extends EventSearchSession {
       if (resultEvents != null) {
         events.addAll(resultEvents
             .where((i) => i.result != null)
+            .where((i) => _matchesParameters(
+                  parameters,
+                  i.result!,
+                ))
             .sorted((a, b) =>
                 b.result!.originServerTs.compareTo(a.result!.originServerTs))
             .map((i) => (timeline.room as MatrixRoom).convertEvent(matrix.Event(
@@ -383,7 +387,15 @@ class MatrixEventSearchComponent implements EventSearchComponent<MatrixClient> {
         "from:@user:example.com"
       ];
     } else {
-      return ["from:@user:example.com"];
+      return [
+        MatrixSearchParameters.hasLinkString,
+        MatrixSearchParameters.hasFileString,
+        MatrixSearchParameters.hasImageString,
+        MatrixSearchParameters.hasVideoString,
+        MatrixSearchParameters.hasAudioString,
+        MatrixSearchParameters.hasMediaString,
+        "from:@user:example.com",
+      ];
     }
   }
 }
