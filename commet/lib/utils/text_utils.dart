@@ -151,8 +151,10 @@ class TextUtils {
     var difference = DateTime.now().difference(time);
 
     if (difference.inDays == 0) {
-      return MaterialLocalizations.of(context)
-          .formatTimeOfDay(TimeOfDay.fromDateTime(time));
+      return MaterialLocalizations.of(context).formatTimeOfDay(
+        TimeOfDay.fromDateTime(time),
+        alwaysUse24HourFormat: preferences.use24HourTime.value,
+      );
     }
 
     if (difference.inDays < 365) {
@@ -165,7 +167,10 @@ class TextUtils {
   }
 
   static String timestampToLocalizedTimeSpecific(DateTime time, context) {
-    return intl.DateFormat().format(time.toLocal());
+    final formatter = preferences.use24HourTime.value
+        ? intl.DateFormat.yMMMMd().add_Hms()
+        : intl.DateFormat.yMMMMd().add_jms();
+    return formatter.format(time.toLocal());
   }
 
   static String formatDuration(Duration duration) {
