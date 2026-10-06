@@ -269,8 +269,11 @@ class _SearchFilters {
     if (from != null) {
       final query = from!.toLowerCase();
       final sender = event.senderId.toLowerCase();
-      final member = room.getMemberOrFallback(event.senderId).displayName.toLowerCase();
-      if (sender != query && !sender.startsWith(query) && !member.contains(query)) {
+      final member =
+          room.getMemberOrFallback(event.senderId).displayName.toLowerCase();
+      if (sender != query &&
+          !sender.startsWith(query) &&
+          !member.contains(query)) {
         return false;
       }
     }
@@ -401,12 +404,12 @@ class _QuickSwitcherState extends State<QuickSwitcher> {
             child: Row(
               spacing: 8,
               children: [
-                for (var room in clientManager!.directMessages.directMessageRooms
-                    .sorted(
-                      (a, b) => b.lastEventTimestamp.compareTo(
-                        a.lastEventTimestamp,
-                      ),
-                    ))
+                for (var room
+                    in clientManager!.directMessages.directMessageRooms.sorted(
+                  (a, b) => b.lastEventTimestamp.compareTo(
+                    a.lastEventTimestamp,
+                  ),
+                ))
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -580,12 +583,10 @@ class _QuickSwitcherState extends State<QuickSwitcher> {
     if (!mounted || generation != _searchGeneration) return;
 
     results.sort(
-      (a, b) => (b as QuickSwitcherMessageSearchItem)
-          .event
-          .originServerTs
-          .compareTo(
-            (a as QuickSwitcherMessageSearchItem).event.originServerTs,
-          ),
+      (a, b) =>
+          (b as QuickSwitcherMessageSearchItem).event.originServerTs.compareTo(
+                (a as QuickSwitcherMessageSearchItem).event.originServerTs,
+              ),
     );
 
     setState(() {
