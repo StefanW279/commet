@@ -1010,6 +1010,7 @@ class MatrixRoom extends Room {
     }
 
     await tl.setReadMarker(public: public);
+    await NotificationManager.clearNotifications(this);
   }
 
   @override
