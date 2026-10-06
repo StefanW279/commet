@@ -78,7 +78,8 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                       value: status,
                       child: Row(
                         children: [
-                          Icon(status.icon, size: 18, color: _presenceColor(status)),
+                          Icon(status.icon,
+                              size: 18, color: _presenceColor(status)),
                           const SizedBox(width: 12),
                           Text(status.label),
                           const Spacer(),
