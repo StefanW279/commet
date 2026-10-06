@@ -44,7 +44,7 @@ class LinuxNotifier implements Notifier {
   static const callDecline = "call.decline";
   static const openRoom = "room.open";
 
-  static int notificationId = 0;
+  static int notificationId = 1;
 
   // Keep track of notification IDs so a read room can dismiss only its
   // notifications instead of affecting notifications from other rooms.
