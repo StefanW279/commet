@@ -2291,5 +2291,33 @@
     "placeholders": {
       "roomName": {}
     }
-  }
+  },
+  "draftPreview": "Draft: {text}",
+  "@draftPreview": {"description":"Preview shown in a room list when a message draft exists","type":"text","placeholders":{"text":{}}},
+  "use24HourTime": "Use 24-hour time",
+  "@use24HourTime": {"description":"Label for the setting that controls 24-hour time formatting","type":"text","placeholders":{}},
+  "use24HourTimeDescription": "Display times using the 24-hour clock instead of the 12-hour clock",
+  "@use24HourTimeDescription": {"description":"Description for the 24-hour time setting","type":"text","placeholders":{}},
+  "webPushEnabled": "Web Push enabled",
+  "@webPushEnabled": {"description":"Button label when Web Push notifications are enabled","type":"text","placeholders":{}},
+  "enableWebPush": "Enable Web Push",
+  "@enableWebPush": {"description":"Button label to enable Web Push notifications","type":"text","placeholders":{}},
+  "webPushDescription": "Allow browser notifications to receive messages when Commet is closed.",
+  "@webPushDescription": {"description":"Description for Web Push notifications","type":"text","placeholders":{}},
+  "presenceSetTooltip": "Set presence",
+  "@presenceSetTooltip": {"description":"Tooltip for the control used to choose the current presence status","type":"text","placeholders":{}},
+  "presenceOnline": "Online",
+  "@presenceOnline": {"description":"Presence status label","type":"text","placeholders":{}},
+  "presenceIdle": "Idle",
+  "@presenceIdle": {"description":"Presence status label","type":"text","placeholders":{}},
+  "presenceDoNotDisturb": "Do Not Disturb",
+  "@presenceDoNotDisturb": {"description":"Presence status label","type":"text","placeholders":{}},
+  "presenceInvisible": "Invisible",
+  "@presenceInvisible": {"description":"Presence status label","type":"text","placeholders":{}},
+  "notificationsSuppressedDoNotDisturb": "Notifications are suppressed while Do Not Disturb is enabled",
+  "@notificationsSuppressedDoNotDisturb": {"description":"Reason shown when a notification is suppressed because Do Not Disturb is enabled","type":"text","placeholders":{}},
+  "searchNoResultsFound": "No results found",
+  "@searchNoResultsFound": {"description":"Message shown when a room event search returns no results","type":"text","placeholders":{}},
+  "searchNext": "Next",
+  "@searchNext": {"description":"Button to load the next page of room search results","type":"text","placeholders":{}}
 }
