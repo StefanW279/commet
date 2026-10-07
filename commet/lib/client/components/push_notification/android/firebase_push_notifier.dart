@@ -64,7 +64,7 @@ Future<void> _firebaseMessagingBackgroundHandler(dynamic message) async {
       return;
     }
 
-    notificationManager.handleMessage(data);
+    await notificationManager.handleMessage(data);
   } catch (e, s) {
     Log.e("An error occured while processing unified push background message");
     Log.onError(e, s);
