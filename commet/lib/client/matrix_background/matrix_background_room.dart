@@ -165,7 +165,7 @@ class MatrixBackgroundRoom implements Room {
   T? getComponent<T extends RoomComponent<Client, Room>>() {
     throw UnimplementedError();
   }
-
+/*
   vod.InboundGroupSession? _createSession(String sessionKey) {
     try {
       return vod.InboundGroupSession(sessionKey);
@@ -183,7 +183,7 @@ class MatrixBackgroundRoom implements Room {
     Log.i("Could not import key");
 
     return null;
-  }
+  }*/
 
   Future<matrix.MatrixEvent?> attemptDecrypt(matrix.MatrixEvent result,
       String cipherText, StoredInboundGroupSession session) async {
