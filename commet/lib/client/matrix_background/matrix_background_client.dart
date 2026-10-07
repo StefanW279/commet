@@ -31,6 +31,7 @@ class MatrixBackgroundClient implements Client {
 
   late MatrixSdkDriftDatabase database;
   late matrix.MatrixApi api;
+  late String userId;
 
   List<RoomDataData> allRooms = List.empty();
   List<PreloadRoomStateData> preloadRoomStates = List.empty();
@@ -105,6 +106,7 @@ class MatrixBackgroundClient implements Client {
     var homeserver = Uri.parse(account!['homeserver_url']);
     var accessToken = account['token'];
     deviceId = account['device_id'];
+    userId = account['user_id'];
 
     api = matrix.MatrixApi(
       httpClient: http.Client(),
