@@ -9,7 +9,7 @@
 > yay -S android-sdk-cmdline-tools-latest
 > ```
 > ```bash
-> android --sdk=$HOME/Android/Sdk sdk install ndk/28.2.13676358 extras/google/market_licensing cmake/3.22.1 build-tools/35.0.0 platforms/android-36 sources/android-36 cmdline-tools/latest
+> /opt/android-sdk/cmdline-tools/latest/bin/android --sdk=$HOME/Android/Sdk sdk install ndk/28.2.13676358 extras/google/market_licensing cmake/3.22.1 build-tools/35.0.0 platforms/android-36 sources/android-36 cmdline-tools/latest
 > ```
 > after installing the packages run the following command in the root of the repository
 > ```bash
