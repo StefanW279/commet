@@ -18,7 +18,7 @@
 > after this use the following command to select the correct Java version and Android SDK
 > ```bash
 > fvm flutter config --jdk-dir /usr/lib/jvm/java-17-openjdk/
-> fvm flutter config --android-sdk ~/Android/Sdk/
+> fvm flutter config --android-sdk $HOME/Android/Sdk/
 > ```
 > And now just reboot once, and you're ready to build
 
