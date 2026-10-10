@@ -68,13 +68,17 @@ jobs:
       - name: Archive 
         run: tar -a -c -f commet-windows.zip -C .\commet\build\windows\x64\runner\ Release
 
-      - name: Build MSI Installer
+      - name: Calculate MSI Version
         shell: pwsh
         run: |
-          $tag = 'v0.0.0.0'
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $tag = "${{ github.ref_name }}"
+          } else {
+            $tag = "v0.0.0.0"
+          }
 
           if ($tag -notmatch '^v?(\d+)\.(\d+)\.(\d+)\.(\d+)$') {
-            throw "Invalid version tag '$tag'. Expected a four-part tag like v0.5.0.3"
+            throw "Invalid release tag '$tag'. Expected a four-part version such as v0.5.0.11."
           }
 
           $major = [int]$Matches[1]
@@ -82,8 +86,12 @@ jobs:
           $build = [int]$Matches[3]
           $revision = [int]$Matches[4]
 
-          if ($revision -ge 1000) {
-            throw "Revision must be below 1000."
+          if ($major -gt 255 -or $minor -gt 255) {
+            throw "MSI major and minor versions must each be 255 or lower."
+          }
+
+          if ($revision -gt 999) {
+            throw "Revision must be between 0 and 999."
           }
 
           $msiBuild = $build * 1000 + $revision
@@ -93,20 +101,51 @@ jobs:
           }
 
           $msiVersion = "$major.$minor.$msiBuild"
+          "MSI_VERSION=$msiVersion" >> $env:GITHUB_ENV
 
-          $flutterBuildDir = (Resolve-Path ".\commet\build\windows\x64\runner\Release").Path
-
-          Write-Host "GitHub tag: $tag"
+          Write-Host "Git tag: $tag"
           Write-Host "MSI version: $msiVersion"
-          Write-Host "Flutter files: $flutterBuildDir"
 
-          dotnet build .\commet\windows\installer\Installer.wixproj `
-            -c Release `
-            "-p:DefineConstants=ProductVersion=$msiVersion"
+      - name: Generate WiX File Components
+        shell: pwsh
+        run: |
+          $releaseDir = (Resolve-Path ".\commet\build\windows\x64\runner\Release").Path
+          $installerDir = ".\commet\windows\installer"
+          $generator = Join-Path $installerDir "GenerateFiles.ps1"
+          $generated = Join-Path $installerDir "GeneratedFiles.wxs"
 
-          if ($LASTEXITCODE -ne 0) {
-            throw "MSI build failed."
+          if (-not (Test-Path $generator)) {
+            throw "WiX generator not found: $generator"
           }
+
+          & $generator -SourceDir $releaseDir -OutputFile $generated
+
+          if (-not (Test-Path $generated)) {
+            throw "GeneratedFiles.wxs was not created."
+          }
+
+      - name: Build MSI Installer
+        shell: pwsh
+        run: |
+          $project = ".\commet\windows\installer\Installer.wixproj"
+          $installerDir = ".\commet\windows\installer"
+
+          # Avoid accidentally collecting an MSI from an earlier build.
+          if (Test-Path (Join-Path $installerDir "bin")) {
+            Remove-Item (Join-Path $installerDir "bin") -Recurse -Force
+          }
+
+          dotnet build $project `
+            --configuration Release `
+            "-p:ProductVersion=$env:MSI_VERSION"
+
+          $msiPath = ".\commet\windows\installer\bin\x64\Release\commet-windows.msi"
+
+          if (-not (Test-Path $msiPath)) {
+            throw "MSI was not created at expected path: $msiPath"
+          }
+
+          Copy-Item $msiPath ".\commet-windows.msi" -Force
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

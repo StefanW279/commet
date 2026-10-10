@@ -14,14 +14,49 @@
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="INSTALLFOLDER" Name="Commet">
-
-        <RemoveFolder
-          Id="RemoveInstallFolder"
-          On="uninstall" />
-
-        <Files Include="..\..\..\build\windows\x64\runner\Release\**" />
-
+        <Component Id="InstallFolderCleanup" Guid="*">
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\Commet\Installer\Folders"
+            Name="InstallFolder"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+          <RemoveFolder
+            Id="RemoveInstallFolder"
+            On="uninstall" />
+        </Component>
       </Directory>
     </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="CommetStartMenuFolder" Name="Commet">
+        <Component Id="StartMenuShortcut" Guid="*">
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\Commet\Installer"
+            Name="StartMenuShortcut"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+
+          <Shortcut
+            Id="CommetShortcut"
+            Name="Commet"
+            Target="[INSTALLFOLDER]commet.exe"
+            WorkingDirectory="INSTALLFOLDER" />
+
+          <RemoveFolder
+            Id="RemoveCommetStartMenuFolder"
+            On="uninstall" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="Commet" Level="1">
+      <ComponentGroupRef Id="CommetFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="InstallFolderCleanup" />
+    </Feature>
   </Package>
 </Wix>
