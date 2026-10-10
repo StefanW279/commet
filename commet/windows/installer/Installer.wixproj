@@ -1,7 +1,8 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="WixToolset.Sdk/5.0.2">
   <PropertyGroup>
     <OutputName>commet-windows</OutputName>
     <Platform>x64</Platform>
+    <DefineConstants>$(DefineConstants);ProductVersion=$(ProductVersion)</DefineConstants>
   </PropertyGroup>
 </Project>
