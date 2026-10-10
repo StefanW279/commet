@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:matrix/encryption/utils/pickle_key.dart';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -164,7 +165,7 @@ class MatrixBackgroundRoom implements Room {
   T? getComponent<T extends RoomComponent<Client, Room>>() {
     throw UnimplementedError();
   }
-
+/*
   vod.InboundGroupSession? _createSession(String sessionKey) {
     try {
       return vod.InboundGroupSession(sessionKey);
@@ -182,18 +183,34 @@ class MatrixBackgroundRoom implements Room {
     Log.i("Could not import key");
 
     return null;
-  }
+  }*/
 
   Future<matrix.MatrixEvent?> attemptDecrypt(matrix.MatrixEvent result,
       String cipherText, StoredInboundGroupSession session) async {
-    var key = jsonDecode(session.content);
-    var sessionKey = key["session_key"];
-
     if (vod.isInitialized() == false) {
       await vod.init();
     }
 
-    var sess = _createSession(sessionKey);
+    // Restore the persisted vodozemac ratchet. Recreating a fresh session from
+    // content['session_key'] loses the live ratchet/skipped-message state and
+    // is especially fragile when push notifications arrive out of order.
+    vod.InboundGroupSession? sess;
+    try {
+      sess = vod.InboundGroupSession.fromPickleEncrypted(
+        pickle: session.pickle,
+        pickleKey: backgroundClient.userId.toPickleKey(),
+      );
+    } catch (e, s) {
+      Log.onError(e, s);
+      try {
+        sess = vod.InboundGroupSession.fromOlmPickleEncrypted(
+          pickle: session.pickle,
+          pickleKey: utf8.encode(backgroundClient.userId),
+        );
+      } catch (e2, s2) {
+        Log.onError(e2, s2);
+      }
+    }
 
     if (sess != null) {
       try {
