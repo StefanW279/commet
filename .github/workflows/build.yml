@@ -68,6 +68,14 @@ jobs:
       - name: Archive 
         run: tar -a -c -f commet-windows.zip -C .\commet\build\windows\x64\runner\ Release
 
+      - name: Upload Zip Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: commet-windows.zip
+          path: |
+            .\commet-windows.zip
+          retention-days: 1
+
       - name: Calculate MSI Version
         shell: pwsh
         run: |
@@ -147,12 +155,11 @@ jobs:
 
           Copy-Item $msiPath ".\commet-windows.msi" -Force
 
-      - name: Upload Artifact
+      - name: Upload MSI Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: commet-windows
+          name: commet-windows.msi
           path: |
-            .\commet-windows.zip
             .\commet-windows.msi
           retention-days: 1
 
