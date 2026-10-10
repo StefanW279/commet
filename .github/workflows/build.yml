@@ -75,6 +75,7 @@ jobs:
           path: |
             .\commet-windows.zip
           retention-days: 1
+          overwrite: true
 
       - name: Calculate MSI Version
         shell: pwsh
@@ -162,6 +163,7 @@ jobs:
           path: |
             .\commet-windows.msi
           retention-days: 1
+          overwrite: true
 
   build-android:
     runs-on: ubuntu-latest
@@ -238,6 +240,7 @@ jobs:
           name: commet-android-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 1
+          overwrite: true
 
   build-android-google-services:
     runs-on: ubuntu-latest
@@ -316,6 +319,7 @@ jobs:
           name: commet-android-google-services-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 1
+          overwrite: true
 
   build-flatpak:
     runs-on: ubuntu-latest
@@ -395,6 +399,7 @@ jobs:
           name: chat.commet.commetapp.flatpak
           path: commet/linux/flatpak/chat.commet.commetapp.flatpak
           retention-days: 1
+          overwrite: true
 
   build-web:
     runs-on: ubuntu-latest
@@ -446,3 +451,4 @@ jobs:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
           retention-days: 1
+          overwrite: true
