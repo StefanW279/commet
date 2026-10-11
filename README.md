@@ -1,13 +1,8 @@
+ ## This is a modified Fork of the [commet](https://github.com/commetchat/commet) Repository, that has some new features added, and some bugs fixed, to be mostly used by our small Friend Group
+
 <p align="center" style="padding-top:20px">
 <img src="https://raw.githubusercontent.com/commetchat/.github/refs/heads/main/assets/banner.png">
 
-<p align="center">
-    <a href="https://commet.chat/donate"><img alt="Donate" src="https://img.shields.io/badge/donate-534cdd?style=for-the-badge"></a>
-    <a href="https://commet.chat/install"><img alt="Download" src="https://img.shields.io/github/downloads/commetchat/commet/total?style=for-the-badge&color=534cdd"></a>
-    <a href="https://matrix.to/#/#commet:matrix.org"><img alt="Matrix" src="https://img.shields.io/matrix/commet%3Amatrix.org?logo=matrix&style=for-the-badge&color=534cdd"></a>
-    <a href="https://fosstodon.org/@commetchat"><img alt="Mastodon" src="https://img.shields.io/mastodon/follow/109894490854601533?domain=https%3A%2F%2Ffosstodon.org&style=for-the-badge&logo=mastodon&color=534cdd&logoColor=white"></a>
-    <a href="https://bsky.app/profile/commet.chat"><img alt="Bluesky" src="https://img.shields.io/badge/follow-@commet.chat-whitesmoke?style=for-the-badge&logo=bluesky&logoColor=white&color=534cdd"></a>
-</p>
 
 ### Your space to connect
 We are building a client for [Matrix](https://matrix.org) focused on providing a feature rich experience while maintaining a simple interface. The goal is to build a secure, privacy respecting app without compromising on the features you have come to expect from a modern chat client.
@@ -17,7 +12,7 @@ We are building a client for [Matrix](https://matrix.org) focused on providing a
 <img src="https://raw.githubusercontent.com/commetchat/.github/main/assets/banner_demo.png">
 
 # Features
-- Supports **Windows**, **Linux**, and **Android** (MacOS and iOS planned in future)
+- Supports **Windows**, **Linux**, **Android**, as well as **iOS**/**iPadOS** through the [Web App](https://client.kantengewichte.de)
 - End to End Encryption
 - Custom Emoji + Stickers
 - GIF Search
@@ -28,37 +23,11 @@ We are building a client for [Matrix](https://matrix.org) focused on providing a
 - Emoji verification & cross signing
 - Push Notifications
 - URL Preview
-  
+- Search Filters
+- Presence Status selection
 
-<details><summary><b>PGP Public Key to verify executables</b></summary>
 
-```
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xiYEaVcZBRudW9w7efKKX9fRmwwQ8VSGeBDxPR/L1ZiorA99Ja93y80cQ29tbWV0
-IDxjb250YWN0QGNvbW1ldC5jaGF0PsKCBBMbCAAuBQJpVxkFFiEEdJSx+k46noJT
-sEiwnYIftF7A4aoCGwECHgEBCwEVARYBJwIZAQAKCRCdgh+0XsDhqiE1sVz/Q146
-a/XQm2yeA+QJ4KuD+YY7j1zUl8gNZGJtl4LfvzMlEgrl9Tt8r6FP35mlRhKl+XSG
-GwMpXUeHJwxvCM4mBGlXGQUbia8Ea3sb8PNFMjxgTF+gjCOBou6vMn8dCux6QEqs
-fSDCwCcEGBsIAJMFAmlXGQUCGwIWIQR0lLH6TjqeglOwSLCdgh+0XsDhqnIgBBkb
-CAAdBQJpVxkFFiEExdz0cdzyrZo8ihAhUfYeLD/fY80ACgkQUfYeLD/fY812w6BM
-9avvCNSTmyogmsYLBpUb5XxaSe+3J6WhwBHyblaodZ2dlJg+npi1qRnMxvz+jTyQ
-ctgmD24jtS2EbXlkCQkACgkQnYIftF7A4aqUviQ+fo2mEwweefVoqGuu2Tx/04B2
-RY6FOKYsZL4qnEEO8lW7MoLXhVev8QHxmA6TQae8KZKbh8MXdCHW/cA3ZwjOOARp
-VxkFEgorBgEEAZdVAQUBAQdAQatH56zW5TzNugWIsK1UGACqdQ/FCFcG/KT5LDiW
-TDwDAQgHwnQEGBsIACAFAmlXGQUCGwwWIQR0lLH6TjqeglOwSLCdgh+0XsDhqgAK
-CRCdgh+0XsDhqg1ipzJFtQCftqPRNvYPq96xFw3SAAE3CpAfHi+gwOk3BM7FmMxV
-COa2WMfqY9EZxYWMwsbF6wZMdI2w3TLbo68MCc4zBGlXGQUWCSsGAQQB2kcPAQEH
-QKcpVnktGVrHWHShUhp2Xb/nX6bQfy57gCe8zQ4Kzp0fwnQEGBsIACAFAmlXGQUC
-GyAWIQR0lLH6TjqeglOwSLCdgh+0XsDhqgAKCRCdgh+0XsDhqkolM/gHzXSWM9t5
-menzfZtegZnLPZ+n/zufzXdidzGa1K88juIrgoUjGZYJXnPHOJKm8qBXbLBscDkc
-SHrEquc3Cw==
-=wnah
------END PGP PUBLIC KEY BLOCK-----
-```
-</details>
-
-# Translation
+# Translation (Original REPO)
 Help translate to your language on [Weblate](https://hosted.weblate.org/projects/commetchat/commet/)
 
 <a href="https://hosted.weblate.org/engage/commetchat/">
@@ -70,6 +39,12 @@ To build, you require [Flutter](https://flutter.dev), currently v3.41.9
 
 This repo currently has a monorepo structure, containing two flutter projects: Commet and Tiamat. Commet is the main client, and Tiamat is a sort of wrapper around Material with some extra goodies, which is used to maintain a consistent style across the app. Tiamat may eventually be moved to its own repo, but for now it is maintained here for ease of development.
 ## Building
+> [!TIP]
+> If you are using ArchLinux and you want to build the entire application locally we have created some buildscripts, found at [commet/buildscripts](https://github.com/StefanW279/commet/tree/main/commet/buildscripts).
+> 
+> There is also another [README](https://github.com/StefanW279/commet/tree/main/commet/buildscripts/README.md) which goes more into detail what is needed to get these buildscripts to work.
+> 
+> The build scripts are intended to build the same application code as our published releases. Build results may vary depending on the build environment and configuration.
 
 ### 1. [Install Flutter](https://docs.flutter.dev/get-started/install)
 
@@ -100,7 +75,7 @@ When building, there are some additional command line arguments that must be use
 **Required**
 | **Argument** | **Valid Values**                                                          | **Description**                                                                                              |
 |--------------|---------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| PLATFORM    | 'desktop', 'mobile', 'linux', 'windows', 'macos', 'android', 'ios', 'web' | Defines which platform to build for                                                                          |
+| PLATFORM     | 'desktop', 'mobile', 'linux', 'windows', 'macos', 'android', 'ios', 'web' | Defines which platform to build for                                                                          |
 | BUILD_MODE   | 'release', 'debug'                                                        | When building with 'debug' flag, additional debug information will be shown                                  |
 
 **Optional**
@@ -120,7 +95,8 @@ flutter run --dart-define BUILD_MODE=debug --dart-define PLATFORM=linux
 > [!WARNING]
 > On arch linux, do not use `flutter-bin (AUR)`, use `fvm` instead.
 >
-> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.41.9`) in order to select the flutter version of the project. 
+> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.41.9`) in order to select the flutter version of the project.
+> Or you can just run `fvm install` in the root of the repository to use the configured version, which should match the version mentioned before. 
 >
 > Then prefix every command with fvm.
 > - Downloading dependencies will become: `fvm flutter pub get`
