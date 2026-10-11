@@ -19,6 +19,10 @@ class BackgroundNotificationsManager2 {
 
   Timer? shutdownTimer;
 
+  // Serialize background notifications so concurrent FCM callbacks cannot race
+  // while decrypting events from the same Megolm session.
+  static Future<void> _messageTail = Future<void>.value();
+
   List<Map<String, dynamic>> queue = List.empty(growable: true);
 
   Future<void> init() async {
@@ -98,7 +102,13 @@ class BackgroundNotificationsManager2 {
     }
   }
 
-  Future<void> handleMessage(Map<String, dynamic> data) async {
+  Future<void> handleMessage(Map<String, dynamic> data) {
+    final next = _messageTail.then((_) => _handleMessage(data));
+    _messageTail = next.catchError((_) {});
+    return next;
+  }
+
+  Future<void> _handleMessage(Map<String, dynamic> data) async {
     try {
       var roomId = data["room_id"] as String?;
       var eventId = data["event_id"] as String?;
