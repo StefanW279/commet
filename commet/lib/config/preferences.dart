@@ -396,7 +396,7 @@ class Preferences {
       BoolPreference("use_24_hour_time", defaultValue: true);
 
   BoolPreference minimizeOnClose =
-      BoolPreference("minimize_on_close", defaultValue: false);
+      BoolPreference("minimize_on_close", defaultValue: true);
 
   BoolPreference developerMode =
       BoolPreference("developer_mode", defaultValue: false);
