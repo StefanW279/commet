@@ -7,17 +7,20 @@ import 'package:commet/config/platform_utils.dart';
 import 'package:commet/main.dart';
 import 'package:commet/utils/event_bus.dart';
 import 'package:flutter/services.dart';
+import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowManagement {
+  static final TrayManager _trayManager = TrayManager.instance;
+
   static Future<void> init() async {
     if (!(PlatformUtils.isLinux || PlatformUtils.isWindows)) return;
 
     await windowManager.ensureInitialized();
-    _WindowListener listener = _WindowListener();
-
     windowManager.setPreventClose(true);
-    windowManager.addListener(listener);
+    windowManager.addListener(_WindowListener());
+
+    await _initTray();
 
     HardwareKeyboard.instance.addHandler(_onKeyEvent);
 
@@ -25,8 +28,61 @@ class WindowManagement {
     EventBus.onSelectedSpaceChanged.stream.listen(_onSelectedSpaceChanged);
 
     if (commandLineArgs.contains("--minimize")) {
-      windowManager.minimize();
+      await windowManager.hide();
     }
+  }
+
+  static Future<void> _initTray() async {
+    _trayManager.addListener(_TrayListener());
+    await _configureTray();
+  }
+
+  static String _trayIconPath() {
+    final asset = PlatformUtils.isWindows
+        ? "assets/images/app_icon/app_icon_rounded.png"
+        : "assets/images/app_icon/app_icon_filled.png";
+
+    // Linux tray_manager reads an icon from the filesystem, so resolve the
+    // asset in Flutter's bundled data directory (including Flatpak installs).
+    if (PlatformUtils.isLinux) {
+      final executableDirectory = File(Platform.resolvedExecutable).parent.path;
+      return "$executableDirectory/data/flutter_assets/$asset";
+    }
+    return asset;
+  }
+
+  static Future<void> _configureTray() async {
+    // Linux tray_manager does not implement setToolTip in the 0.5.x API.
+    if (PlatformUtils.isWindows) {
+      await _trayManager.setToolTip("Commet");
+    }
+    await _trayManager.setIcon(_trayIconPath());
+    await _trayManager.setContextMenu(
+      Menu(
+        items: [
+          MenuItem(key: "show_window", label: "Open Commet"),
+          MenuItem.separator(),
+          MenuItem(key: "quit_app", label: "Quit"),
+        ],
+      ),
+    );
+  }
+
+  static Future<void> showWindow() async {
+    await windowManager.show();
+    await windowManager.focus();
+
+    // Re-register the icon after activation; KDE may drop the StatusNotifierItem.
+    await _trayManager.setIcon(_trayIconPath());
+  }
+
+  static Future<void> quit() async {
+    if (clientManager != null) {
+      for (final client in clientManager!.clients) {
+        await client.close();
+      }
+    }
+    exit(0);
   }
 
   static bool _onKeyEvent(KeyEvent event) {
@@ -38,7 +94,7 @@ class WindowManagement {
   }
 
   static void _toggleFullscreen() async {
-    var isFullScreen = await windowManager.isFullScreen();
+    final isFullScreen = await windowManager.isFullScreen();
     await windowManager.setFullScreen(!isFullScreen);
   }
 
@@ -65,21 +121,34 @@ class WindowManagement {
   }
 }
 
+class _TrayListener with TrayListener {
+  @override
+  void onTrayIconMouseDown() {
+    WindowManagement.showWindow();
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) {
+    switch (menuItem.key) {
+      case "show_window":
+        WindowManagement.showWindow();
+        break;
+      case "quit_app":
+        WindowManagement.quit();
+        break;
+    }
+  }
+}
+
 class _WindowListener extends WindowListener {
   @override
   void onWindowClose() async {
     super.onWindowClose();
 
     if (preferences.minimizeOnClose.value) {
-      windowManager.minimize();
+      await windowManager.hide();
     } else {
-      if (clientManager != null) {
-        for (var client in clientManager!.clients) {
-          await client.close();
-        }
-      }
-
-      exit(0);
+      await WindowManagement.quit();
     }
   }
 }
