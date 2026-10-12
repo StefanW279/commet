@@ -23,11 +23,58 @@ finish-args:
 - "--device=all"
 - "--filesystem=xdg-download"
 - "--talk-name=org.freedesktop.Notifications"
+- "--talk-name=org.kde.StatusNotifierWatcher"
 - "--talk-name=org.freedesktop.Flatpak"
 - "--talk-name=org.freedesktop.portal.Documents"
 - "--system-talk-name=org.freedesktop.NetworkManager"
 - "--env=LD_LIBRARY_PATH=/app/lib"
 modules:
+- name: intltool
+  cleanup:
+  - "*"
+  sources:
+  - type: archive
+    url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+    sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
+- name: libayatana-ido
+  buildsystem: cmake-ninja
+  config-opts:
+  - -DENABLE_TESTS=NO
+  sources:
+  - type: git
+    url: https://github.com/AyatanaIndicators/ayatana-ido.git
+    tag: 0.10.4
+- name: libdbusmenu-gtk3
+  buildsystem: autotools
+  build-options:
+    cflags: -Wno-error
+  config-opts:
+  - --with-gtk=3
+  - --disable-dumper
+  - --disable-static
+  - --disable-nls
+  sources:
+  - type: archive
+    url: https://launchpad.net/libdbusmenu/16.04/16.04.0/+download/libdbusmenu-16.04.0.tar.gz
+    sha256: b9cc4a2acd74509435892823607d966d424bd9ad5d0b00938f27240a1bfa878a
+- name: libayatana-indicator
+  buildsystem: cmake-ninja
+  config-opts:
+  - -DENABLE_TESTS=NO
+  - -DENABLE_IDO=YES
+  sources:
+  - type: git
+    url: https://github.com/AyatanaIndicators/libayatana-indicator.git
+    tag: 0.9.4
+- name: libayatana-appindicator
+  buildsystem: cmake-ninja
+  config-opts:
+  - -DENABLE_BINDINGS_MONO=NO
+  - -DENABLE_BINDINGS_VALA=NO
+  sources:
+  - type: git
+    url: https://github.com/AyatanaIndicators/libayatana-appindicator.git
+    tag: 0.5.93
 - name: keybinder3
   buildsystem: autotools
   post-install:
