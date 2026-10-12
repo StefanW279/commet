@@ -77,6 +77,24 @@ jobs:
           retention-days: 1
           overwrite: true
 
+      - name: Checkout installer files from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: installer-source
+          sparse-checkout: |
+            commet/windows/installer
+          sparse-checkout-cone-mode: true
+
+      - name: Copy installer files into original location
+        shell: pwsh
+        run: |
+          $source = ".\installer-source\commet\windows\installer"
+          $destination = ".\commet\windows\installer"
+
+          New-Item -ItemType Directory -Path $destination -Force | Out-Null
+          Copy-Item "$source\*" $destination -Recurse -Force
+
       - name: Calculate MSI Version
         shell: pwsh
         run: |
