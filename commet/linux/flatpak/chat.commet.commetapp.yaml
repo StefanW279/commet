@@ -39,7 +39,11 @@ modules:
 - name: libayatana-ido
   buildsystem: cmake-ninja
   config-opts:
+  - -DCMAKE_INSTALL_LIBDIR=lib
   - -DENABLE_TESTS=NO
+  post-install:
+  - find /app -name 'libayatana-ido3-0.4.pc' -print
+  - pkg-config --modversion libayatana-ido3-0.4 || true
   sources:
   - type: git
     url: https://github.com/AyatanaIndicators/ayatana-ido.git
@@ -61,7 +65,11 @@ modules:
     sha256: b9cc4a2acd74509435892823607d966d424bd9ad5d0b00938f27240a1bfa878a
 - name: libayatana-indicator
   buildsystem: cmake-ninja
+  build-options:
+    env:
+      PKG_CONFIG_PATH: /app/lib64/pkgconfig:/app/lib/pkgconfig
   config-opts:
+  - -DCMAKE_INSTALL_LIBDIR=lib
   - -DENABLE_TESTS=NO
   - -DENABLE_IDO=YES
   sources:
@@ -70,7 +78,11 @@ modules:
     tag: 0.9.4
 - name: libayatana-appindicator
   buildsystem: cmake-ninja
+  build-options:
+    env:
+      PKG_CONFIG_PATH: /app/lib64/pkgconfig:/app/lib/pkgconfig
   config-opts:
+  - -DCMAKE_INSTALL_LIBDIR=lib
   - -DENABLE_BINDINGS_MONO=NO
   - -DENABLE_BINDINGS_VALA=NO
   - -DENABLE_GTKDOC=NO
