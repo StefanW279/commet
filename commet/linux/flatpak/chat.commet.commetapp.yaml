@@ -40,6 +40,9 @@ modules:
   buildsystem: cmake-ninja
   config-opts:
   - -DENABLE_TESTS=NO
+  post-install:
+  - find /app -name 'libayatana-ido3-0.4.pc' -print
+  - pkg-config --modversion libayatana-ido3-0.4 || true
   sources:
   - type: git
     url: https://github.com/AyatanaIndicators/ayatana-ido.git
