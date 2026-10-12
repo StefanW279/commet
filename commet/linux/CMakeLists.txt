@@ -78,7 +78,7 @@ add_executable(${BINARY_NAME}
 # that need different build settings.
 apply_standard_settings(${BINARY_NAME})
 
-add_compile_options(-Wno-error=sometimes-uninitialized -Wno-sometimes-uninitialized -Wno-error)
+add_compile_options(-Wno-error=sometimes-uninitialized -Wno-sometimes-uninitialized -Wno-error=deprecated-declarations -Wno-error)
 
 include(CheckCXXCompilerFlag)
 set(CMAKE_REQUIRED_FLAGS "-Werror")
