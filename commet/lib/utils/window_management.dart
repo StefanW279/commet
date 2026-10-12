@@ -40,7 +40,10 @@ class WindowManagement {
   // Reapply the icon and menu when restoring the window. Some Linux tray
   // implementations can drop the AppIndicator after an icon click.
   static Future<void> _configureTray() async {
-    await _trayManager.setToolTip("Commet");
+    // Linux tray_manager does not implement setToolTip.
+    if (PlatformUtils.isWindows) {
+      await _trayManager.setToolTip("Commet");
+    }
     await _trayManager.setIcon(
       PlatformUtils.isWindows
           ? "assets/images/app_icon/app_icon_rounded.png"
@@ -60,7 +63,13 @@ class WindowManagement {
   static Future<void> showWindow() async {
     await windowManager.show();
     await windowManager.focus();
-    await _configureTray();
+
+    // Re-register the icon after activation; KDE may drop the StatusNotifierItem.
+    await _trayManager.setIcon(
+      PlatformUtils.isWindows
+          ? "assets/images/app_icon/app_icon_rounded.png"
+          : "assets/images/app_icon/app_icon_filled.png",
+    );
   }
 
   static Future<void> quit() async {
