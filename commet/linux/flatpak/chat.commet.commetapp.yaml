@@ -39,6 +39,7 @@ modules:
 - name: libayatana-ido
   buildsystem: cmake-ninja
   config-opts:
+  - -DCMAKE_INSTALL_LIBDIR=lib
   - -DENABLE_TESTS=NO
   post-install:
   - find /app -name 'libayatana-ido3-0.4.pc' -print
