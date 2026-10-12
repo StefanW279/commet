@@ -2,7 +2,7 @@
 > These Scripts are made for and tested on Arch Linux
 > When using Arch Linux all required packages can be installed using:
 > ```bash
-> sudo pacman -Syu cmake clang ninja rustup gtk3 mpv ffmpeg mimalloc webkit2gtk-4.1 libkeybinder3 flatpak flatpak-builder git git-lfs fvm jdk17-openjdk
+> sudo pacman -Syu cmake clang ninja rustup gtk3 mpv ffmpeg mimalloc webkit2gtk-4.1 libkeybinder3 libayatana-appindicator ayatana-ido flatpak flatpak-builder git git-lfs fvm jdk17-openjdk
 > ```
 > for building android apps, we also need some packages from the [AUR](https://aur.archlinux.org), if you're using [yay](https://github.com/jguer/yay) then you can use the following command:
 > ```bash
