@@ -37,18 +37,26 @@ class WindowManagement {
     await _configureTray();
   }
 
-  // Reapply the icon and menu when restoring the window. Some Linux tray
-  // implementations can drop the AppIndicator after an icon click.
+  static String _trayIconPath() {
+    final asset = PlatformUtils.isWindows
+        ? "assets/images/app_icon/app_icon_rounded.png"
+        : "assets/images/app_icon/app_icon_filled.png";
+
+    // Linux tray_manager reads an icon from the filesystem, so resolve the
+    // asset in Flutter's bundled data directory (including Flatpak installs).
+    if (PlatformUtils.isLinux) {
+      final executableDirectory = File(Platform.resolvedExecutable).parent.path;
+      return "$executableDirectory/data/flutter_assets/$asset";
+    }
+    return asset;
+  }
+
   static Future<void> _configureTray() async {
-    // Linux tray_manager does not implement setToolTip.
+    // Linux tray_manager does not implement setToolTip in the 0.5.x API.
     if (PlatformUtils.isWindows) {
       await _trayManager.setToolTip("Commet");
     }
-    await _trayManager.setIcon(
-      PlatformUtils.isWindows
-          ? "assets/images/app_icon/app_icon_rounded.png"
-          : "assets/images/app_icon/app_icon_filled.png",
-    );
+    await _trayManager.setIcon(_trayIconPath());
     await _trayManager.setContextMenu(
       Menu(
         items: [
@@ -65,11 +73,7 @@ class WindowManagement {
     await windowManager.focus();
 
     // Re-register the icon after activation; KDE may drop the StatusNotifierItem.
-    await _trayManager.setIcon(
-      PlatformUtils.isWindows
-          ? "assets/images/app_icon/app_icon_rounded.png"
-          : "assets/images/app_icon/app_icon_filled.png",
-    );
+    await _trayManager.setIcon(_trayIconPath());
   }
 
   static Future<void> quit() async {
