@@ -69,6 +69,7 @@ modules:
     env:
       PKG_CONFIG_PATH: /app/lib64/pkgconfig:/app/lib/pkgconfig
   config-opts:
+  - -DCMAKE_INSTALL_LIBDIR=lib
   - -DENABLE_TESTS=NO
   - -DENABLE_IDO=YES
   sources:
@@ -81,6 +82,7 @@ modules:
     env:
       PKG_CONFIG_PATH: /app/lib64/pkgconfig:/app/lib/pkgconfig
   config-opts:
+  - -DCMAKE_INSTALL_LIBDIR=lib
   - -DENABLE_BINDINGS_MONO=NO
   - -DENABLE_BINDINGS_VALA=NO
   - -DENABLE_GTKDOC=NO
