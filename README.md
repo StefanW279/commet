@@ -95,7 +95,7 @@ flutter run --dart-define BUILD_MODE=debug --dart-define PLATFORM=linux
 > [!WARNING]
 > On arch linux, do not use `flutter-bin (AUR)`, use `fvm` instead.
 >
-> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.41.9`) in order to select the flutter version of the project.
+> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.47.7`) in order to select the flutter version of the project.
 > Or you can just run `fvm install` in the root of the repository to use the configured version, which should match the version mentioned before. 
 >
 > Then prefix every command with fvm.
