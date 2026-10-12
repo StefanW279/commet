@@ -45,8 +45,23 @@ class WindowManagement {
     // Linux tray_manager reads an icon from the filesystem, so resolve the
     // asset in Flutter's bundled data directory (including Flatpak installs).
     if (PlatformUtils.isLinux) {
-      final executableDirectory = File(Platform.resolvedExecutable).parent.path;
-      return "$executableDirectory/data/flutter_assets/$asset";
+      final executableDirectory = File(Platform.resolvedExecutable).parent;
+      final candidates = [
+        File("${executableDirectory.path}/data/flutter_assets/$asset"),
+        File("${executableDirectory.parent.path}/data/flutter_assets/$asset"),
+        File("/app/data/flutter_assets/$asset"),
+        File("/app/share/commet/data/flutter_assets/$asset"),
+      ];
+
+      for (final candidate in candidates) {
+        if (candidate.existsSync()) {
+          return candidate.path;
+        }
+      }
+
+      // Keep an absolute path as the fallback for diagnostics / nonstandard
+      // bundle layouts; tray_manager's Linux API expects a filesystem path.
+      return candidates.first.path;
     }
     return asset;
   }
