@@ -34,6 +34,12 @@ class WindowManagement {
 
   static Future<void> _initTray() async {
     _trayManager.addListener(_TrayListener());
+    await _configureTray();
+  }
+
+  // Reapply the icon and menu when restoring the window. Some Linux tray
+  // implementations can drop the AppIndicator after an icon click.
+  static Future<void> _configureTray() async {
     await _trayManager.setToolTip("Commet");
     await _trayManager.setIcon(
       PlatformUtils.isWindows
@@ -54,6 +60,7 @@ class WindowManagement {
   static Future<void> showWindow() async {
     await windowManager.show();
     await windowManager.focus();
+    await _configureTray();
   }
 
   static Future<void> quit() async {
