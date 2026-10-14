@@ -299,11 +299,7 @@ class _LoginPageViewState extends State<LoginPageView> {
             onPressed: () => NavigationUtils.navigateTo(
               context,
               PasswordResetPage(
-                onSubmitEmail: (_) async {
-                  throw UnsupportedError(
-                    'Password recovery is not configured for this homeserver.',
-                  );
-                },
+                homeserver: _homeserverTextField.text,
               ),
             ),
             child: const Text('Forgot password?'),
