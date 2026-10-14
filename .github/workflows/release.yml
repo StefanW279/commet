@@ -159,7 +159,9 @@ jobs:
           while ($record = $view.Fetch()) {
             $fileCount++
             $fileName = [string]$record.StringData(1)
-            if ($fileName -match '(?i)commet\.exe
+            if ($fileName -match '(?i)commet\.exe$') {
+              $hasApplication = $true
+            }
           }
           $view.Close()
 
