@@ -10,7 +10,8 @@ class TextureCoordinatePainter extends CustomPainter {
   final double windowHeight;
   final ui.Image image;
 
-  TextureCoordinatePainter(FragmentShader fragmentShader, this.image, this.windowWidth, this.windowHeight, this.offset)
+  TextureCoordinatePainter(FragmentShader fragmentShader, this.image,
+      this.windowWidth, this.windowHeight, this.offset)
       : shader = fragmentShader;
   @override
   void paint(Canvas canvas, Size size) {
