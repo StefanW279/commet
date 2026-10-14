@@ -36,7 +36,42 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
   }
 
   Uri _appendApiPath(Uri base, String path) {
-    final prefix = base.path.replaceFirst(RegExp(r'/+
+    final prefix = base.path.replaceFirst(RegExp(r'/+$'), '');
+    final suffix = path.startsWith('/') ? path : '/$path';
+    return base.replace(
+      path: '$prefix$suffix',
+      query: null,
+      fragment: null,
+    );
+  }
+
+  Future<Uri> _url(String path) async {
+    final entered = _serverUri(widget.homeserver);
+    final discovery = entered.replace(
+      path: '/.well-known/matrix/client',
+      query: null,
+      fragment: null,
+    );
+    try {
+      final response = await http.get(discovery).timeout(const Duration(seconds: 8));
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final data = jsonDecode(response.body);
+        if (data is Map<String, dynamic>) {
+          final server = data['m.homeserver'];
+          if (server is Map<String, dynamic> && server['base_url'] is String) {
+            final base = (server['base_url'] as String).trim();
+            if (base.isNotEmpty) {
+              return _appendApiPath(_serverUri(base), path);
+            }
+          }
+        }
+      }
+    } catch (_) {
+      // If discovery is unavailable, fall back to the entered server name.
+    }
+    return _appendApiPath(entered, path);
+  }
+
   String _makeSecret() => base64Url.encode(
       List<int>.generate(32, (_) => Random.secure().nextInt(256))).replaceAll('=', '');
 
