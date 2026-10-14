@@ -1364,19 +1364,6 @@ jobs:
             fdroid update -c
 
             echo "F-Droid Updated sucessfully"
-) {
-              $hasApplication = $true
-            }
-          }
-          $view.Close()
-
-          Write-Host "MSI File table entries: $fileCount"
-          if ($fileCount -eq 0) {
-            throw "The MSI File table is empty; refusing to publish an installer with no payload files."
-          }
-          if (-not $hasApplication) {
-            throw "The MSI does not contain commet.exe; refusing to publish an incomplete installer."
-          }
 
       - name: Upload MSI Artifact
         if: github.event_name == 'release'
@@ -1973,19 +1960,6 @@ jobs:
             fdroid update -c
 
             echo "F-Droid Updated sucessfully"
-) {
-              $hasApplication = $true
-            }
-          }
-          $view.Close()
-
-          Write-Host "MSI File table entries: $fileCount"
-          if ($fileCount -eq 0) {
-            throw "The MSI File table is empty; refusing to publish an installer with no payload files."
-          }
-          if (-not $hasApplication) {
-            throw "The MSI does not contain commet.exe; refusing to publish an incomplete installer."
-          }
 
       - name: Upload MSI Artifact
         if: github.event_name == 'release'
