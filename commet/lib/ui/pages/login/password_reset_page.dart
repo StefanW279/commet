@@ -24,15 +24,37 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     _email.dispose(); _password.dispose(); _confirm.dispose(); super.dispose();
   }
 
-  Uri _url(String path) {
-    var host = widget.homeserver.trim();
+  Uri _serverUri(String value) {
+    var host = value.trim();
     if (host.isEmpty) throw const FormatException('Enter a homeserver first.');
     if (!host.contains('://')) host = 'https://$host';
     final uri = Uri.parse(host);
     if (!uri.hasAuthority || !['https', 'http'].contains(uri.scheme)) {
       throw const FormatException('Enter a valid homeserver URL.');
     }
-    return uri.replace(path: path, query: null, fragment: null);
+    return uri;
+  }
+
+  Future<Uri> _url(String path) async {
+    final entered = _serverUri(widget.homeserver);
+    final discovery = entered.replace(path: '/.well-known/matrix/client', query: null, fragment: null);
+    try {
+      final response = await http.get(discovery).timeout(const Duration(seconds: 8));
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final data = jsonDecode(response.body);
+        if (data is Map<String, dynamic>) {
+          final server = data['m.homeserver'];
+          if (server is Map<String, dynamic> && server['base_url'] is String) {
+            final base = (server['base_url'] as String).trim();
+            if (base.isNotEmpty) return _serverUri(base);
+          }
+        }
+      }
+    } catch (_) {
+      // If discovery is unavailable, fall back to the entered server name.
+    }
+    final prefix = entered.path.replaceFirst(RegExp(r'/+$'), '');
+    return entered.replace(path: '$prefix$path', query: null, fragment: null);
   }
 
   String _makeSecret() => base64Url.encode(
@@ -69,7 +91,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     try {
       final secret = _makeSecret();
       final response = await http.post(
-        _url('/_matrix/client/v3/account/password/email/requestToken'),
+        await _url('/_matrix/client/v3/account/password/email/requestToken'),
         headers: const {'content-type': 'application/json'},
         body: jsonEncode({'email': _email.text.trim(), 'client_secret': secret, 'send_attempt': 1}),
       );
@@ -90,7 +112,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     setState(() { _busy = true; _error = null; });
     try {
       final response = await http.post(
-        _url('/_matrix/client/v3/account/password'),
+        await _url('/_matrix/client/v3/account/password'),
         headers: const {'content-type': 'application/json'},
         body: jsonEncode({
           'auth': {'type': 'm.login.email.identity', 'threepid_creds': {'sid': _sid, 'client_secret': _secret}},
