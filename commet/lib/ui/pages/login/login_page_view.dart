@@ -5,6 +5,7 @@ import 'package:commet/config/global_config.dart';
 import 'package:commet/ui/atoms/shader/star_trails.dart';
 import 'package:commet/ui/navigation/navigation_utils.dart';
 import 'package:commet/ui/pages/settings/app_settings_page.dart';
+import 'package:commet/ui/pages/login/password_reset_page.dart';
 import 'package:commet/ui/pages/settings/categories/about/settings_category_about.dart';
 import 'package:commet/utils/common_strings.dart';
 import 'package:flutter/material.dart';
@@ -292,6 +293,18 @@ class _LoginPageViewState extends State<LoginPageView> {
         passwordEntry(),
         const SizedBox(height: 16),
         loginButton(),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () => NavigationUtils.navigateTo(
+              context,
+              PasswordResetPage(
+                homeserver: _homeserverTextField.text,
+              ),
+            ),
+            child: const Text('Forgot password?'),
+          ),
+        ),
       ],
     );
   }

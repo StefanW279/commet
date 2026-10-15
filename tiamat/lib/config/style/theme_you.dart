@@ -9,11 +9,8 @@ import 'package:tiamat/config/style/theme_dark.dart';
 class ThemeYou {
   static Future<ThemeData> theme(Brightness brightness) async {
     ColorScheme? scheme;
-    scheme =
-        (await DynamicColorPlugin.getColorScheme())?[brightness ==
-                Brightness.light
-            ? 0
-            : 1];
+    scheme = (await DynamicColorPlugin.getColorScheme())?[
+        brightness == Brightness.light ? 0 : 1];
 
     if (scheme == null) {
       var color = await DynamicColorPlugin.getAccentColor();

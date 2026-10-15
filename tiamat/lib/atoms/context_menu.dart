@@ -125,7 +125,7 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
     var view = WidgetsBinding.instance.platformDispatcher.views.first;
     var viewSize = view.physicalSize;
 
-    var scale = (tiamat.getAppScale?.call() ?? 1.0)  * view.devicePixelRatio;
+    var scale = (tiamat.getAppScale?.call() ?? 1.0) * view.devicePixelRatio;
 
     if (calculatedOffset == null) {
       return Container(
