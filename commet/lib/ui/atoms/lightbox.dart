@@ -215,6 +215,22 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     return completer.future;
   }
 
+  void zoomBy(double factor) {
+    final currentScale = controller.value.getMaxScaleOnAxis();
+    final nextScale = (currentScale * factor).clamp(1.0, 3.5).toDouble();
+    controller.value = nextScale <= 1.0
+        ? Matrix4.identity()
+        : Matrix4.diagonal3Values(nextScale, nextScale, 1);
+  }
+
+  void toggleZoom() {
+    if (controller.value.getMaxScaleOnAxis() > 1.0) {
+      controller.value = Matrix4.identity();
+    } else {
+      zoomBy(2);
+    }
+  }
+
   void dismiss() {
     setState(() {
       dismissing = true;
@@ -251,6 +267,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(10),
                           child: GestureDetector(
                             onTap: () {},
+                            onDoubleTap: toggleZoom,
                             child: AspectRatio(
                                 aspectRatio: aspectRatio,
                                 child: widget.customWidget ??
@@ -294,7 +311,54 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                                   CircularProgressIndicator()),
                                                         )),
                                                   ),
-                                                )
+                                                ),
+                                              Positioned(
+                                                right: 8,
+                                                bottom: 8,
+                                                child: Material(
+                                                  color: Colors.black54,
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      IconButton(
+                                                        tooltip: "Zoom in",
+                                                        visualDensity:
+                                                            VisualDensity.compact,
+                                                        color: Colors.white,
+                                                        onPressed: () =>
+                                                            zoomBy(1.25),
+                                                        icon: const Icon(
+                                                            Icons.add),
+                                                      ),
+                                                      IconButton(
+                                                        tooltip: "Zoom out",
+                                                        visualDensity:
+                                                            VisualDensity.compact,
+                                                        color: Colors.white,
+                                                        onPressed: () =>
+                                                            zoomBy(0.8),
+                                                        icon: const Icon(
+                                                            Icons.remove),
+                                                      ),
+                                                      IconButton(
+                                                        tooltip: "Reset zoom",
+                                                        visualDensity:
+                                                            VisualDensity.compact,
+                                                        color: Colors.white,
+                                                        onPressed: () {
+                                                          controller.value =
+                                                              Matrix4.identity();
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.fit_screen),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           )
                                         : widget.video != null
