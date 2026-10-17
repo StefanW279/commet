@@ -174,6 +174,49 @@ jobs:
 
           Copy-Item $msiPath ".\commet-windows.msi" -Force
 
+      - name: Validate MSI contents
+        shell: pwsh
+        run: |
+          $msiPath = (Resolve-Path ".\\commet-windows.msi").Path
+          $installer = New-Object -ComObject WindowsInstaller.Installer
+          $database = $installer.OpenDatabase($msiPath, 0)
+          $view = $database.OpenView('SELECT `FileName` FROM `File`')
+          $view.Execute()
+
+          $fileCount = 0
+          $hasApplication = $false
+          while ($record = $view.Fetch()) {
+            $fileCount++
+            $fileName = [string]$record.StringData(1)
+            if ($fileName -match '(?i)commet\.exe$') {
+              $hasApplication = $true
+            }
+          }
+          $view.Close()
+
+          Write-Host "MSI File table entries: $fileCount"
+          if ($fileCount -eq 0) {
+            throw "The MSI File table is empty; refusing to publish an installer with no payload files."
+          }
+          if (-not $hasApplication) {
+            throw "The MSI does not contain commet.exe; refusing to publish an incomplete installer."
+          }
+
+          $mediaView = $database.OpenView('SELECT `Cabinet` FROM `Media`')
+          $mediaView.Execute()
+          $embeddedCabinet = $false
+          while ($mediaRecord = $mediaView.Fetch()) {
+            $cabinet = [string]$mediaRecord.StringData(1)
+            Write-Host "MSI cabinet entry: $cabinet"
+            if ($cabinet.StartsWith('#')) {
+              $embeddedCabinet = $true
+            }
+          }
+          $mediaView.Close()
+          if (-not $embeddedCabinet) {
+            throw "The MSI does not reference an embedded cabinet. Check that MediaTemplate EmbedCab=yes is applied."
+          }
+
       - name: Upload MSI Artifact
         uses: actions/upload-artifact@v4
         with:

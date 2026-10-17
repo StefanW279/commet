@@ -10,7 +10,7 @@
     <MajorUpgrade
       DowngradeErrorMessage="A newer version of Commet is already installed." />
 
-    <MediaTemplate />
+    <MediaTemplate EmbedCab="yes" />
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="INSTALLFOLDER" Name="Commet">
