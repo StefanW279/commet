@@ -45,7 +45,12 @@ class WindowManagement {
     // Linux tray_manager reads an icon from the filesystem, so resolve the
     // asset in Flutter's bundled data directory (including Flatpak installs).
     if (PlatformUtils.isLinux) {
-      final executableDirectory = File(Platform.resolvedExecutable).parent.path;
+      // Flatpak launchers can expose the executable through a symlink. Resolve
+      // it before deriving the Flutter bundle path so the tray plugin receives
+      // the real on-disk asset path rather than a path relative to the launcher.
+      final executable = File(Platform.resolvedExecutable);
+      final resolvedExecutable = executable.resolveSymbolicLinksSync();
+      final executableDirectory = File(resolvedExecutable).parent.path;
       return "$executableDirectory/data/flutter_assets/$asset";
     }
     return asset;
