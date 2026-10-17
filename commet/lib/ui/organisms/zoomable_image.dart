@@ -30,7 +30,6 @@ class ZoomableImage extends StatefulWidget {
 
 class _ZoomableImageState extends State<ZoomableImage> {
   late final TransformationController _transformationController;
-  bool _zoomed = false;
 
   @override
   void initState() {
@@ -44,24 +43,20 @@ class _ZoomableImageState extends State<ZoomableImage> {
     super.dispose();
   }
 
-  void _toggleZoom() {
-    setState(() {
-      _zoomed = !_zoomed;
-      _transformationController.value = _zoomed
-          ? Matrix4.diagonal3Values(
-              widget.maxScale.clamp(widget.minScale, 2.5),
-              widget.maxScale.clamp(widget.minScale, 2.5),
-              1,
-            )
-          : Matrix4.identity();
-    });
+  void _setScale(double scale) {
+    final nextScale = scale.clamp(widget.minScale, widget.maxScale).toDouble();
+    _transformationController.value = nextScale == 1
+        ? Matrix4.identity()
+        : Matrix4.diagonal3Values(nextScale, nextScale, 1);
   }
 
-  void _resetZoom() {
-    setState(() {
-      _zoomed = false;
-      _transformationController.value = Matrix4.identity();
-    });
+  void _toggleZoom() {
+    final currentScale =
+        _transformationController.value.getMaxScaleOnAxis();
+    _setScale(currentScale > widget.minScale
+        ? widget.minScale
+        : widget.maxScale.clamp(widget.minScale, 2.5).toDouble());
+    setState(() {});
   }
 
   @override
@@ -107,15 +102,10 @@ class _ZoomableImageState extends State<ZoomableImage> {
                     tooltip: 'Zoom in',
                     color: Colors.white,
                     onPressed: () {
-                      final currentScale =
-                          _transformationController.value.getMaxScaleOnAxis();
-                      final nextScale =
-                          (currentScale * 1.25).clamp(widget.minScale, widget.maxScale);
-                      setState(() {
-                        _zoomed = nextScale > widget.minScale;
-                        _transformationController.value =
-                            Matrix4.diagonal3Values(nextScale, nextScale, 1);
-                      });
+                      final currentScale = _transformationController.value
+                          .getMaxScaleOnAxis();
+                      _setScale(currentScale * 1.25);
+                      setState(() {});
                     },
                     icon: const Icon(Icons.add),
                   ),
@@ -123,23 +113,20 @@ class _ZoomableImageState extends State<ZoomableImage> {
                     tooltip: 'Zoom out',
                     color: Colors.white,
                     onPressed: () {
-                      final currentScale =
-                          _transformationController.value.getMaxScaleOnAxis();
-                      final nextScale =
-                          (currentScale / 1.25).clamp(widget.minScale, widget.maxScale);
-                      setState(() {
-                        _zoomed = nextScale > widget.minScale;
-                        _transformationController.value = nextScale == widget.minScale
-                            ? Matrix4.identity()
-                            : Matrix4.diagonal3Values(nextScale, nextScale, 1);
-                      });
+                      final currentScale = _transformationController.value
+                          .getMaxScaleOnAxis();
+                      _setScale(currentScale / 1.25);
+                      setState(() {});
                     },
                     icon: const Icon(Icons.remove),
                   ),
                   IconButton(
                     tooltip: 'Reset zoom',
                     color: Colors.white,
-                    onPressed: _resetZoom,
+                    onPressed: () {
+                      _setScale(widget.minScale);
+                      setState(() {});
+                    },
                     icon: const Icon(Icons.fit_screen),
                   ),
                 ],
