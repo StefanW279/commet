@@ -42,10 +42,15 @@ class WindowManagement {
         ? "assets/images/app_icon/app_icon_rounded.png"
         : "assets/images/app_icon/app_icon_filled.png";
 
-    // Linux tray_manager reads an icon from the filesystem, so resolve the
-    // asset in Flutter's bundled data directory (including Flatpak installs).
     if (PlatformUtils.isLinux) {
-      final executableDirectory = File(Platform.resolvedExecutable).parent.path;
+      final isFlatpak = Platform.environment.containsKey('FLATPAK_ID');
+      if (isFlatpak) {
+        return 'chat.commet.commetapp';
+      }
+
+      final executable = File(Platform.resolvedExecutable);
+      final resolvedExecutable = executable.resolveSymbolicLinksSync();
+      final executableDirectory = File(resolvedExecutable).parent.path;
       return "$executableDirectory/data/flutter_assets/$asset";
     }
     return asset;
