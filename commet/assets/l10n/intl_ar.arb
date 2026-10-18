@@ -1,4 +1,5 @@
 {
+    "@@locale": "ar",
     "promptHomeserver": "الخادوم الرئيسي",
     "@promptHomeserver": {
         "description": "Placeholder text for homeserver field on login form",

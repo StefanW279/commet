@@ -1,4 +1,5 @@
 {
+    "@@locale": "pt_BR",
     "messagePlaceholderSticker": "{user} enviou uma figurinha",
     "@messagePlaceholderSticker": {
         "description": "Message body for when a user sends a sticker",
@@ -1779,6 +1780,11 @@
     "promptProfileChangeBanner": "Mudar banner",
     "@promptProfileChangeBanner": {
         "description": "Prompt to change the banner on the user's profile",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipStreamFramerateDescription": "Alvo de quadros por segundo para compartilhamento de tela. Maior tem movimento mais suave, mas talvez reduza a clareza visual.",
+    "@labelVoipStreamFramerateDescription": {
         "type": "text",
         "placeholders": {}
     }
