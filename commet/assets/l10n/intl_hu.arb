@@ -1,4 +1,5 @@
 {
+    "@@locale": "hu",
     "labelRoomsList": "Szobák",
     "@labelRoomsList": {
         "description": "Header label for the list of rooms",

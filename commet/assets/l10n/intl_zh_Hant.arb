@@ -1,4 +1,5 @@
 {
+    "@@locale": "zh_Hant",
     "labelRoomsList": "房間",
     "@labelRoomsList": {
         "description": "Header label for the list of rooms",
