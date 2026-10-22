@@ -140,6 +140,11 @@ dependencies:
 
 
 dependency_overrides:
+  tray_manager:
+    git:
+      url: https://github.com/StefanW279/tray_manager.git
+      ref: commet
+      path: packages/tray_manager
   analyzer: ^7.3.0
   pointycastle: ^4.0.0
 
