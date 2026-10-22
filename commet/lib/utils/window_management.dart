@@ -39,7 +39,7 @@ class WindowManagement {
 
   static String _trayIconPath() {
     final asset = PlatformUtils.isWindows
-        ? "assets/images/app_icon/app_icon_rounded.png"
+        ? "assets/images/app_icon/app_icon_rounded.ico"
         : "assets/images/app_icon/app_icon_filled.png";
 
     if (PlatformUtils.isLinux) {
@@ -47,13 +47,14 @@ class WindowManagement {
       if (isFlatpak) {
         return 'chat.commet.commetapp';
       }
-
-      final executable = File(Platform.resolvedExecutable);
-      final resolvedExecutable = executable.resolveSymbolicLinksSync();
-      final executableDirectory = File(resolvedExecutable).parent.path;
-      return "$executableDirectory/data/flutter_assets/$asset";
     }
-    return asset;
+
+    // tray_manager's Windows implementation expects an on-disk icon path.
+    // Flutter bundles assets under data/flutter_assets next to the executable.
+    final executable = File(Platform.resolvedExecutable);
+    final resolvedExecutable = executable.resolveSymbolicLinksSync();
+    final executableDirectory = File(resolvedExecutable).parent.path;
+    return "$executableDirectory/data/flutter_assets/$asset";
   }
 
   static Future<void> _configureTray() async {
