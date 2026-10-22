@@ -134,6 +134,11 @@ class _TrayListener with TrayListener {
   }
 
   @override
+  void onTrayIconRightMouseDown() {
+    WindowManagement._trayManager.popUpContextMenu();
+  }
+
+  @override
   void onTrayMenuItemClick(MenuItem menuItem) {
     switch (menuItem.key) {
       case "show_window":
