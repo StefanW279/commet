@@ -276,6 +276,7 @@ jobs:
           java-version: 17
 
       - name: Setup Tools
+        timeout-minutes: 5
         run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg
@@ -354,6 +355,7 @@ jobs:
           java-version: 17
 
       - name: Setup Tools
+        timeout-minutes: 5
         run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg
@@ -426,6 +428,7 @@ jobs:
           channel: 'stable'
 
       - name: Setup Tools
+        timeout-minutes: 5
         run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev flatpak-builder flatpak webkit2gtk-4.1 keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev
@@ -479,6 +482,7 @@ jobs:
           channel: 'stable'
 
       - name: Setup Tools
+        timeout-minutes: 5
         run: |
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg webkit2gtk-4.1 
