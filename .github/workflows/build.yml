@@ -275,6 +275,12 @@ jobs:
         with:
           java-version: 17
 
+      - name: Bypass degraded Ubuntu mirror
+        run: |
+          grep -Eq '^https://archive\.ubuntu\.com/ubuntu/([[:space:]]|$)' /etc/apt/apt-mirrors.txt
+          sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
+          cat /etc/apt/apt-mirrors.txt
+
       - name: Setup Tools
         timeout-minutes: 5
         run: |
@@ -354,6 +360,12 @@ jobs:
         with:
           java-version: 17
 
+      - name: Bypass degraded Ubuntu mirror
+        run: |
+          grep -Eq '^https://archive\.ubuntu\.com/ubuntu/([[:space:]]|$)' /etc/apt/apt-mirrors.txt
+          sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
+          cat /etc/apt/apt-mirrors.txt
+
       - name: Setup Tools
         timeout-minutes: 5
         run: |
@@ -427,6 +439,12 @@ jobs:
           flutter-version: '3.41.9'
           channel: 'stable'
 
+      - name: Bypass degraded Ubuntu mirror
+        run: |
+          grep -Eq '^https://archive\.ubuntu\.com/ubuntu/([[:space:]]|$)' /etc/apt/apt-mirrors.txt
+          sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
+          cat /etc/apt/apt-mirrors.txt
+
       - name: Setup Tools
         timeout-minutes: 5
         run: |
@@ -480,6 +498,12 @@ jobs:
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
+
+      - name: Bypass degraded Ubuntu mirror
+        run: |
+          grep -Eq '^https://archive\.ubuntu\.com/ubuntu/([[:space:]]|$)' /etc/apt/apt-mirrors.txt
+          sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
+          cat /etc/apt/apt-mirrors.txt
 
       - name: Setup Tools
         timeout-minutes: 5
