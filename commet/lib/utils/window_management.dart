@@ -63,6 +63,9 @@ class WindowManagement {
       await _trayManager.setToolTip("Commet");
     }
     await _trayManager.setIcon(_trayIconPath());
+    if (PlatformUtils.isLinux) {
+      await _trayManager.setTitle("Commet");
+    }
     await _trayManager.setContextMenu(
       Menu(
         items: [
