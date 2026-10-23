@@ -105,6 +105,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   @override
   void dispose() {
     onLodChanged?.cancel();
+    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -218,9 +220,15 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   void zoomBy(double factor) {
     final currentScale = controller.value.getMaxScaleOnAxis();
     final nextScale = (currentScale * factor).clamp(1.0, 3.5).toDouble();
-    controller.value = nextScale <= 1.0
-        ? Matrix4.identity()
-        : Matrix4.diagonal3Values(nextScale, nextScale, 1);
+    if (nextScale <= 1.0) {
+      controller.value = Matrix4.identity();
+      return;
+    }
+
+    // Scale the existing transform so zooming does not discard the current
+    // pan offset. InteractiveViewer still handles gesture-based panning.
+    final scaleFactor = nextScale / currentScale;
+    controller.value = controller.value.clone()..scale(scaleFactor);
   }
 
   void toggleZoom() {
