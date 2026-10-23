@@ -2212,7 +2212,7 @@ packages:
     description:
       path: "packages/tray_manager"
       ref: commet
-      resolved-ref: "105a03d12443126263df7781b73f80a3495f65a6"
+      resolved-ref: ce52e766196fc0d640e73d3ccf520e090d2eebee
       url: "https://github.com/StefanW279/tray_manager.git"
     source: git
     version: "0.5.1"
