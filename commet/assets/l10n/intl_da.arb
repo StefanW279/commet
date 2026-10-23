@@ -1,4 +1,5 @@
 {
+    "@@locale": "da",
     "labelRoomsList": "Rum",
     "@labelRoomsList": {
         "description": "Header label for the list of rooms",

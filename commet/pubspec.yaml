@@ -156,6 +156,13 @@ dependency_overrides:
       ref: main
       path: pkgs/markdown
 
+  ## fixes: https://github.com/StefanW279/commet/issues/70
+  tray_manager:
+    git:
+      url: https://github.com/StefanW279/tray_manager.git
+      ref: commet
+      path: packages/tray_manager
+
   ## fixes: https://github.com/commetchat/commet/issues/1068
   desktop_drop:
     git:

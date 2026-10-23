@@ -1,4 +1,5 @@
 {
+    "@@locale": "pl",
     "promptMatrixVerifySession": "Zweryfikuj",
     "@promptMatrixVerifySession": {
         "description": "Text on the button to verify a session",

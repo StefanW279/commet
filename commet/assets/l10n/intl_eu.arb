@@ -1,4 +1,5 @@
 {
+    "@@locale": "eu",
     "messagePlaceholderSticker": "{user}(e)k pegatina bidali du",
     "@messagePlaceholderSticker": {
         "description": "Message body for when a user sends a sticker",

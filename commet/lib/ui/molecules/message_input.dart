@@ -181,12 +181,44 @@ class MessageInputState extends State<MessageInput> {
     textFocus.requestFocus();
   }
 
+  static bool _hasOtherTextEditorFocused(MessageInputState input) {
+    final primaryFocus = FocusManager.instance.primaryFocus;
+
+    if (primaryFocus == null || identical(primaryFocus, input.textFocus)) {
+      return false;
+    }
+
+    final context = primaryFocus.context;
+    if (context == null) {
+      return false;
+    }
+
+    // EditableText owns the focus node through an internal Focus widget, so
+    // check the element ancestry rather than only inspecting context.widget.
+    if (context.widget is EditableText) {
+      return true;
+    }
+
+    var hasEditableTextAncestor = false;
+    context.visitAncestorElements((element) {
+      if (element.widget is EditableText) {
+        hasEditableTextAncestor = true;
+        return false;
+      }
+
+      return true;
+    });
+
+    return hasEditableTextAncestor;
+  }
+
   static bool _handleUnfocusedKey(KeyEvent event) {
     final input = _activeInstance;
 
     if (input == null ||
         !input.mounted ||
         input.textFocus.hasFocus ||
+        _hasOtherTextEditorFocused(input) ||
         !input.widget.enabled ||
         input.widget.isProcessing ||
         !BuildConfig.DESKTOP ||

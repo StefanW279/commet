@@ -1,4 +1,5 @@
 {
+    "@@locale": "pt",
     "labelSpacePermissionSettings": "Permissões",
     "@labelSpacePermissionSettings": {
         "description": "Label for space permission settings",
