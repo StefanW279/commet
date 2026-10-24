@@ -1,0 +1,63 @@
+version: 2
+updates:
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/commet/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/rust/rust_builder/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/rust/rust_builder/cargokit/build_tool/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/widgets/matrix_widget_api/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/widgets/calendar/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub" # Flutter/Dart
+    directory: "/tiamat/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "cargo" # Rust
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "cargo" # Rust
+    directory: "/rust/rust/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "nix" # Nix flakes
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "gradle" # Gradle
+    directory: "/commet/android/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions" # GitHub Actions
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+      
