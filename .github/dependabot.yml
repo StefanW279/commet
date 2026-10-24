@@ -5,7 +5,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      
+
   - package-ecosystem: "cargo" # Rust
     open-pull-requests-limit: 20
     directory: "/"
@@ -20,7 +20,7 @@ updates:
 
   - package-ecosystem: "gradle" # Gradle
     open-pull-requests-limit: 20
-    directory: "/"
+    directory: "/commet/android/"
     schedule:
       interval: "weekly"
 
