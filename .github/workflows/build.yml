@@ -69,7 +69,7 @@ jobs:
         run: tar -a -c -f commet-windows.zip -C .\commet\build\windows\x64\runner\ Release
 
       - name: Upload Zip Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.zip
           path: |
@@ -218,7 +218,7 @@ jobs:
           }
 
       - name: Upload MSI Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.msi
           path: |
@@ -303,7 +303,7 @@ jobs:
           dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -389,7 +389,7 @@ jobs:
           dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }} --enable_google_services true --build_detail google_services
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android-google-services-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -476,7 +476,7 @@ jobs:
           flatpak build-bundle repo chat.commet.commetapp.flatpak chat.commet.commetapp
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: chat.commet.commetapp.flatpak
           path: commet/linux/flatpak/chat.commet.commetapp.flatpak
@@ -535,7 +535,7 @@ jobs:
           tar -czf commet-web.tar.gz web
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz

@@ -60,7 +60,7 @@ jobs:
       
       - name: Upload Zip Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.zip
           path: .\commet-windows.zip
@@ -201,7 +201,7 @@ jobs:
 
       - name: Upload MSI Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.msi
           path: .\commet-windows.msi
@@ -294,7 +294,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -390,7 +390,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android-google-services.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -488,7 +488,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-${{ matrix.os }}-x64.deb
           path: commet-pkg/commet-linux-x64.deb
@@ -585,7 +585,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: chat.commet.commetapp.flatpak
           path: commet/linux/flatpak/chat.commet.commetapp.flatpak
@@ -673,7 +673,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-linux-portable-x64.tar.gz
           path: commet/build/linux/x64/release/commet-linux-portable-x64.tar.gz
@@ -742,7 +742,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
