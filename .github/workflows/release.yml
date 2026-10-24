@@ -20,7 +20,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
@@ -238,7 +238,7 @@ jobs:
           docker builder prune -af || true
           df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           fetch-depth: 0
@@ -332,7 +332,7 @@ jobs:
           df -h
       
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           fetch-depth: 0
@@ -432,7 +432,7 @@ jobs:
           df -h
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
@@ -526,7 +526,7 @@ jobs:
           df -h
       
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
@@ -623,7 +623,7 @@ jobs:
           df -h
   
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
@@ -684,7 +684,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
