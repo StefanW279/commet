@@ -7,7 +7,7 @@ environment:
 resolution: workspace
 
 dependencies: 
-  build: any
+  build: 3.0.1
   build_config: ^1.1.1
   commet_calendar_widget:
     path: ../widgets/calendar
@@ -26,8 +26,8 @@ dependencies:
   html_unescape: ^2.0.0
   http: ^1.1.0
   implicitly_animated_list: ^2.2.0
-  intl: any
-  intl_utils: any
+  intl: ^0.20.3
+  intl_utils: 2.8.14
   just_the_tooltip: ^0.0.12
   media_kit: ^1.2.6 # Primary package.
   media_kit_libs_video: ^1.0.7 # Native video dependencies.
@@ -42,13 +42,13 @@ dependencies:
   shared_preferences: ^2.5.2
   sqflite: ^2.3.0
   sqflite_common_ffi: ^2.3.0+4
-  test: ^1.24.3
+  test: ^1.31.1
   unifiedpush: ^5.0.1
   universal_html: ^2.2.4
-  url_launcher: ^6.1.11
+  url_launcher: ^6.3.3
   win_toast: ^0.4.0
   window_manager: ^0.5.1
-  tray_manager: ^0.5.1
+  tray_manager: ^0.7.0
   flutter: 
     sdk: flutter
   flutter_highlighter: 
@@ -84,9 +84,9 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.23
   fuzzy: ^0.5.1
   drift: ^2.28.1
-  archive: ^3.6.1
+  archive: ^4.5.2
   exif: ^3.3.0
-  image: ^4.2.0
+  image: ^4.12.0
   livekit_client: ^2.13.0
   flutter_webrtc: ^1.6.2+hotfix.3
   file_picker: ^10.2.0
@@ -98,7 +98,7 @@ dependencies:
   flutter_shortcuts_new: ^2.0.0
   flutter_vodozemac: ^0.5.0
   vodozemac: ^0.5.0
-  intl_translation: ^0.20.1
+  intl_translation: ^0.21.0
 
 
   ## ---- Putting some extra lines in here to help git with the diff
@@ -109,7 +109,7 @@ dependencies:
   ## End Google Services Dependencies
   ## ----
   ## ----
-  markdown: any
+  markdown: 7.3.1
   collection: any
   webrtc_interface: any
   uuid: any
@@ -131,7 +131,7 @@ dependencies:
   flutter_inappwebview: ^6.1.5
   network_info_plus: ^7.0.0
   pretty_qr_code: ^3.6.0
-  basic_utils: ^5.7.0
+  basic_utils: ^5.8.2
   
   launcher_entry:
     git: https://github.com/commetchat/launcher_entry.git
@@ -183,8 +183,8 @@ dependency_overrides:
   #     ref: hkdf
 
 dev_dependencies: 
-  drift_dev: ^2.28.0
-  build_runner: ^2.4.11
+  drift_dev: ^2.28.3
+  build_runner: ^2.6.1
   flutter_launcher_icons: ^0.13.1
   msix: ^3.7.0
   pubspec_dependency_sorter: ^1.0.4
