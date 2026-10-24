@@ -274,6 +274,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           java-version: 17
+          distribution: 'zulu'
 
       - name: Bypass degraded Ubuntu mirror
         run: |
@@ -359,6 +360,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           java-version: 17
+          distribution: 'zulu'
 
       - name: Bypass degraded Ubuntu mirror
         run: |
