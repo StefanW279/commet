@@ -764,7 +764,7 @@ jobs:
     needs: [release-linux-flatpak]
     steps:
       - name: Update Repositorys on Remote Server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -802,7 +802,7 @@ jobs:
     needs: [release-android-google-services]
     steps:
       - name: Update Repositorys on Remote Server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
