@@ -21,7 +21,7 @@ stderrlog = "0.6.0"
 tao = "0.35.3"
 tokio = { version = "1.50.0", features = ["io-util", "io-std"] }
 uuid = "1.23.0"
-wry = "0.54.4"
+wry = "0.55.1"
 overlay = { git = "https://github.com/commetchat/overlay.git", rev = "5e110888725bc2e21831b923896f2f89dea5963f" }
 
 [target.'cfg(unix)'.dependencies]
