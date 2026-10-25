@@ -20,12 +20,12 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -60,7 +60,7 @@ jobs:
       
       - name: Upload Zip Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.zip
           path: .\commet-windows.zip
@@ -201,7 +201,7 @@ jobs:
 
       - name: Upload MSI Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.msi
           path: .\commet-windows.msi
@@ -238,21 +238,22 @@ jobs:
           docker builder prune -af || true
           df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           fetch-depth: 0
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
 
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v6
         with:
           java-version: 17
+          distribution: 'zulu'
 
       - name: Bypass degraded Ubuntu mirror
         run: |
@@ -294,7 +295,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -332,21 +333,22 @@ jobs:
           df -h
       
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           fetch-depth: 0
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
 
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v6
         with:
           java-version: 17
+          distribution: 'zulu'
 
       - name: Bypass degraded Ubuntu mirror
         run: |
@@ -390,7 +392,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android-google-services.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -432,12 +434,12 @@ jobs:
           df -h
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -488,7 +490,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-${{ matrix.os }}-x64.deb
           path: commet-pkg/commet-linux-x64.deb
@@ -526,12 +528,12 @@ jobs:
           df -h
       
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -585,7 +587,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: chat.commet.commetapp.flatpak
           path: commet/linux/flatpak/chat.commet.commetapp.flatpak
@@ -623,12 +625,12 @@ jobs:
           df -h
   
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -673,7 +675,7 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-linux-portable-x64.tar.gz
           path: commet/build/linux/x64/release/commet-linux-portable-x64.tar.gz
@@ -684,12 +686,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -742,16 +744,16 @@ jobs:
 
       - name: Upload Artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
           overwrite: true
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           # Upload entire repository
           path: 'commet/build/web'
@@ -764,7 +766,7 @@ jobs:
     needs: [release-linux-flatpak]
     steps:
       - name: Update Repositorys on Remote Server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -802,7 +804,7 @@ jobs:
     needs: [release-android-google-services]
     steps:
       - name: Update Repositorys on Remote Server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}

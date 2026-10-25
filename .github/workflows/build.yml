@@ -39,14 +39,14 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           ref: ${{ github.event.pull_request.head.sha }}
           allow-unsafe-pr-checkout: true
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -69,7 +69,7 @@ jobs:
         run: tar -a -c -f commet-windows.zip -C .\commet\build\windows\x64\runner\ Release
 
       - name: Upload Zip Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.zip
           path: |
@@ -78,7 +78,7 @@ jobs:
           overwrite: true
 
       - name: Checkout installer files from main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
           path: installer-source
@@ -218,7 +218,7 @@ jobs:
           }
 
       - name: Upload MSI Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-windows.msi
           path: |
@@ -257,7 +257,7 @@ jobs:
           docker builder prune -af || true
           df -h
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           fetch-depth: 0
@@ -265,15 +265,16 @@ jobs:
           allow-unsafe-pr-checkout: true
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
 
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v6
         with:
           java-version: 17
+          distribution: 'zulu'
 
       - name: Bypass degraded Ubuntu mirror
         run: |
@@ -303,7 +304,7 @@ jobs:
           dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -342,7 +343,7 @@ jobs:
           df -h
       
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           fetch-depth: 0
@@ -350,15 +351,16 @@ jobs:
           allow-unsafe-pr-checkout: true
         
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
 
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v6
         with:
           java-version: 17
+          distribution: 'zulu'
 
       - name: Bypass degraded Ubuntu mirror
         run: |
@@ -389,7 +391,7 @@ jobs:
           dart run scripts/build_release.dart --platform android --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }} --enable_google_services true --build_detail google_services
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-android-google-services-beta.apk
           path: commet/build/app/outputs/flutter-apk/app-release.apk
@@ -427,14 +429,14 @@ jobs:
           df -h
       
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           ref: ${{ github.event.pull_request.head.sha }}
           allow-unsafe-pr-checkout: true
 
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -476,7 +478,7 @@ jobs:
           flatpak build-bundle repo chat.commet.commetapp.flatpak chat.commet.commetapp
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: chat.commet.commetapp.flatpak
           path: commet/linux/flatpak/chat.commet.commetapp.flatpak
@@ -487,14 +489,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           submodules: 'true'
           ref: ${{ github.event.pull_request.head.sha }}
           allow-unsafe-pr-checkout: true
 
       - name: Setup Flutter 
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: 'stable'
@@ -535,7 +537,7 @@ jobs:
           tar -czf commet-web.tar.gz web
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: commet-web.tar.gz
           path: commet/build/commet-web.tar.gz
