@@ -5,52 +5,12 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-
-  - package-ecosystem: "pub" # Flutter/Dart
-    open-pull-requests-limit: 20
-    directory: "/commet/"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pub" # Flutter/Dart
-    open-pull-requests-limit: 20
-    directory: "/rust/rust_builder/"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pub" # Flutter/Dart
-    open-pull-requests-limit: 20
-    directory: "/rust/rust_builder/cargokit/build_tool/"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pub" # Flutter/Dart
-    open-pull-requests-limit: 20
-    directory: "/widgets/matrix_widget_api/"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pub" # Flutter/Dart
-    open-pull-requests-limit: 20
-    directory: "/widgets/calendar/"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pub" # Flutter/Dart
-    open-pull-requests-limit: 20
-    directory: "/tiamat/"
-    schedule:
-      interval: "weekly"
+    ignore:
+      - dependency-name: "intl"
 
   - package-ecosystem: "cargo" # Rust
     open-pull-requests-limit: 20
     directory: "/"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "cargo" # Rust
-    open-pull-requests-limit: 20
-    directory: "/rust/rust/"
     schedule:
       interval: "weekly"
 
