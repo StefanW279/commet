@@ -3,6 +3,6 @@ Version: {{VERSION_TAG}}
 Architecture: all
 Essential: no
 Priority: optional
-Depends: libmpv1, keybinder-3.0
-Maintainer: Update maintainer
+Depends: libmpv1, libkeybinder-3.0-0
+Maintainer: Stefan / Jonas
 Description: Your space to connect!
