@@ -815,6 +815,12 @@ jobs:
 
             echo "Updating F-Droid"
 
+            echo "Updating F-Droid App Metadata..."
+
+            cd ${{ secrets.FDROID_PATH }}
+
+            ./update_metadata.sh
+
             cd ${{ secrets.FDROID_PATH }}/repo
 
             echo "Downloading latest APK Release..."

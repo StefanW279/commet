@@ -1,0 +1,1 @@
+Ein komfortabler Chat-Client, der deine Privatsphäre respektiert. Unterstützt durch Matrix.
