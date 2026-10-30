@@ -105,6 +105,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   @override
   void dispose() {
     onLodChanged?.cancel();
+    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -215,6 +217,28 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     return completer.future;
   }
 
+  void zoomBy(double factor) {
+    final currentScale = controller.value.getMaxScaleOnAxis();
+    final nextScale = (currentScale * factor).clamp(1.0, 3.5).toDouble();
+    if (nextScale <= 1.0) {
+      controller.value = Matrix4.identity();
+      return;
+    }
+
+    // Scale the existing transform so zooming does not discard the current
+    // pan offset. InteractiveViewer still handles gesture-based panning.
+    final scaleFactor = nextScale / currentScale;
+    controller.value = controller.value.clone()..scale(scaleFactor);
+  }
+
+  void toggleZoom() {
+    if (controller.value.getMaxScaleOnAxis() > 1.0) {
+      controller.value = Matrix4.identity();
+    } else {
+      zoomBy(2);
+    }
+  }
+
   void dismiss() {
     setState(() {
       dismissing = true;
@@ -251,6 +275,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(10),
                           child: GestureDetector(
                             onTap: () {},
+                            onDoubleTap: toggleZoom,
                             child: AspectRatio(
                                 aspectRatio: aspectRatio,
                                 child: widget.customWidget ??
@@ -294,7 +319,54 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                                   CircularProgressIndicator()),
                                                         )),
                                                   ),
-                                                )
+                                                ),
+                                              Positioned(
+                                                right: 8,
+                                                bottom: 8,
+                                                child: Material(
+                                                  color: Colors.black54,
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      IconButton(
+                                                        tooltip: "Zoom in",
+                                                        visualDensity:
+                                                            VisualDensity.compact,
+                                                        color: Colors.white,
+                                                        onPressed: () =>
+                                                            zoomBy(1.25),
+                                                        icon: const Icon(
+                                                            Icons.add),
+                                                      ),
+                                                      IconButton(
+                                                        tooltip: "Zoom out",
+                                                        visualDensity:
+                                                            VisualDensity.compact,
+                                                        color: Colors.white,
+                                                        onPressed: () =>
+                                                            zoomBy(0.8),
+                                                        icon: const Icon(
+                                                            Icons.remove),
+                                                      ),
+                                                      IconButton(
+                                                        tooltip: "Reset zoom",
+                                                        visualDensity:
+                                                            VisualDensity.compact,
+                                                        color: Colors.white,
+                                                        onPressed: () {
+                                                          controller.value =
+                                                              Matrix4.identity();
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.fit_screen),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           )
                                         : widget.video != null
