@@ -15,6 +15,13 @@ import 'package:commet/ui/pages/get_or_create_room/voice_chat_view.dart';
 import 'package:commet/utils/common_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
+import 'package:intl/intl.dart';
+
+String get labelCreateRoomHeader => Intl.message(
+      "Create Room:",
+      name: "labelCreateRoomHeader",
+      desc: "",
+    );
 
 class RoomGetter {
   final String label;
@@ -359,7 +366,7 @@ class _GetOrCreateRoomState extends State<GetOrCreateRoom> {
                             createEntry(widget.existing!),
                           if (widget.join != null) createEntry(widget.join!),
                           if (widget.creators.isNotEmpty)
-                            tiamat.Text.labelLow("Create Room:"),
+                            tiamat.Text.labelLow(labelCreateRoomHeader),
                           for (var entry in widget.creators) createEntry(entry)
                         ],
                       ),

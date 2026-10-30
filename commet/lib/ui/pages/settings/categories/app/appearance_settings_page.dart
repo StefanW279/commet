@@ -91,6 +91,60 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
       desc:
           "Description for the toggle which shows an extra entry for rooms which are not contained in a space in the sidebar");
 
+  String get labelFollowSystemBrightness => Intl.message(
+        "Follow System Brightness",
+        name: "labelFollowSystemBrightness",
+        desc: "",
+      );
+
+  String get labelFollowSystemBrightnessDescription => Intl.message(
+        "Automatically follow system Light / Dark mode",
+        name: "labelFollowSystemBrightnessDescription",
+        desc: "",
+      );
+
+  String get labelFollowSystemColors => Intl.message(
+        "Follow System Colors",
+        name: "labelFollowSystemColors",
+        desc: "",
+      );
+
+  String get labelFollowSystemColorsDescription => Intl.message(
+        "Automatically follow system color scheme",
+        name: "labelFollowSystemColorsDescription",
+        desc: "",
+      );
+
+  String get labelSettingsScaling => Intl.message(
+        "Scaling",
+        name: "labelSettingsScaling",
+        desc: "",
+      );
+
+  String get labelAppScaleDescription => Intl.message(
+        "Resizes the overall interface of the app",
+        name: "labelAppScaleDescription",
+        desc: "",
+      );
+
+  String get labelTextScale => Intl.message(
+        "Text Scale",
+        name: "labelTextScale",
+        desc: "",
+      );
+
+  String get labelTextScaleDescription => Intl.message(
+        "Multiply the size of text",
+        name: "labelTextScaleDescription",
+        desc: "",
+      );
+
+  String get labelSettingsOtherOptions => Intl.message(
+        "Other Options",
+        name: "labelSettingsOtherOptions",
+        desc: "",
+      );
+
   @override
   void initState() {
     super.initState();
@@ -105,7 +159,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
           height: 10,
         ),
         Panel(
-          header: "Scaling",
+          header: labelSettingsScaling,
           mode: TileType.surfaceContainerLow,
           child: Column(
             spacing: 12,
@@ -122,15 +176,15 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
                   };
                 },
                 title: labelAppScale,
-                description: "Resizes the overall interface of the app",
+                description: labelAppScaleDescription,
               ),
               DoublePreferenceSlider(
                 min: 0.2,
                 max: 3,
                 requiresConfirmationButton: true,
                 preference: preferences.textScale,
-                title: "Text Scale",
-                description: "Multiply the size of text",
+                title: labelTextScale,
+                description: labelTextScaleDescription,
               )
             ],
           ),
@@ -139,7 +193,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
           height: 10,
         ),
         Panel(
-          header: "Other Options",
+          header: labelSettingsOtherOptions,
           mode: TileType.surfaceContainerLow,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -198,8 +252,8 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                 child: BooleanPreferenceToggle(
                   preference: preferences.shouldFollowSystemTheme,
-                  title: "Follow System Brightness",
-                  description: "Automatically follow system Light / Dark mode",
+                  title: labelFollowSystemBrightness,
+                  description: labelFollowSystemBrightnessDescription,
                   onChanged: (_) async {
                     var theme = await preferences.resolveTheme();
                     if (context.mounted) ThemeChanger.setTheme(context, theme);
@@ -209,8 +263,8 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                 child: BooleanPreferenceToggle(
                   preference: preferences.shouldFollowSystemColors,
-                  title: "Follow System Colors",
-                  description: "Automatically follow system color scheme",
+                  title: labelFollowSystemColors,
+                  description: labelFollowSystemColorsDescription,
                   onChanged: (_) async {
                     var theme = await preferences.resolveTheme();
                     if (context.mounted) ThemeChanger.setTheme(context, theme);

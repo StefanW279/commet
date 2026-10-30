@@ -567,8 +567,8 @@ class Preferences {
   NullableBoolPreference unifiedPushEnabled =
       NullableBoolPreference("unified_push_enabled", defaultValue: null);
 
-  NullableBoolPreference checkForUpdates =
-      NullableBoolPreference("check_for_updates", defaultValue: null);
+  BoolPreference checkForUpdates =
+      BoolPreference("check_for_updates", defaultValue: true);
 
   NullableStringPreference layoutOverride =
       NullableStringPreference("layout_override", defaultValue: null);

@@ -58,6 +58,120 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           name: "notificationSettingsNotSupported",
           desc: "Message to display when push notifications are not supported");
 
+  String get labelPushNotifications => Intl.message(
+        "Push Notifications",
+        name: "labelPushNotifications",
+        desc: "",
+      );
+
+  String get labelUnifiedPush => Intl.message(
+        "Unified Push",
+        name: "labelUnifiedPush",
+        desc: "",
+      );
+
+  String get labelRegisteredPushers => Intl.message(
+        "Registered Pushers",
+        name: "labelRegisteredPushers",
+        desc: "",
+      );
+
+  String get labelSilenceNotifications => Intl.message(
+        "Silence Notifications",
+        name: "labelSilenceNotifications",
+        desc: "",
+      );
+
+  String get labelSilenceNotificationsDescription => Intl.message(
+        "When another device or client is active, silence notifications on this device",
+        name: "labelSilenceNotificationsDescription",
+        desc: "",
+      );
+
+  String get labelShowNotifications => Intl.message(
+        "Show notifications",
+        name: "labelShowNotifications",
+        desc: "",
+      );
+
+  String get labelShowNotificationsDescription => Intl.message(
+        "Enable or disable the display of notifications entirely",
+        name: "labelShowNotificationsDescription",
+        desc: "",
+      );
+
+  String get labelHideNotificationsCurrentRoom => Intl.message(
+        "Hide notifications for current room",
+        name: "labelHideNotificationsCurrentRoom",
+        desc: "",
+      );
+
+  String get labelHideNotificationsCurrentRoomDescription => Intl.message(
+        "When receiving a message, if you have the chat selected and the app is in focus, dont show the notification",
+        name: "labelHideNotificationsCurrentRoomDescription",
+        desc: "",
+      );
+
+  String get labelNotificationBadges => Intl.message(
+        "Notification Badges",
+        name: "labelNotificationBadges",
+        desc: "",
+      );
+
+  String get labelNotificationBadgesDescription => Intl.message(
+        "Show a badge with the number of unread messages in the system taskbar",
+        name: "labelNotificationBadgesDescription",
+        desc: "",
+      );
+
+  String get labelMessageBodyFormatting => Intl.message(
+        "Message Body Formatting",
+        name: "labelMessageBodyFormatting",
+        desc: "",
+      );
+
+  String get labelMessageBodyFormattingDescription => Intl.message(
+        "Apply user formatting in message notifications",
+        name: "labelMessageBodyFormattingDescription",
+        desc: "",
+      );
+
+  String get labelShowImages => Intl.message(
+        "Show Images",
+        name: "labelShowImages",
+        desc: "",
+      );
+
+  String get labelShowImagesDescription => Intl.message(
+        "Show images in notifications, if allowed by 'General > Media Preview' settings",
+        name: "labelShowImagesDescription",
+        desc: "",
+      );
+
+  String get labelPreviewUrls => Intl.message(
+        "Preview Urls",
+        name: "labelPreviewUrls",
+        desc: "",
+      );
+
+  String get labelPreviewUrlsDescription => Intl.message(
+        "Fetch URL previews to show extra information about links in notifications",
+        name: "labelPreviewUrlsDescription",
+        desc: "",
+      );
+
+  String get labelNotificationVolume => Intl.message(
+        "Notification volume",
+        name: "labelNotificationVolume",
+        desc: "",
+      );
+
+  String get labelNotificationVolumeDescription => Intl.message(
+        "Controls the volume of notifications and ringtones",
+        name: "labelNotificationVolumeDescription",
+        desc: "",
+      );
+
   @override
   void initState() {
     super.initState();
@@ -76,7 +190,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             children: [
               Panel(
                 mode: tiamat.TileType.surfaceContainerLow,
-                header: "Push Notifications",
+                header: labelPushNotifications,
                 child: buildNotificationSettings(),
               ),
               if (notifier is UnifiedPushNotifier)
@@ -87,7 +201,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                     Panel(
                         mode: tiamat.TileType.surfaceContainerLow,
-                        header: "Unified Push",
+                        header: labelUnifiedPush,
                         child: Column(
                           children: [
                             UnifiedPushSetupView(
@@ -105,9 +219,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             ],
           ),
         if (preferences.developerMode.value)
-          const Panel(
+          Panel(
             mode: tiamat.TileType.surfaceContainerLow,
-            header: "Registered Pushers",
+            header: labelRegisteredPushers,
             child: NotifierDebugView(),
           ),
       ],
@@ -138,24 +252,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         if (PlatformUtils.isAndroid)
           BooleanPreferenceToggle(
             preference: preferences.silenceNotifications,
-            title: "Silence Notifications",
-            description:
-                "When another device or client is active, silence notifications on this device",
+            title: labelSilenceNotifications,
+            description: labelSilenceNotificationsDescription,
           ),
         if (PlatformUtils.isLinux || PlatformUtils.isWindows)
           Column(
             children: [
               BooleanPreferenceToggle(
                 preference: preferences.enableNotifications,
-                title: "Show notifications",
-                description:
-                    "Enable or disable the display of notifications entirely",
+                title: labelShowNotifications,
+                description: labelShowNotificationsDescription,
               ),
               BooleanPreferenceToggle(
                 preference: preferences.suppressNotificationWhenRoomFocused,
-                title: "Hide notifications for current room",
-                description:
-                    "When receiving a message, if you have the chat selected and the app is in focus, dont show the notification",
+                title: labelHideNotificationsCurrentRoom,
+                description: labelHideNotificationsCurrentRoomDescription,
               ),
               if (PlatformUtils.isLinux)
                 Column(
@@ -165,9 +276,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                     BooleanPreferenceToggle(
                       preference: preferences.showNotificationBadgesInTaskbar,
-                      title: "Notification Badges",
-                      description:
-                          "Show a badge with the number of unread messages in the system taskbar",
+                      title: labelNotificationBadges,
+                      description: labelNotificationBadgesDescription,
                       onChanged: (enabled) {
                         if (enabled) {
                           NotificationManager.notifier?.enableBadges();
@@ -178,9 +288,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                     BooleanPreferenceToggle(
                       preference: preferences.formatNotificationBody,
-                      title: "Message Body Formatting",
-                      description:
-                          "Apply user formatting in message notifications",
+                      title: labelMessageBodyFormatting,
+                      description: labelMessageBodyFormattingDescription,
                     ),
                     AnimatedOpacity(
                       opacity:
@@ -193,15 +302,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                           children: [
                             BooleanPreferenceToggle(
                               preference: preferences.showMediaInNotifications,
-                              title: "Show Images",
-                              description:
-                                  "Show images in notifications, if allowed by 'General > Media Preview' settings",
+                              title: labelShowImages,
+                              description: labelShowImagesDescription,
                             ),
                             BooleanPreferenceToggle(
                               preference: preferences.previewUrlInNotifications,
-                              title: "Preview Urls",
-                              description:
-                                  "Fetch URL previews to show extra information about links in notifications",
+                              title: labelPreviewUrls,
+                              description: labelPreviewUrlsDescription,
                             ),
                           ],
                         ),
@@ -218,9 +325,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 max: 150,
                 numDecimals: 0,
                 units: "%",
-                title: "Notification volume",
-                description:
-                    "Controls the volume of notifications and ringtones",
+                title: labelNotificationVolume,
+                description: labelNotificationVolumeDescription,
                 onChanged: (p0) {
                   Player p = NotificationManager.getSoundPlayer();
                   p.setVolume(p0);
@@ -243,7 +349,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             textEditorPlaceholder: "push.example.com",
             editableEntryPlaceholder: "Custom push gateway",
             items: [
-              "push.commet.chat",
+              "push.kantengewichte.de",
               if (notifier is UnifiedPushNotifier)
                 "matrix.gateway.unifiedpush.org"
             ]),
