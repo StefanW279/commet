@@ -1,0 +1,29 @@
+<p>Commet ist ein Matrix-Client, der darauf ausgelegt ist, einen umfangreichen Funktionsumfang mit einer einfachen Benutzeroberfläche zu verbinden. Unser Ziel ist es, eine sichere und datenschutzfreundliche App zu entwickeln, ohne dabei auf die Funktionen verzichten zu müssen, die du von einem modernen Chat-Client erwartest.</p>
+
+<h3>Umfangreiche Funktionen</h3>
+<p>Commet möchte dir alle Funktionen bieten, die du von einer modernen Chat-App kennst und erwartest – ohne Kompromisse bei der Sicherheit einzugehen.</p>
+<ul>
+    <li>🖼️ GIF-Suche</li>
+    <li>☎️ Anrufe und Sprachchats</li>
+    <li>🧵 Threads</li>
+    <li>🔍 Suche in verschlüsselten Nachrichten</li>
+    <li>🔗 URL-Vorschau</li>
+    <li>😀 Benutzerdefinierte Emojis und Sticker</li>
+    <li>🚀 Spaces</li>
+    <li>📳 Push-Benachrichtigungen</li>
+    <li>🔒 Ende-zu-Ende-Verschlüsselung</li>
+    <li>➕ Und vieles mehr!</li>
+</ul>
+
+<h3>Dein Ort, um in Verbindung zu bleiben</h3>
+
+<p>Neben Textnachrichten und Anrufen bietet Commet weitere Möglichkeiten, gemeinsam Zeit zu verbringen und mit Freunden in Kontakt zu bleiben. Plane ganz einfach gemeinsame Veranstaltungen über einen geteilten Kalender und lade all eure Fotos in ein gemeinsames Album hoch!</p>
+
+<h3>Nahtlose Unterstützung mehrerer Konten</h3>
+
+<p>Commet wurde von Anfang an mit Blick auf die Nutzung mehrerer Konten entwickelt. Dank eines besonderen Konzepts musst du nicht manuell zwischen deinen Konten wechseln.</p>
+
+<p>Alle deine Konten sind gleichzeitig angemeldet und nahtlos miteinander verbunden, sodass du dich ganz auf deine Unterhaltungen konzentrieren kannst.</p>
+
+<h3>Wir sind Open Source</h3>
+<p>Commet wird von einer engagierten Gruppe freiwilliger Mitwirkender entwickelt und gepflegt. Wir freuen uns jederzeit über jede Unterstützung!</p>
