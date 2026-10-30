@@ -31,6 +31,14 @@ class MatrixSessionView extends StatelessWidget {
       desc: "Text on the button to verify a session",
       name: "promptMatrixVerifySession");
 
+  String get promptMatrixThisDevice => Intl.message("This Device",
+      desc: "Text to indicate that this is the current device",
+      name: "promptMatrixThisDevice");
+
+  String get promptMatrixInactive => Intl.message("Inactive",
+      desc: "Text to indicate that this session is inactive",
+      name: "promptMatrixInactive");
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -62,15 +70,15 @@ class MatrixSessionView extends StatelessWidget {
                         Row(
                           children: [
                             if (isThisDevice)
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                                child: TinyPill("This Device"),
+                                child: TinyPill(promptMatrixThisDevice),
                               ),
                             if (inactive)
                               Padding(
                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                                 child: TinyPill(
-                                  "Inactive",
+                                  promptMatrixInactive,
                                   background: ColorScheme.of(context).error,
                                   foreground: ColorScheme.of(context).onError,
                                 ),
@@ -79,8 +87,12 @@ class MatrixSessionView extends StatelessWidget {
                           ],
                         ),
                         if (lastSeenTimestamp != null)
-                          tiamat.Text.tiny(
-                              "Last Seen: ${DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY).format(DateTime.fromMillisecondsSinceEpoch(lastSeenTimestamp!))}"),
+                          tiamat.Text.tiny(Intl.message("Last Seen: ",
+                                  desc: "Label for the last seen timestamp",
+                                  name: "labelLastSeenTimestamp") +
+                              DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
+                                  .format(DateTime.fromMillisecondsSinceEpoch(
+                                      lastSeenTimestamp!))),
                         if (lastSeenIp != null)
                           const Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),

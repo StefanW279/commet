@@ -7,6 +7,7 @@ import 'package:matrix/matrix.dart' as matrix;
 import 'package:tiamat/atoms/panel.dart';
 import 'package:tiamat/atoms/tile.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
+import 'package:intl/intl.dart';
 
 class MatrixNotifierComponentView extends StatefulWidget {
   const MatrixNotifierComponentView(this.component, {super.key});
@@ -31,6 +32,18 @@ class _MatrixNotifierComponentViewState
     super.initState();
   }
 
+  String get labelThisDevice => Intl.message(
+        "This Device",
+        name: "labelThisDevice",
+        desc: "",
+      );
+
+  String get labelOtherDevices => Intl.message(
+        "Other Devices",
+        name: "labelOtherDevices",
+        desc: "",
+      );
+
   @override
   Widget build(BuildContext context) {
     if (pushers == null) {
@@ -49,7 +62,7 @@ class _MatrixNotifierComponentViewState
 
     return Column(children: [
       Panel(
-        header: "This Device",
+        header: labelThisDevice,
         mode: TileType.surfaceContainerLowest,
         child: Column(
             children: ourPushers
@@ -62,7 +75,7 @@ class _MatrixNotifierComponentViewState
         height: 10,
       ),
       Panel(
-        header: "Other Devices",
+        header: labelOtherDevices,
         mode: TileType.surfaceContainerLowest,
         child: Column(
             children: otherPushers

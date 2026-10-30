@@ -2377,5 +2377,498 @@
     "description": "Button to load the next page of room search results",
     "type": "text",
     "placeholders": {}
+  },
+  "promptProfileSetColorOverrideDescription": "Set a local color override for a user. This is only visible to you",
+  "@promptProfileSetColorOverrideDescription": {
+    "description": "Description of the prompt to override the display color of a user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptProfileSetNickname": "Set Nickname",
+  "@promptProfileSetNickname": {
+    "description": "Button text to set a nickname for a user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptProfileSetNicknameTitle": "Nickname",
+  "@promptProfileSetNicknameTitle": {
+    "description": "Title for the prompt to set a nickname for a user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAllowInvitationsToggle": "Allow invitations",
+  "@labelAllowInvitationsToggle": {
+    "description": "Label for the toggle for enabling and disabling the automatic blocking of invitations",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAllowInvitationsDescription": "Allow other members of a room to invite you to other rooms.",
+  "@labelAllowInvitationsDescription": {
+    "description": "description for the toggle for enabling and disabling the automatic blocking of invitations",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptMatrixThisDevice": "This device",
+  "@promptMatrixThisDevice": {
+    "description": "Text to indicate that this is the current device",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptMatrixInactive": "Inactive",
+  "@promptMatrixInactive": {
+    "description": "Text to indicate that this session is inactive",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelLastSeenTimestamp": "Last seen: ",
+  "@labelLastSeenTimestamp": {
+    "description": "Label for the last seen timestamp",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptCheckForUpdates": "Check for updates",
+  "@promptCheckForUpdates": {
+    "description": "Title for the check for updates setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptCheckForUpdatesDescription": "Automatically check if there is a newer version of Commet available",
+  "@promptCheckForUpdatesDescription": {
+    "description": "Description for the check for updates setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelPauseAnimationsWhenNotFocused": "Pause animations when unfocused",
+  "@labelPauseAnimationsWhenNotFocused": {
+    "description": "Description for the toggle for pausing animations when the app is in the background",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelPauseAnimationsWhenNotFocusedDescription": "When the app is in the background, pause animations to reduce CPU usage",
+  "@labelPauseAnimationsWhenNotFocusedDescription": {
+    "description": "Label describing toggle of pausing animations when the app is in the background",
+    "type": "text",
+    "placeholders": {}
+
+  },
+  "labelOpenRoomsAtLastReadMessage": "Open at last read message",
+  "@labelOpenRoomsAtLastReadMessage": {
+    "description": "Description for the toggle for opening a room at the last read message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelOpenRoomsAtLastReadMessageDescription": "When opening a room, jump to the last message you read",
+  "@labelOpenRoomsAtLastReadMessageDescription": {
+    "description": "Label describing toggle of opening a room at the last read message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAutomaticallyOpenSpace": "Always open space",
+  "@labelAutomaticallyOpenSpace": {
+    "description": "Description for the toggle for automatically opening a space when navigating to a room",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAutomaticallyOpenSpaceDescription": "When navigating to a room from outside of a space, also open the space the room is in, if any",
+  "@labelAutomaticallyOpenSpaceDescription": {
+    "description": "Label describing the toggle for automatically opening a space when navigating to a room",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSelectAutoCompleteSuggestion": "Select first auto-complete suggestion",
+  "@labelSelectAutoCompleteSuggestion": {
+    "description": "Description for the toggle for selecting the first auto-complete suggestion when typing a message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSelectAutoCompleteSuggestionDescription": "When typing a message, if there are any auto-complete suggestions, the first one will be highlighted by default",
+  "@labelSelectAutoCompleteSuggestionDescription": {
+    "description": "Label describing the toggle for selecting the first auto-complete suggestion when typing a message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAutofocusMessageTextBox": "Autofocus Message Input",
+  "@labelAutofocusMessageTextBox": {
+    "description": "Description for the toggle for automatically focusing on the message input text field when opening a chat",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAutofocusMessageTextBoxDescription": "Automatically focus on the message input text field when opening a chat",
+  "@labelAutofocusMessageTextBoxDescription": {
+    "description": "Label describing the toggle for automatically focusing on the message input text field when opening a chat",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelNoEntries": "No Entries",
+  "@labelNoEntries": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelRotateImages": "Rotate Images",
+  "@labelRotateImages": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelRotateImagesDescription": "When showing images in fullscreen, automatically rotate the image to best fill the screen",
+  "@labelRotateImagesDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelRotateVideos": "Rotate Videos",
+  "@labelRotateVideos": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelRotateVideosDescription": "When showing videos in fullscreen, automatically rotate the video to best fill the screen",
+  "@labelRotateVideosDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAllowedVideoHosts": "Allowed Video Hosts",
+  "@labelAllowedVideoHosts": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAllowedVideoHostsDescription": "Allowed web hosts for displaying external videos, such as in URL Previews. Your IP address will be revealed to these servers when accessing the video",
+  "@labelAllowedVideoHostsDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelFollowSystemBrightness": "Follow System Brightness",
+  "@labelFollowSystemBrightness": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelFollowSystemBrightnessDescription": "Automatically follow system Light / Dark mode",
+  "@labelFollowSystemBrightnessDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelFollowSystemColors": "Follow System Colors",
+  "@labelFollowSystemColors": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelFollowSystemColorsDescription": "Automatically follow system color scheme",
+  "@labelFollowSystemColorsDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSettingsScaling": "Scaling",
+  "@labelSettingsScaling": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelAppScaleDescription": "Resizes the overall interface of the app",
+  "@labelAppScaleDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelTextScale": "Text Scale",
+  "@labelTextScale": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelTextScaleDescription": "Multiply the size of text",
+  "@labelTextScaleDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSettingsOtherOptions": "Other Options",
+  "@labelSettingsOtherOptions": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowRoomsInSidebar": "Show rooms in sidebar",
+  "@labelShowRoomsInSidebar": {
+    "description": "Label for the toggle which shows an extra entry for rooms which are not contained in a space in the sidebar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowRoomsInSidebarDescription": "Add an entry to the sidebar that shows all rooms which are not contained in a space",
+  "@labelShowRoomsInSidebarDescription": {
+    "description": "Description for the toggle which shows an extra entry for rooms which are not contained in a space in the sidebar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowRoomStateEvents": "Show state events",
+  "@labelShowRoomStateEvents": {
+    "description": "Label for enabling visibility of state events in the room timeline",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowRoomStateEventsDescription": "Show changes to the room state, such as members joining and leaving, in the chat timeline",
+  "@labelShowRoomStateEventsDescription": {
+    "description": "Description for enabling using visibility of room state events in the timeline",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelCollapseStateEvents": "Collapse state events",
+  "@labelCollapseStateEvents": {
+    "description": "Label for enabling collapsing of state events in the room timeline",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelCollapseStateEventsDescription": "Group changes to room state in to a single timeline event",
+  "@labelCollapseStateEventsDescription": {
+    "description": "Description for enabling using collapsing of room state events in the timeline",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelVoipEnableOverlay": "Enable Overlay",
+  "@labelVoipEnableOverlay": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelVoipEnableOverlayDescription": "When in a call, add an overlay on your screen to show the call participants",
+  "@labelVoipEnableOverlayDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "headerVoipSettingsOverlay": "Overlay",
+  "@headerVoipSettingsOverlay": {
+    "description": "Header for the settings tile containing configuration for the voip overlay",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelVoipAudioInput": "Default Audio Input",
+  "@labelVoipAudioInput": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelVoipAudioOutput": "Audio Output",
+  "@labelVoipAudioOutput": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "headerVoipSettingsAudioSettings": "Audio Settings",
+  "@headerVoipSettingsAudioSettings": {
+    "description": "Header for settings tile containing stream audio quality configuration",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelVoipAudioBitrateSettings": "Audio Bitrate",
+  "@labelVoipAudioBitrateSettings": {
+    "description": "label for the slider to adjust the bitrate of outgoing audio on a call",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelVoipAudioBitrateSettingsDescription": "Adjust the bitrate of your outgoing audio. Higher is better",
+  "@labelVoipAudioBitrateSettingsDescription": {
+    "description": "describes the behavior for the slider to adjust the bitrate of outgoing audio on a call",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelPushNotifications": "Push Notifications",
+  "@labelPushNotifications": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelUnifiedPush": "Unified Push",
+  "@labelUnifiedPush": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelRegisteredPushers": "Registered Pushers",
+  "@labelRegisteredPushers": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSilenceNotifications": "Silence Notifications",
+  "@labelSilenceNotifications": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSilenceNotificationsDescription": "When another device or client is active, silence notifications on this device",
+  "@labelSilenceNotificationsDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowNotifications": "Show notifications",
+  "@labelShowNotifications": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowNotificationsDescription": "Enable or disable the display of notifications entirely",
+  "@labelShowNotificationsDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelHideNotificationsCurrentRoom": "Hide notifications for current room",
+  "@labelHideNotificationsCurrentRoom": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelHideNotificationsCurrentRoomDescription": "When receiving a message, if you have the chat selected and the app is in focus, dont show the notification",
+  "@labelHideNotificationsCurrentRoomDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelNotificationBadges": "Notification Badges",
+  "@labelNotificationBadges": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelNotificationBadgesDescription": "Show a badge with the number of unread messages in the system taskbar",
+  "@labelNotificationBadgesDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelMessageBodyFormatting": "Message Body Formatting",
+  "@labelMessageBodyFormatting": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelMessageBodyFormattingDescription": "Apply user formatting in message notifications",
+  "@labelMessageBodyFormattingDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowImages": "Show Images",
+  "@labelShowImages": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelShowImagesDescription": "Show images in notifications, if allowed by 'General > Media Preview' settings",
+  "@labelShowImagesDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelPreviewUrls": "Preview Urls",
+  "@labelPreviewUrls": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelPreviewUrlsDescription": "Fetch URL previews to show extra information about links in notifications",
+  "@labelPreviewUrlsDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelNotificationVolume": "Notification volume",
+  "@labelNotificationVolume": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelNotificationVolumeDescription": "Controls the volume of notifications and ringtones",
+  "@labelNotificationVolumeDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelThisDevice": "This Device",
+  "@labelThisDevice": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelOtherDevices": "Other Devices",
+  "@labelOtherDevices": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelOverrideLayout": "Override Layout",
+  "@labelOverrideLayout": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelOverrideLayoutDescription": "You may need to restart the app for this to take effect",
+  "@labelOverrideLayoutDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelNoOverride": "No Override",
+  "@labelNoOverride": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelExperimentsUnderDevelopment": "These features are still under development, and may contain bugs or security issues. Enable at your own risk",
+  "@labelExperimentsUnderDevelopment": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelExperiments": "Experiments",
+  "@labelExperiments": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelExperimentsEncryptedElementCall": "Encrypted Element Call",
+  "@labelExperimentsEncryptedElementCall": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelExperimentsEncryptedElementCallDescription": "Allow use of the experimental support for end to end encryption in element call",
+  "@labelExperimentsEncryptedElementCallDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelExperimentsMustRestart": "You must restart the app for changes to take effect",
+  "@labelExperimentsMustRestart": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "promptCheckForUpdatesDescriptionFirstLogin": "Would you like Commet to automatically check for new updates?",
+  "@promptCheckForUpdatesDescriptionFirstLogin": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelSpaceDescription": "Spaces are a collection of rooms, they can contain text chats, voice chats and more! They are the perfect way to organize your community or group!",
+  "@labelSpaceDescription": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
+  },
+  "labelCreateRoomHeader": "Create Room:",
+  "@labelCreateRoomHeader": {
+    "description": "",
+    "type": "text",
+    "placeholders": {}
   }
 }

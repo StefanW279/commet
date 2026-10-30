@@ -140,6 +140,20 @@ class UserProfileViewState extends State<UserProfileView> {
       name: "promptProfileSetColorOverride",
       desc: "Prompt to override the display color of a user");
 
+  String get promptProfileSetColorOverrideDescription => Intl.message(
+      "Set a local color override for a user. This is only visible to you",
+      name: "promptProfileSetColorOverrideDescription",
+      desc:
+          "Description of the prompt to override the display color of a user");
+
+  String get promptProfileSetNickname => Intl.message("Set Nickname",
+      name: "promptProfileSetNickname",
+      desc: "Prompt to set a nickname for a user");
+
+  String get promptProfileSetNicknameTitle => Intl.message("Nickname",
+      name: "promptProfileSetNicknameTitle",
+      desc: "Title for the prompt to set a nickname for a user");
+
   String get promptProfileClearColorOverride =>
       Intl.message("Clear Color Override",
           name: "promptProfileClearColorOverride",
@@ -549,7 +563,7 @@ class UserProfileViewState extends State<UserProfileView> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: tiamat.Text.labelLow(
-                            "Set a local color override for a user. This is only visible to you"),
+                            promptProfileSetColorOverrideDescription),
                       ),
                       GridView(
                           shrinkWrap: true,
@@ -582,7 +596,7 @@ class UserProfileViewState extends State<UserProfileView> {
           },
           icon: Icons.colorize),
       profileMenuItem(
-        text: "Set Nickame",
+        text: promptProfileSetNickname,
         icon: Icons.badge,
         onClearPressed:
             widget.hasPetName ? () => widget.setPetName?.call(null) : null,
@@ -590,7 +604,7 @@ class UserProfileViewState extends State<UserProfileView> {
           final text = await AdaptiveDialog.textPrompt(
             context,
             initialText: widget.currentPetName ?? '',
-            title: "Nickname",
+            title: promptProfileSetNicknameTitle,
           );
           if (text != null) {
             await widget.setPetName

@@ -32,6 +32,24 @@ class _AdvancedSettingsPageState extends State<AdvancedSettingsPage> {
       desc: "Explains what sticker compatibility mode does",
       name: "labelSettingsStickerCompatibilityExplanation");
 
+  String get labelOverrideLayout => Intl.message(
+        "Override Layout",
+        name: "labelOverrideLayout",
+        desc: "",
+      );
+
+  String get labelOverrideLayoutDescription => Intl.message(
+        "You may need to restart the app for this to take effect",
+        name: "labelOverrideLayoutDescription",
+        desc: "",
+      );
+
+  String get labelNoOverride => Intl.message(
+        "No Override",
+        name: "labelNoOverride",
+        desc: "",
+      );
+
   @override
   void initState() {
     super.initState();
@@ -66,16 +84,15 @@ class _AdvancedSettingsPageState extends State<AdvancedSettingsPage> {
         ),
         Panel(
             mode: tiamat.TileType.surfaceContainerLow,
-            header: "Override Layout",
+            header: labelOverrideLayout,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                tiamat.Text.labelLow(
-                    "You may need to restart the app for this to take effect"),
+                tiamat.Text.labelLow(labelOverrideLayoutDescription),
                 tiamat.DropdownSelector(
                     items: [null, "desktop", "mobile"],
                     itemBuilder: (item) =>
-                        tiamat.Text.label(item ?? "No Override"),
+                        tiamat.Text.label(item ?? labelNoOverride),
                     onItemSelected: (item) async {
                       await preferences.layoutOverride.set(item);
                       setState(() {});
