@@ -80,6 +80,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   Size viewerSize = Size.zero;
   Matrix4? fitTransform;
   Size? fitImageSize;
+  double viewerScale = 1.0;
   bool loadingHighQuality = false;
 
   StreamSubscription? onLodChanged;
@@ -105,9 +106,19 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
       ConstantTween(0.0).animate(_controller);
   late final Animation<double> scale = ConstantTween(1.0).animate(_controller);
 
+  void onTransformChanged() {
+    final nextScale = controller.value.getMaxScaleOnAxis();
+    if ((nextScale - viewerScale).abs() > 0.001 && mounted) {
+      setState(() {
+        viewerScale = nextScale;
+      });
+    }
+  }
+
   @override
   void dispose() {
     onLodChanged?.cancel();
+    controller.removeListener(onTransformChanged);
     controller.dispose();
     _controller.dispose();
     super.dispose();
@@ -117,6 +128,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    controller.addListener(onTransformChanged);
     _controller.stop(canceled: true);
 
     if (widget.aspectRatio != null) {
@@ -331,7 +343,24 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 transformationController: controller,
                                 minScale: 1.0,
                                 maxScale: 3.5,
-                                boundaryMargin: EdgeInsets.zero,
+                                // Recalculate the letterboxed allowance at
+                                // every zoom level. Once the scaled image is
+                                // larger than the viewport, its margin is zero
+                                // so panning stops at the image edges.
+                                boundaryMargin: EdgeInsets.symmetric(
+                                  horizontal: ((constraints.maxWidth /
+                                              viewerScale -
+                                          imageWidth) /
+                                      2)
+                                      .clamp(0.0, double.infinity)
+                                      .toDouble(),
+                                  vertical: ((constraints.maxHeight /
+                                              viewerScale -
+                                          imageHeight) /
+                                      2)
+                                      .clamp(0.0, double.infinity)
+                                      .toDouble(),
+                                ),
                                 clipBehavior: Clip.hardEdge,
                                 child: SizedBox(
                                   width: imageWidth,
