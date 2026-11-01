@@ -373,6 +373,11 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
 
                             return SizedBox.expand(
                               child: InteractiveViewer(
+                                // Keep the transformed child at the fitted
+                                // image dimensions. With constrained=true the
+                                // child fills the viewport, so the fit offset
+                                // is applied on top of an already centered image.
+                                constrained: false,
                                 trackpadScrollCausesScale: true,
                                 transformationController: controller,
                                 minScale: 1.0,
