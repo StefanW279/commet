@@ -331,10 +331,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 transformationController: controller,
                                 minScale: 1.0,
                                 maxScale: 3.5,
-                                boundaryMargin: EdgeInsets.symmetric(
-                                  horizontal: offsetX,
-                                  vertical: offsetY,
-                                ),
+                                boundaryMargin: EdgeInsets.zero,
                                 clipBehavior: Clip.hardEdge,
                                 child: SizedBox(
                                   width: imageWidth,
