@@ -255,7 +255,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
       child: Container(
         color: Colors.transparent,
         child: Padding(
-          padding: const EdgeInsets.all(BuildConfig.MOBILE ? 10 : 100.0),
+          padding: const EdgeInsets.all(BuildConfig.MOBILE ? 2 : 20.0),
           child: ScaledSafeArea(
             child: RotatedBox(
               quarterTurns: rotate ? 1 : 0,
