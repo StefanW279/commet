@@ -306,9 +306,19 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: dismiss,
-      child: Container(
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.escape) {
+          dismiss();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: GestureDetector(
+        onTap: dismiss,
+        child: Container(
         color: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.all(BuildConfig.MOBILE ? 2 : 20.0),
@@ -512,6 +522,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
             ),
           ),
         ),
+      ),
       ),
     );
   }
