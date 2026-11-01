@@ -299,11 +299,10 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 ? constraints.maxWidth / aspectRatio
                                 : constraints.maxHeight;
 
-                            viewerSize = Size(
+                            final nextViewerSize = Size(
                               constraints.maxWidth,
                               constraints.maxHeight,
                             );
-
                             final imageSize = Size(imageWidth, imageHeight);
                             final offsetX =
                                 (constraints.maxWidth - imageWidth) / 2;
@@ -313,9 +312,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                               ..translate(offsetX, offsetY);
 
                             if (fitImageSize != imageSize ||
-                                viewerSize !=
-                                    Size(constraints.maxWidth,
-                                        constraints.maxHeight)) {
+                                viewerSize != nextViewerSize) {
+                              viewerSize = nextViewerSize;
                               fitImageSize = imageSize;
                               fitTransform = nextFitTransform;
                               WidgetsBinding.instance.addPostFrameCallback((_) {
