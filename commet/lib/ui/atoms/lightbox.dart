@@ -265,7 +265,9 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                   turns: rotate ? rotationAnimation : rotation,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: InteractiveViewer(
+                    child: Stack(
+                      children: [
+                        InteractiveViewer(
                       trackpadScrollCausesScale: true,
                       transformationController: controller,
                       maxScale: 3.5,
@@ -320,7 +322,35 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                         )),
                                                   ),
                                                 ),
-                                              Positioned(
+
+                                            ],
+                                          )
+                                        : widget.video != null
+                                            ? dismissing
+                                                ? widget.thumbnail != null
+                                                    ? Image(
+                                                        fit: BoxFit.cover,
+                                                        image:
+                                                            widget.thumbnail!,
+                                                      )
+                                                    : Container(
+                                                        color: Colors.black,
+                                                      )
+                                                : VideoPlayer(
+                                                    widget.video!,
+                                                    controller:
+                                                        widget.videoController,
+                                                    showProgressBar: true,
+                                                    canGoFullscreen: false,
+                                                    thumbnail: widget.thumbnail,
+                                                    key: widget.contentKey,
+                                                  )
+                                            : const Placeholder())),
+                          ),
+                        ),
+                      ),
+                    ),
+                        Positioned(
                                                 right: 8,
                                                 bottom: 8,
                                                 child: Material(
@@ -366,33 +396,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                     ],
                                                   ),
                                                 ),
-                                              )
-                                            ],
-                                          )
-                                        : widget.video != null
-                                            ? dismissing
-                                                ? widget.thumbnail != null
-                                                    ? Image(
-                                                        fit: BoxFit.cover,
-                                                        image:
-                                                            widget.thumbnail!,
-                                                      )
-                                                    : Container(
-                                                        color: Colors.black,
-                                                      )
-                                                : VideoPlayer(
-                                                    widget.video!,
-                                                    controller:
-                                                        widget.videoController,
-                                                    showProgressBar: true,
-                                                    canGoFullscreen: false,
-                                                    thumbnail: widget.thumbnail,
-                                                    key: widget.contentKey,
-                                                  )
-                                            : const Placeholder())),
-                          ),
-                        ),
-                      ),
+                                              ),
+                      ],
                     ),
                   ),
                 ),
