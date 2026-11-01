@@ -275,12 +275,11 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                             // from being panned past the viewport.
                             final availableRatio =
                                 constraints.maxWidth / constraints.maxHeight;
-                            // Size the image so it covers the entire viewport
-                            // before zooming. With contain-sized children (for
-                            // example a 275x275 image in a landscape viewport),
-                            // panning can otherwise expose empty space beside it.
-                            // Keep the source aspect ratio while covering the
-                            // viewport, then let InteractiveViewer scale/pan it.
+                            // Fit the image inside the viewport without
+                            // changing its aspect ratio. The viewer itself
+                            // remains full-sized; with unconstrained=false the
+                            // child would expand to the viewport and allow
+                            // panning into empty space around smaller images.
                             final imageWidth = aspectRatio > availableRatio
                                 ? constraints.maxWidth
                                 : constraints.maxHeight * aspectRatio;
@@ -288,24 +287,17 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 ? constraints.maxWidth / aspectRatio
                                 : constraints.maxHeight;
 
-                            final coverWidth = imageWidth < constraints.maxWidth
-                                ? constraints.maxWidth
-                                : imageWidth;
-                            final coverHeight =
-                                imageHeight < constraints.maxHeight
-                                    ? constraints.maxHeight
-                                    : imageHeight;
-
                             return InteractiveViewer(
+                              constrained: false,
+                              alignment: Alignment.center,
                               trackpadScrollCausesScale: true,
                               transformationController: controller,
                               maxScale: 3.5,
                               boundaryMargin: EdgeInsets.zero,
                               clipBehavior: Clip.hardEdge,
-                              child: Center(
-                                child: SizedBox(
-                                  width: coverWidth,
-                                  height: coverHeight,
+                              child: SizedBox(
+                                width: imageWidth,
+                                height: imageHeight,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: GestureDetector(
@@ -383,7 +375,6 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                              ),
                             );
                           },
                         ),
