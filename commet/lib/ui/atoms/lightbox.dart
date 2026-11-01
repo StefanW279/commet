@@ -81,6 +81,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   Matrix4? fitTransform;
   Size? fitImageSize;
   double viewerScale = 1.0;
+  bool adjustingTransform = false;
   bool loadingHighQuality = false;
 
   StreamSubscription? onLodChanged;
@@ -107,7 +108,40 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   late final Animation<double> scale = ConstantTween(1.0).animate(_controller);
 
   void onTransformChanged() {
-    final nextScale = controller.value.getMaxScaleOnAxis();
+    if (adjustingTransform || fitImageSize == null || viewerSize == Size.zero) {
+      return;
+    }
+
+    final matrix = controller.value;
+    final nextScale = matrix.getMaxScaleOnAxis();
+    final imageWidth = fitImageSize!.width * nextScale;
+    final imageHeight = fitImageSize!.height * nextScale;
+
+    // Keep the image centered on axes where it still fits. When it overflows,
+    // constrain translation to the interval between its two edges and the
+    // viewport edges. These limits are recalculated for every scale change.
+    final minX = imageWidth > viewerSize.width
+        ? viewerSize.width - imageWidth
+        : (viewerSize.width - imageWidth) / 2;
+    final maxX = imageWidth > viewerSize.width ? 0.0 : minX;
+    final minY = imageHeight > viewerSize.height
+        ? viewerSize.height - imageHeight
+        : (viewerSize.height - imageHeight) / 2;
+    final maxY = imageHeight > viewerSize.height ? 0.0 : minY;
+
+    final nextX = matrix.entry(0, 3).clamp(minX, maxX).toDouble();
+    final nextY = matrix.entry(1, 3).clamp(minY, maxY).toDouble();
+
+    if ((nextX - matrix.entry(0, 3)).abs() > 0.001 ||
+        (nextY - matrix.entry(1, 3)).abs() > 0.001) {
+      final corrected = matrix.clone()
+        ..[12] = nextX
+        ..[13] = nextY;
+      adjustingTransform = true;
+      controller.value = corrected;
+      adjustingTransform = false;
+    }
+
     if ((nextScale - viewerScale).abs() > 0.001 && mounted) {
       setState(() {
         viewerScale = nextScale;
@@ -343,24 +377,10 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 transformationController: controller,
                                 minScale: 1.0,
                                 maxScale: 3.5,
-                                // Recalculate the letterboxed allowance at
-                                // every zoom level. Once the scaled image is
-                                // larger than the viewport, its margin is zero
-                                // so panning stops at the image edges.
-                                boundaryMargin: EdgeInsets.symmetric(
-                                  horizontal: ((constraints.maxWidth /
-                                              viewerScale -
-                                          imageWidth) /
-                                      2)
-                                      .clamp(0.0, double.infinity)
-                                      .toDouble(),
-                                  vertical: ((constraints.maxHeight /
-                                              viewerScale -
-                                          imageHeight) /
-                                      2)
-                                      .clamp(0.0, double.infinity)
-                                      .toDouble(),
-                                ),
+                                // Translation is clamped by onTransformChanged
+                                // using the scaled image size, so no extra
+                                // boundary margin is needed here.
+                                boundaryMargin: EdgeInsets.zero,
                                 clipBehavior: Clip.hardEdge,
                                 child: SizedBox(
                                   width: imageWidth,
