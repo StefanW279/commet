@@ -9,6 +9,7 @@ import 'package:commet/ui/molecules/video_player/video_player.dart';
 import 'package:commet/ui/molecules/video_player/video_player_controller.dart';
 import 'package:commet/utils/image/lod_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tiamat/atoms/popup_dialog.dart';
 import 'dart:ui' as ui;
 
