@@ -312,7 +312,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 child: SizedBox(
                                   width: imageWidth,
                                   height: imageHeight,
-                                  ClipRRect(
+                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: GestureDetector(
                                       onTap: () {},
@@ -386,6 +386,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                           key: widget.contentKey,
                                                         )
                                                   : const Placeholder()),
+                                  ),
                                 ),
                               ),
                             );
