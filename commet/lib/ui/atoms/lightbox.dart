@@ -249,9 +249,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        dismiss();
-      },
+      onTap: dismiss,
       child: Container(
         color: Colors.transparent,
         child: Padding(
@@ -266,137 +264,138 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Stack(
+                      fit: StackFit.expand,
                       children: [
-                        InteractiveViewer(
-                      trackpadScrollCausesScale: true,
-                      transformationController: controller,
-                      maxScale: 3.5,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GestureDetector(
-                            onTap: () {},
-                            onDoubleTap: toggleZoom,
-                            child: AspectRatio(
-                                aspectRatio: aspectRatio,
-                                child: widget.customWidget ??
-                                    (widget.image != null
-                                        ? Stack(
-                                            fit: StackFit.expand,
-                                            children: [
-                                              Image(
-                                                fit: BoxFit.cover,
-                                                image: widget.image!,
-                                                isAntiAlias: true,
-                                                filterQuality:
-                                                    FilterQuality.medium,
-                                              ),
-                                              if (loadingHighQuality)
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomRight,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Container(
-                                                        decoration: BoxDecoration(
+                        Center(
+                          // Keep the InteractiveViewer viewport the same size
+                          // and aspect ratio as the displayed image. Otherwise
+                          // it can pan into unused space around the image.
+                          child: AspectRatio(
+                            aspectRatio: aspectRatio,
+                            child: InteractiveViewer(
+                              trackpadScrollCausesScale: true,
+                              transformationController: controller,
+                              maxScale: 3.5,
+                              boundaryMargin: EdgeInsets.zero,
+                              clipBehavior: Clip.hardEdge,
+                              child: SizedBox.expand(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    onDoubleTap: toggleZoom,
+                                    child: widget.customWidget ??
+                                        (widget.image != null
+                                            ? Stack(
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  Image(
+                                                    fit: BoxFit.cover,
+                                                    image: widget.image!,
+                                                    isAntiAlias: true,
+                                                    filterQuality:
+                                                        FilterQuality.medium,
+                                                  ),
+                                                  if (loadingHighQuality)
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.bottomRight,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                                8.0),
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
                                                             color: Theme.of(
                                                                     context)
                                                                 .colorScheme
                                                                 .surfaceContainer,
                                                             borderRadius:
                                                                 BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: SizedBox(
+                                                                    .circular(8),
+                                                          ),
+                                                          child: const Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8.0),
+                                                            child: SizedBox(
                                                               width: 12,
                                                               height: 12,
                                                               child:
-                                                                  CircularProgressIndicator()),
-                                                        )),
-                                                  ),
-                                                ),
-
-                                            ],
-                                          )
-                                        : widget.video != null
-                                            ? dismissing
-                                                ? widget.thumbnail != null
-                                                    ? Image(
-                                                        fit: BoxFit.cover,
-                                                        image:
-                                                            widget.thumbnail!,
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              )
+                                            : widget.video != null
+                                                ? dismissing
+                                                    ? widget.thumbnail != null
+                                                        ? Image(
+                                                            fit: BoxFit.cover,
+                                                            image: widget
+                                                                .thumbnail!,
+                                                          )
+                                                        : Container(
+                                                            color: Colors.black,
+                                                          )
+                                                    : VideoPlayer(
+                                                        widget.video!,
+                                                        controller: widget
+                                                            .videoController,
+                                                        showProgressBar: true,
+                                                        canGoFullscreen: false,
+                                                        thumbnail:
+                                                            widget.thumbnail,
+                                                        key: widget.contentKey,
                                                       )
-                                                    : Container(
-                                                        color: Colors.black,
-                                                      )
-                                                : VideoPlayer(
-                                                    widget.video!,
-                                                    controller:
-                                                        widget.videoController,
-                                                    showProgressBar: true,
-                                                    canGoFullscreen: false,
-                                                    thumbnail: widget.thumbnail,
-                                                    key: widget.contentKey,
-                                                  )
-                                            : const Placeholder())),
+                                                : const Placeholder()),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                        Positioned(
-                                                right: 8,
-                                                bottom: 8,
-                                                child: Material(
-                                                  color: Colors.black54,
-                                                  borderRadius:
-                                                      BorderRadius.circular(24),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      IconButton(
-                                                        tooltip: "Zoom in",
-                                                        visualDensity:
-                                                            VisualDensity.compact,
-                                                        color: Colors.white,
-                                                        onPressed: () =>
-                                                            zoomBy(1.25),
-                                                        icon: const Icon(
-                                                            Icons.add),
-                                                      ),
-                                                      IconButton(
-                                                        tooltip: "Zoom out",
-                                                        visualDensity:
-                                                            VisualDensity.compact,
-                                                        color: Colors.white,
-                                                        onPressed: () =>
-                                                            zoomBy(0.8),
-                                                        icon: const Icon(
-                                                            Icons.remove),
-                                                      ),
-                                                      IconButton(
-                                                        tooltip: "Reset zoom",
-                                                        visualDensity:
-                                                            VisualDensity.compact,
-                                                        color: Colors.white,
-                                                        onPressed: () {
-                                                          controller.value =
-                                                              Matrix4.identity();
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.fit_screen),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
+                        if (widget.image != null)
+                          Positioned(
+                            right: 8,
+                            bottom: 8,
+                            child: Material(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(24),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    tooltip: "Zoom in",
+                                    visualDensity: VisualDensity.compact,
+                                    color: Colors.white,
+                                    onPressed: () => zoomBy(1.25),
+                                    icon: const Icon(Icons.add),
+                                  ),
+                                  IconButton(
+                                    tooltip: "Zoom out",
+                                    visualDensity: VisualDensity.compact,
+                                    color: Colors.white,
+                                    onPressed: () => zoomBy(0.8),
+                                    icon: const Icon(Icons.remove),
+                                  ),
+                                  IconButton(
+                                    tooltip: "Reset zoom",
+                                    visualDensity: VisualDensity.compact,
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      controller.value = Matrix4.identity();
+                                    },
+                                    icon: const Icon(Icons.fit_screen),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
