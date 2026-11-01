@@ -299,8 +299,9 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                               constraints.maxHeight,
                             );
 
-                            return InteractiveViewer(
-                              trackpadScrollCausesScale: true,
+                            return SizedBox.expand(
+                              child: InteractiveViewer(
+                                trackpadScrollCausesScale: true,
                               transformationController: controller,
                               minScale: 1.0,
                               maxScale: 3.5,
@@ -378,6 +379,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                       )
                                                 : const Placeholder()),
                                   ),
+                                ),
                                 ),
                               ),
                             );
