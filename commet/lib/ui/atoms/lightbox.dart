@@ -287,17 +287,19 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 ? constraints.maxWidth / aspectRatio
                                 : constraints.maxHeight;
 
-                            return InteractiveViewer(
-                              constrained: false,
-                              alignment: Alignment.center,
-                              trackpadScrollCausesScale: true,
-                              transformationController: controller,
-                              maxScale: 3.5,
-                              boundaryMargin: EdgeInsets.zero,
-                              clipBehavior: Clip.hardEdge,
-                              child: SizedBox(
-                                width: imageWidth,
-                                height: imageHeight,
+                            return SizedBox.expand(
+                              child: InteractiveViewer(
+                                constrained: false,
+                                alignment: Alignment.center,
+                                trackpadScrollCausesScale: true,
+                                transformationController: controller,
+                                minScale: 1.0,
+                                maxScale: 3.5,
+                                boundaryMargin: EdgeInsets.zero,
+                                clipBehavior: Clip.hardEdge,
+                                child: SizedBox(
+                                  width: imageWidth,
+                                  height: imageHeight,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: GestureDetector(
@@ -309,7 +311,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                   fit: StackFit.expand,
                                                   children: [
                                                     Image(
-                                                      fit: BoxFit.fill,
+                                                      fit: BoxFit.contain,
                                                       image: widget.image!,
                                                       isAntiAlias: true,
                                                       filterQuality:
@@ -373,8 +375,10 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                         )
                                                   : const Placeholder()),
                                     ),
+                                    ),
                                   ),
                                 ),
+                              ),
                             );
                           },
                         ),
