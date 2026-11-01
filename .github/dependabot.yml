@@ -1,0 +1,35 @@
+version: 2
+updates:
+  - package-ecosystem: "pub" # Flutter/Dart
+    open-pull-requests-limit: 20
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "intl"
+
+  - package-ecosystem: "cargo" # Rust
+    open-pull-requests-limit: 20
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "nix" # Nix flakes
+    open-pull-requests-limit: 20
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "gradle" # Gradle
+    open-pull-requests-limit: 20
+    directory: "/commet/android/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions" # GitHub Actions
+    open-pull-requests-limit: 20
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+      

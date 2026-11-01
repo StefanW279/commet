@@ -24,7 +24,7 @@ git checkout $PROJECT_PATH/linux/flatpak/chat.commet.commetapp.desktop $PROJECT_
 cd $PROJECT_PATH/linux/flatpak
 sed -i "s/{{VERSION_TAG}}/$version/g" ./chat.commet.commetapp.desktop
 sed -i "s/{{VERSION_TAG}}/$version/g" ./chat.commet.commetapp.metainfo.xml
-flatpak-builder --force-clean build-dir chat.commet.commetapp.local.yaml --repo=repo
+flatpak-builder --force-clean build-dir chat.commet.commetapp.yaml --repo=repo
 flatpak build-bundle repo chat.commet.commetapp.flatpak chat.commet.commetapp
 
 git checkout $PROJECT_PATH/linux/flatpak/chat.commet.commetapp.desktop $PROJECT_PATH/linux/flatpak/chat.commet.commetapp.metainfo.xml

@@ -102,6 +102,110 @@ class GeneralSettingsPageState extends State<GeneralSettingsPage> {
       desc: "Label describing toggle of media previews for public rooms",
       name: "labelMediaPreviewPublicRoomsToggleDescription");
 
+  String get labelPauseAnimationsWhenNotFocused => Intl.message(
+        "Pause animations when unfocused",
+        desc:
+            "Description for the toggle for pausing animations when the app is in the background",
+        name: "labelPauseAnimationsWhenNotFocused",
+      );
+
+  String get labelPauseAnimationsWhenNotFocusedDescription => Intl.message(
+      "When the app is in the background, pause animations to reduce CPU usage",
+      desc:
+          "Label describing toggle of pausing animations when the app is in the background",
+      name: "labelPauseAnimationsWhenNotFocusedDescription");
+
+  String get labelOpenRoomsAtLastReadMessage => Intl.message(
+        "Open at last read message",
+        desc:
+            "Description for the toggle for opening a room at the last read message",
+        name: "labelOpenRoomsAtLastReadMessage",
+      );
+
+  String get labelOpenRoomsAtLastReadMessageDescription => Intl.message(
+      "When opening a room, jump to the last message you read",
+      desc:
+          "Label describing toggle of opening a room at the last read message",
+      name: "labelOpenRoomsAtLastReadMessageDescription");
+
+  String get labelAutomaticallyOpenSpace => Intl.message(
+        "Always open space",
+        desc:
+            "Description for the toggle for automatically opening a space when navigating to a room",
+        name: "labelAutomaticallyOpenSpace",
+      );
+
+  String get labelAutomaticallyOpenSpaceDescription => Intl.message(
+        "When navigating to a room from outside of a space, also open the space the room is in, if any",
+        desc:
+            "Label describing the toggle for automatically opening a space when navigating to a room",
+        name: "labelAutomaticallyOpenSpaceDescription",
+      );
+
+  String get labelSelectAutoCompleteSuggestion => Intl.message(
+        "Select first auto-complete suggestion",
+        desc:
+            "Description for the toggle for selecting the first auto-complete suggestion when typing a message",
+        name: "labelSelectAutoCompleteSuggestion",
+      );
+
+  String get labelSelectAutoCompleteSuggestionDescription => Intl.message(
+        "When typing a message, if there are any auto-complete suggestions, the first one will be highlighted by default",
+        desc:
+            "Label describing the toggle for selecting the first auto-complete suggestion when typing a message",
+        name: "labelSelectAutoCompleteSuggestionDescription",
+      );
+
+  String get labelAutofocusMessageTextBox => Intl.message(
+        "Autofocus Message Input",
+        desc:
+            "Description for the toggle for automatically focusing on the message input text field when opening a chat",
+        name: "labelAutofocusMessageTextBox",
+      );
+
+  String get labelAutofocusMessageTextBoxDescription => Intl.message(
+        "Automatically focus on the message input text field when opening a chat",
+        desc:
+            "Label describing the toggle for automatically focusing on the message input text field when opening a chat",
+        name: "labelAutofocusMessageTextBoxDescription",
+      );
+
+  String get labelRotateImages => Intl.message(
+        "Rotate Images",
+        desc: "",
+        name: "labelRotateImages",
+      );
+
+  String get labelRotateImagesDescription => Intl.message(
+        "When showing images in fullscreen, automatically rotate the image to best fill the screen",
+        desc: "",
+        name: "labelRotateImagesDescription",
+      );
+
+  String get labelRotateVideos => Intl.message(
+        "Rotate Videos",
+        desc: "",
+        name: "labelRotateVideos",
+      );
+
+  String get labelRotateVideosDescription => Intl.message(
+        "When showing videos in fullscreen, automatically rotate the video to best fill the screen",
+        desc: "",
+        name: "labelRotateVideosDescription",
+      );
+
+  String get labelAllowedVideoHosts => Intl.message(
+        "Allowed Video Hosts",
+        desc: "",
+        name: "labelAllowedVideoHosts",
+      );
+
+  String get labelAllowedVideoHostsDescription => Intl.message(
+        "Allowed web hosts for displaying external videos, such as in URL Previews. Your IP address will be revealed to these servers when accessing the video",
+        desc: "",
+        name: "labelAllowedVideoHostsDescription",
+      );
+
   @override
   void initState() {
     super.initState();
@@ -158,33 +262,28 @@ class GeneralSettingsPageState extends State<GeneralSettingsPage> {
             ),
             BooleanPreferenceToggle(
               preference: preferences.autoFocusMessageTextBox,
-              title: "Autofocus Message Input",
-              description:
-                  "Automatically focus on the message input text field when opening a chat",
+              title: labelAutofocusMessageTextBox,
+              description: labelAutofocusMessageTextBoxDescription,
             ),
             BooleanPreferenceToggle(
               preference: preferences.selectAutoCompleteSuggestion,
-              title: "Select first auto-complete suggestion",
-              description:
-                  "When typing a message, if there are any auto-complete suggestions, the first one will be highlighted by default",
+              title: labelSelectAutoCompleteSuggestion,
+              description: labelSelectAutoCompleteSuggestion,
             ),
             BooleanPreferenceToggle(
               preference: preferences.automaticallyOpenSpace,
-              title: "Always open space",
-              description:
-                  "When navigating to a room from outside of a space, also open the space the room is in, if any",
+              title: labelAutomaticallyOpenSpace,
+              description: labelAutomaticallyOpenSpaceDescription,
             ),
             BooleanPreferenceToggle(
               preference: preferences.openRoomsAtLastReadMessage,
-              title: "Open at last read message",
-              description:
-                  "When opening a room, jump to the last message you read",
+              title: labelOpenRoomsAtLastReadMessage,
+              description: labelOpenRoomsAtLastReadMessageDescription,
             ),
             BooleanPreferenceToggle(
               preference: preferences.pauseAnimationsWhenNotFocused,
-              title: "Pause animations when unfocused",
-              description:
-                  "When the app is in the background, pause animations to reduce CPU usage",
+              title: labelPauseAnimationsWhenNotFocused,
+              description: labelPauseAnimationsWhenNotFocusedDescription,
             )
           ]),
         ),
@@ -221,23 +320,20 @@ class GeneralSettingsPageState extends State<GeneralSettingsPage> {
               Seperator(),
               BooleanPreferenceToggle(
                 preference: preferences.autoRotateImages,
-                title: "Rotate Images",
-                description:
-                    "When showing images in fullscreen, automatically rotate the image to best fill the screen",
+                title: labelRotateImages,
+                description: labelRotateImagesDescription,
               ),
               BooleanPreferenceToggle(
                 preference: preferences.autoRotateVideos,
-                title: "Rotate Videos",
-                description:
-                    "When showing videos in fullscreen, automatically rotate the video to best fill the screen",
+                title: labelRotateVideos,
+                description: labelRotateVideosDescription,
               ),
             ],
             Seperator(),
             StringListPreferenceEditor(
               preference: preferences.allowedRemoteVideoHosts,
-              title: "Allowed Video Hosts",
-              description:
-                  "Allowed web hosts for displaying external videos, such as in URL Previews. Your IP address will be revealed to these servers when accessing the video",
+              title: labelAllowedVideoHosts,
+              description: labelAllowedVideoHostsDescription,
             )
           ]),
         ),

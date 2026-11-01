@@ -16,11 +16,9 @@ import 'package:commet/main.dart';
 import 'package:commet/ui/navigation/adaptive_dialog.dart';
 import 'package:commet/ui/navigation/quick_switcher.dart';
 import 'package:commet/ui/organisms/invitation_view/send_invitation.dart';
-import 'package:commet/ui/organisms/update_installed_dialog/update_installed_dialog.dart';
 import 'package:commet/ui/organisms/user_profile/user_profile.dart';
 import 'package:commet/ui/pages/get_or_create_room/get_or_create_room.dart';
 import 'package:commet/ui/pages/settings/donation_rewards_confirmation.dart';
-import 'package:commet/ui/pages/settings/settings_page.dart';
 import 'package:commet/ui/pages/setup/setup_page.dart';
 import 'package:commet/utils/event_bus.dart';
 import 'package:commet/ui/navigation/navigation_utils.dart';
@@ -36,7 +34,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage(this.clientManager,
@@ -93,11 +90,6 @@ class MainPageState extends State<MainPage> {
       ? null
       : widget.clientManager.callManager
           .getCallInRoom(currentRoom!.client, currentRoom!.identifier);
-
-  String get updateInstalledTitle => Intl.message("Update Installed",
-      desc:
-          "Title for the dialog which is shown when an update has been installed",
-      name: "updateInstalledTitle");
 
   @override
   void initState() {
@@ -219,15 +211,7 @@ class MainPageState extends State<MainPage> {
       if (!kIsWeb && isNewVersion && widget.wasLoggedInAtStartup) {
         await Future.delayed(Duration(seconds: 2));
 
-        await AdaptiveDialog.show(
-          context,
-          title: updateInstalledTitle,
-          builder: (buildContext) {
-            return UpdateInstalledDialog(
-              onDonateTapped: () => SettingsPage.onDonateButtonTapped(context),
-            );
-          },
-        );
+        // Do stuff when update was installed
       }
     }
   }

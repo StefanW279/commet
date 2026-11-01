@@ -2551,5 +2551,497 @@
         "description": "Header for the settings tile containing configuration relating to the initial connection of a call",
         "type": "text",
         "placeholders": {}
+    },
+    "promptProfileSetColorOverrideDescription": "Lege eine lokale Farbänderung für einen Benutzer fest. Diese ist nur für dich sichtbar.",
+    "@promptProfileSetColorOverrideDescription": {
+        "description": "Description of the prompt to override the display color of a user",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptProfileSetNickname": "Spitznamen festlegen",
+    "@promptProfileSetNickname": {
+        "description": "Button text to set a nickname for a user",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptProfileSetNicknameTitle": "Spitzname",
+    "@promptProfileSetNicknameTitle": {
+        "description": "Title for the prompt to set a nickname for a user",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAllowInvitationsToggle": "Einladungen erlauben",
+    "@labelAllowInvitationsToggle": {
+        "description": "Label for the toggle for enabling and disabling the automatic blocking of invitations",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAllowInvitationsDescription": "Anderen Mitgliedern eines Raums erlauben, dich in andere Räume einzuladen.",
+    "@labelAllowInvitationsDescription": {
+        "description": "description for the toggle for enabling and disabling the automatic blocking of invitations",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptMatrixThisDevice": "Dieses Gerät",
+    "@promptMatrixThisDevice": {
+        "description": "Text to indicate that this is the current device",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptMatrixInactive": "Inaktiv",
+    "@promptMatrixInactive": {
+        "description": "Text to indicate that this session is inactive",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelLastSeenTimestamp": "Zuletzt gesehen: ",
+    "@labelLastSeenTimestamp": {
+        "description": "Label for the last seen timestamp",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptCheckForUpdates": "Nach Updates suchen",
+    "@promptCheckForUpdates": {
+        "description": "Title for the check for updates setting",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptCheckForUpdatesDescription": "Automatisch prüfen, ob eine neuere Version von Commet verfügbar ist",
+    "@promptCheckForUpdatesDescription": {
+        "description": "Description for the check for updates setting",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelPauseAnimationsWhenNotFocused": "Animationen bei fehlendem Fokus pausieren",
+    "@labelPauseAnimationsWhenNotFocused": {
+        "description": "Description for the toggle for pausing animations when the app is in the background",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelPauseAnimationsWhenNotFocusedDescription": "Wenn die App im Hintergrund läuft, Animationen pausieren, um die CPU-Auslastung zu reduzieren",
+    "@labelPauseAnimationsWhenNotFocusedDescription": {
+        "description": "Label describing toggle of pausing animations when the app is in the background",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelOpenRoomsAtLastReadMessage": "Bei der zuletzt gelesenen Nachricht öffnen",
+    "@labelOpenRoomsAtLastReadMessage": {
+        "description": "Description for the toggle for opening a room at the last read message",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelOpenRoomsAtLastReadMessageDescription": "Beim Öffnen eines Raums zur zuletzt gelesenen Nachricht springen",
+    "@labelOpenRoomsAtLastReadMessageDescription": {
+        "description": "Label describing toggle of opening a room at the last read message",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAutomaticallyOpenSpace": "Space immer öffnen",
+    "@labelAutomaticallyOpenSpace": {
+        "description": "Description for the toggle for automatically opening a space when navigating to a room",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAutomaticallyOpenSpaceDescription": "Beim Navigieren zu einem Raum außerhalb eines Spaces auch den Space öffnen, zu dem der Raum gehört, falls vorhanden",
+    "@labelAutomaticallyOpenSpaceDescription": {
+        "description": "Label describing the toggle for automatically opening a space when navigating to a room",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSelectAutoCompleteSuggestion": "Ersten Autovervollständigungsvorschlag auswählen",
+    "@labelSelectAutoCompleteSuggestion": {
+        "description": "Description for the toggle for selecting the first auto-complete suggestion when typing a message",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSelectAutoCompleteSuggestionDescription": "Wenn du eine Nachricht schreibst und Autovervollständigungsvorschläge vorhanden sind, wird standardmäßig der erste hervorgehoben",
+    "@labelSelectAutoCompleteSuggestionDescription": {
+        "description": "Label describing the toggle for selecting the first auto-complete suggestion when typing a message",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAutofocusMessageTextBox": "Nachrichteneingabe automatisch fokussieren",
+    "@labelAutofocusMessageTextBox": {
+        "description": "Description for the toggle for automatically focusing on the message input text field when opening a chat",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAutofocusMessageTextBoxDescription": "Beim Öffnen eines Chats automatisch das Texteingabefeld für Nachrichten fokussieren",
+    "@labelAutofocusMessageTextBoxDescription": {
+        "description": "Label describing the toggle for automatically focusing on the message input text field when opening a chat",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelNoEntries": "Keine Einträge",
+    "@labelNoEntries": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelRotateImages": "Bilder drehen",
+    "@labelRotateImages": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelRotateImagesDescription": "Bilder in der Vollbildansicht automatisch so drehen, dass sie den Bildschirm möglichst gut ausfüllen",
+    "@labelRotateImagesDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelRotateVideos": "Videos drehen",
+    "@labelRotateVideos": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelRotateVideosDescription": "Videos in der Vollbildansicht automatisch so drehen, dass sie den Bildschirm möglichst gut ausfüllen",
+    "@labelRotateVideosDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAllowedVideoHosts": "Erlaubte Video-Hosts",
+    "@labelAllowedVideoHosts": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAllowedVideoHostsDescription": "Erlaubte Webhosts zum Anzeigen externer Videos, beispielsweise in URL-Vorschauen. Beim Abrufen des Videos wird diesen Servern deine IP-Adresse offengelegt",
+    "@labelAllowedVideoHostsDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelFollowSystemBrightness": "Systemhelligkeit übernehmen",
+    "@labelFollowSystemBrightness": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelFollowSystemBrightnessDescription": "Automatisch dem hellen bzw. dunklen Darstellungsmodus des Systems folgen",
+    "@labelFollowSystemBrightnessDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelFollowSystemColors": "Systemfarben übernehmen",
+    "@labelFollowSystemColors": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelFollowSystemColorsDescription": "Automatisch das Farbschema des Systems übernehmen",
+    "@labelFollowSystemColorsDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSettingsScaling": "Skalierung",
+    "@labelSettingsScaling": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelAppScaleDescription": "Ändert die Größe der gesamten App-Oberfläche",
+    "@labelAppScaleDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelTextScale": "Textskalierung",
+    "@labelTextScale": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelTextScaleDescription": "Verändert die Schriftgröße",
+    "@labelTextScaleDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSettingsOtherOptions": "Weitere Optionen",
+    "@labelSettingsOtherOptions": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowRoomsInSidebar": "Räume in der Seitenleiste anzeigen",
+    "@labelShowRoomsInSidebar": {
+        "description": "Label for the toggle which shows an extra entry for rooms which are not contained in a space in the sidebar",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowRoomsInSidebarDescription": "Einen Eintrag zur Seitenleiste hinzufügen, der alle Räume anzeigt, die keinem Space angehören",
+    "@labelShowRoomsInSidebarDescription": {
+        "description": "Description for the toggle which shows an extra entry for rooms which are not contained in a space in the sidebar",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowRoomStateEvents": "Statusereignisse anzeigen",
+    "@labelShowRoomStateEvents": {
+        "description": "Label for enabling visibility of state events in the room timeline",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowRoomStateEventsDescription": "Änderungen am Raumstatus, z. B. wenn Mitglieder beitreten oder den Raum verlassen, im Chatverlauf anzeigen",
+    "@labelShowRoomStateEventsDescription": {
+        "description": "Description for enabling using visibility of room state events in the timeline",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelCollapseStateEvents": "Statusereignisse zusammenfassen",
+    "@labelCollapseStateEvents": {
+        "description": "Label for enabling collapsing of state events in the room timeline",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelCollapseStateEventsDescription": "Änderungen am Raumstatus zu einem einzelnen Ereignis im Chatverlauf zusammenfassen",
+    "@labelCollapseStateEventsDescription": {
+        "description": "Description for enabling using collapsing of room state events in the timeline",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipEnableOverlay": "Overlay aktivieren",
+    "@labelVoipEnableOverlay": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipEnableOverlayDescription": "Während eines Anrufs ein Overlay auf dem Bildschirm anzeigen, das die Anrufteilnehmer zeigt",
+    "@labelVoipEnableOverlayDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "headerVoipSettingsOverlay": "Overlay",
+    "@headerVoipSettingsOverlay": {
+        "description": "Header for the settings tile containing configuration for the voip overlay",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipAudioInput": "Standard-Audioeingabe",
+    "@labelVoipAudioInput": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipAudioOutput": "Audioausgabe",
+    "@labelVoipAudioOutput": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "headerVoipSettingsAudioSettings": "Audioeinstellungen",
+    "@headerVoipSettingsAudioSettings": {
+        "description": "Header for settings tile containing stream audio quality configuration",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipAudioBitrateSettings": "Audio-Bitrate",
+    "@labelVoipAudioBitrateSettings": {
+        "description": "label for the slider to adjust the bitrate of outgoing audio on a call",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelVoipAudioBitrateSettingsDescription": "Lege die Bitrate deiner ausgehenden Audiodaten fest. Höher ist besser",
+    "@labelVoipAudioBitrateSettingsDescription": {
+        "description": "describes the behavior for the slider to adjust the bitrate of outgoing audio on a call",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelPushNotifications": "Push-Benachrichtigungen",
+    "@labelPushNotifications": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelUnifiedPush": "Unified Push",
+    "@labelUnifiedPush": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelRegisteredPushers": "Registrierte Push-Dienste",
+    "@labelRegisteredPushers": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSilenceNotifications": "Benachrichtigungen stummschalten",
+    "@labelSilenceNotifications": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSilenceNotificationsDescription": "Wenn ein anderes Gerät oder ein anderer Client aktiv ist, Benachrichtigungen auf diesem Gerät stummschalten",
+    "@labelSilenceNotificationsDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowNotifications": "Benachrichtigungen anzeigen",
+    "@labelShowNotifications": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowNotificationsDescription": "Die Anzeige von Benachrichtigungen vollständig aktivieren oder deaktivieren",
+    "@labelShowNotificationsDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelHideNotificationsCurrentRoom": "Benachrichtigungen für den aktuellen Raum ausblenden",
+    "@labelHideNotificationsCurrentRoom": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelHideNotificationsCurrentRoomDescription": "Wenn du eine Nachricht erhältst, den Chat ausgewählt hast und die App im Vordergrund ist, keine Benachrichtigung anzeigen",
+    "@labelHideNotificationsCurrentRoomDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelNotificationBadges": "Benachrichtigungsindikatoren",
+    "@labelNotificationBadges": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelNotificationBadgesDescription": "Einen Indikator mit der Anzahl ungelesener Nachrichten in der System-Taskleiste anzeigen",
+    "@labelNotificationBadgesDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelMessageBodyFormatting": "Nachrichtenformatierung",
+    "@labelMessageBodyFormatting": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelMessageBodyFormattingDescription": "Benutzerdefinierte Formatierung in Nachrichtenbenachrichtigungen anwenden",
+    "@labelMessageBodyFormattingDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowImages": "Bilder anzeigen",
+    "@labelShowImages": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelShowImagesDescription": "Bilder in Benachrichtigungen anzeigen, sofern dies in den Einstellungen unter „Allgemein > Medienvorschau“ erlaubt ist",
+    "@labelShowImagesDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelPreviewUrls": "URL-Vorschauen",
+    "@labelPreviewUrls": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelPreviewUrlsDescription": "URL-Vorschauen abrufen, um zusätzliche Informationen zu Links in Benachrichtigungen anzuzeigen",
+    "@labelPreviewUrlsDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelNotificationVolume": "Benachrichtigungslautstärke",
+    "@labelNotificationVolume": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelNotificationVolumeDescription": "Regelt die Lautstärke von Benachrichtigungen und Klingeltönen",
+    "@labelNotificationVolumeDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelThisDevice": "Dieses Gerät",
+    "@labelThisDevice": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelOtherDevices": "Andere Geräte",
+    "@labelOtherDevices": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelOverrideLayout": "Layout überschreiben",
+    "@labelOverrideLayout": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelOverrideLayoutDescription": "Damit diese Änderung wirksam wird, musst du möglicherweise die App neu starten",
+    "@labelOverrideLayoutDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelNoOverride": "Keine Überschreibung",
+    "@labelNoOverride": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelExperimentsUnderDevelopment": "Diese Funktionen befinden sich noch in der Entwicklung und können Fehler oder Sicherheitsprobleme enthalten. Aktiviere sie auf eigene Gefahr",
+    "@labelExperimentsUnderDevelopment": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelExperiments": "Experimente",
+    "@labelExperiments": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelExperimentsEncryptedElementCall": "Verschlüsselte Element-Anrufe",
+    "@labelExperimentsEncryptedElementCall": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelExperimentsEncryptedElementCallDescription": "Experimentelle Unterstützung für Ende-zu-Ende-Verschlüsselung in Element Call aktivieren",
+    "@labelExperimentsEncryptedElementCallDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelExperimentsMustRestart": "Du musst die App neu starten, damit die Änderungen wirksam werden",
+    "@labelExperimentsMustRestart": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "promptCheckForUpdatesDescriptionFirstLogin": "Möchtest du, dass Commet automatisch nach neuen Updates sucht?",
+    "@promptCheckForUpdatesDescriptionFirstLogin": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelSpaceDescription": "Spaces sind Sammlungen von Räumen. Sie können Textchats, Sprachchats und mehr enthalten! Sie eignen sich perfekt, um deine Community oder Gruppe zu organisieren!",
+    "@labelSpaceDescription": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
+    },
+    "labelCreateRoomHeader": "Raum erstellen:",
+    "@labelCreateRoomHeader": {
+        "description": "",
+        "type": "text",
+        "placeholders": {}
     }
 }

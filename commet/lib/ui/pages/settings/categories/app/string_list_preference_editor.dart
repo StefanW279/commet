@@ -1,6 +1,7 @@
 import 'package:commet/config/preferences/string_list_preference.dart';
 import 'package:commet/ui/navigation/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:tiamat/tiamat.dart' as tiamat;
 
@@ -54,8 +55,10 @@ class _StringListPreferenceEditorState
                       if (items.isEmpty)
                         SizedBox(
                           height: 50,
-                          child:
-                              Center(child: tiamat.Text.labelLow("No Entries")),
+                          child: Center(
+                              child: tiamat.Text.labelLow(Intl.message(
+                                  "No Entries",
+                                  name: "labelNoEntries"))),
                         ),
                       if (items.isNotEmpty)
                         Column(

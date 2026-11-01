@@ -3,6 +3,13 @@ import 'dart:math';
 import 'package:commet/client/matrix/matrix_member.dart';
 import 'package:flutter/material.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
+import 'package:intl/intl.dart';
+
+String get labelSpaceDescription => Intl.message(
+      "Spaces are a collection of rooms, they can contain text chats, voice chats and more! They are the perfect way to organize your community or group!",
+      name: "labelSpaceDescription",
+      desc: "",
+    );
 
 class SpaceCreatorDescription extends StatelessWidget {
   SpaceCreatorDescription({super.key});
@@ -39,8 +46,7 @@ class SpaceCreatorDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        tiamat.Text.labelLow(
-            "Spaces are a collection of rooms, they can contain text chats, voice chats and more! They are the perfect way to organize your community or group!"),
+        tiamat.Text.labelLow(labelSpaceDescription),
         SizedBox(
           height: 30,
         ),

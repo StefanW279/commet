@@ -300,8 +300,9 @@ Future<void> startGui() async {
 
   var initialTheme = await preferences.resolveTheme();
 
-  if (preferences.checkForUpdates.value == null &&
-      UpdateChecker.shouldCheckForUpdates) {
+  if (preferences.checkForUpdates.value == true &&
+      UpdateChecker.shouldCheckForUpdates &&
+      !(clientManager!.isLoggedIn())) {
     FirstTimeSetup.registerPostLoginSetup(UpdateCheckerSetup());
   }
 

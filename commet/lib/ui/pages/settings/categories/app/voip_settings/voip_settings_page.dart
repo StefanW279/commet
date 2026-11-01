@@ -128,6 +128,36 @@ class _VoipSettingsPage extends State<VoipSettingsPage> {
       desc:
           "describes the behavior for the slider to adjust the bitrate of outgoing audio on a call");
 
+  String get labelVoipEnableOverlay => Intl.message(
+        "Enable Overlay",
+        name: "labelVoipEnableOverlay",
+        desc: "",
+      );
+
+  String get labelVoipEnableOverlayDescription => Intl.message(
+        "When in a call, add an overlay on your screen to show the call participants",
+        name: "labelVoipEnableOverlayDescription",
+        desc: "",
+      );
+
+  String get labelVoipAudioInput => Intl.message(
+        "Default Audio Input",
+        name: "labelVoipAudioInput",
+        desc: "",
+      );
+
+  String get labelVoipAudioOutput => Intl.message(
+        "Audio Output",
+        name: "labelVoipAudioOutput",
+        desc: "",
+      );
+
+  String get labelVoipNoDefaultDevice => Intl.message(
+        "No Default Selected",
+        name: "labelVoipNoDefaultDevice",
+        desc: "",
+      );
+
   @override
   void initState() {
     super.initState();
@@ -169,9 +199,8 @@ class _VoipSettingsPage extends State<VoipSettingsPage> {
           header: headerVoipSettingsOverlay,
           child: BooleanPreferenceToggle(
             preference: preferences.useVoipOverlay,
-            title: "Enable Overlay",
-            description:
-                "When in a call, add an overlay on your screen to show the call participants",
+            title: labelVoipEnableOverlay,
+            description: labelVoipEnableOverlayDescription,
             onChanged: (p0) {
               if (p0 == false) {
                 clientManager?.callManager.removeOverlay();
@@ -269,7 +298,7 @@ class _VoipSettingsPage extends State<VoipSettingsPage> {
     return Column(spacing: 8, children: [
       if (microphones != null && !PlatformUtils.isAndroid)
         buildPicker(
-          "Default Audio Input",
+          labelVoipAudioInput,
           preferences.voipDefaultAudioInput.value,
           microphones!,
           onSelected: (device) async {
@@ -282,7 +311,7 @@ class _VoipSettingsPage extends State<VoipSettingsPage> {
         ),
       if (speakers != null)
         buildPicker(
-          "Audio Output",
+          labelVoipAudioOutput,
           preferences.voipDefaultAudioOutput.value,
           speakers!,
           onSelected: (device) async {
@@ -323,7 +352,7 @@ class _VoipSettingsPage extends State<VoipSettingsPage> {
             onItemSelected: onSelected,
             itemBuilder: (item) {
               if (item == null) {
-                return tiamat.Text.labelLow("No Default Selected");
+                return tiamat.Text.labelLow(labelVoipNoDefaultDevice);
               } else {
                 return tiamat.Text(item.label);
               }
