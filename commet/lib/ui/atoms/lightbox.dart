@@ -153,6 +153,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   @override
   void dispose() {
     onLodChanged?.cancel();
+    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
     controller.removeListener(onTransformChanged);
     controller.dispose();
     _controller.dispose();
@@ -164,6 +165,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     super.initState();
 
     controller.addListener(onTransformChanged);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
     _controller.stop(canceled: true);
 
     if (widget.aspectRatio != null) {
@@ -298,6 +300,18 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     }
   }
 
+  bool _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.escape) {
+      if (!dismissing && mounted) {
+        dismiss();
+      }
+      // Consume Escape before it reaches a focused chat text field.
+      return true;
+    }
+    return false;
+  }
+
   void dismiss() {
     setState(() {
       dismissing = true;
@@ -307,17 +321,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      autofocus: true,
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent &&
-            event.logicalKey == LogicalKeyboardKey.escape) {
-          dismiss();
-          return KeyEventResult.handled;
-        }
-        return KeyEventResult.ignored;
-      },
-      child: GestureDetector(
+    return GestureDetector(
         onTap: dismiss,
         child: Container(
         color: Colors.transparent,
@@ -523,7 +527,6 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
             ),
           ),
         ),
-      ),
       ),
     );
   }
