@@ -382,10 +382,13 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 transformationController: controller,
                                 minScale: 1.0,
                                 maxScale: 3.5,
-                                // Translation is clamped by onTransformChanged
-                                // using the scaled image size, so no extra
-                                // boundary margin is needed here.
-                                boundaryMargin: EdgeInsets.zero,
+                                // Let the custom scale-aware clamp below own
+                                // all pan limits. InteractiveViewer's zero
+                                // margin otherwise applies a second, viewport-
+                                // sized constraint that fights the fitted image.
+                                boundaryMargin: const EdgeInsets.all(
+                                  double.infinity,
+                                ),
                                 clipBehavior: Clip.hardEdge,
                                 child: SizedBox(
                                   width: imageWidth,
