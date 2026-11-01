@@ -375,7 +375,6 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                         )
                                                   : const Placeholder()),
                                     ),
-                                    ),
                                   ),
                                 ),
                               ),
