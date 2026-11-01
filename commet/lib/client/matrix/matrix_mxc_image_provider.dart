@@ -4,6 +4,7 @@ import 'package:commet/client/matrix/extensions/matrix_client_extensions.dart';
 import 'package:commet/debug/log.dart';
 import 'package:commet/main.dart';
 import 'package:commet/utils/mime.dart';
+import 'package:http/http.dart' hide Client;
 import 'package:matrix/matrix.dart';
 
 import '../../utils/image/lod_image.dart';
@@ -60,7 +61,7 @@ class MatrixMxcImage extends LODImageProvider {
       var value = await callback();
       return value;
     } catch (error, trace) {
-      if (error is SocketException) {
+      if (error is SocketException || error is ClientException) {
         while (true) {
           var result = await client.onSyncStatus.stream.first;
 
