@@ -266,98 +266,112 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Center(
-                          // Keep the InteractiveViewer viewport the same size
-                          // and aspect ratio as the displayed image. Otherwise
-                          // it can pan into unused space around the image.
-                          child: AspectRatio(
-                            aspectRatio: aspectRatio,
-                            child: InteractiveViewer(
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Keep the image at its natural aspect ratio, but
+                            // let the viewer itself occupy the full lightbox.
+                            // This way zooming can use the surrounding space,
+                            // while zero boundary margin keeps the image edges
+                            // from being panned past the viewport.
+                            final availableRatio =
+                                constraints.maxWidth / constraints.maxHeight;
+                            final imageWidth = aspectRatio > availableRatio
+                                ? constraints.maxWidth
+                                : constraints.maxHeight * aspectRatio;
+                            final imageHeight = aspectRatio > availableRatio
+                                ? constraints.maxWidth / aspectRatio
+                                : constraints.maxHeight;
+
+                            return InteractiveViewer(
                               trackpadScrollCausesScale: true,
                               transformationController: controller,
                               maxScale: 3.5,
                               boundaryMargin: EdgeInsets.zero,
                               clipBehavior: Clip.hardEdge,
-                              child: SizedBox.expand(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    onDoubleTap: toggleZoom,
-                                    child: widget.customWidget ??
-                                        (widget.image != null
-                                            ? Stack(
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  Image(
-                                                    fit: BoxFit.cover,
-                                                    image: widget.image!,
-                                                    isAntiAlias: true,
-                                                    filterQuality:
-                                                        FilterQuality.medium,
-                                                  ),
-                                                  if (loadingHighQuality)
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.bottomRight,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets.all(
-                                                                8.0),
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .surfaceContainer,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(8),
-                                                          ),
-                                                          child: const Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0),
-                                                            child: SizedBox(
-                                                              width: 12,
-                                                              height: 12,
-                                                              child:
-                                                                  CircularProgressIndicator(),
+                              child: Center(
+                                child: SizedBox(
+                                  width: imageWidth,
+                                  height: imageHeight,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      onDoubleTap: toggleZoom,
+                                      child: widget.customWidget ??
+                                          (widget.image != null
+                                              ? Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    Image(
+                                                      fit: BoxFit.fill,
+                                                      image: widget.image!,
+                                                      isAntiAlias: true,
+                                                      filterQuality:
+                                                          FilterQuality.medium,
+                                                    ),
+                                                    if (loadingHighQuality)
+                                                      Align(
+                                                        alignment:
+                                                            Alignment.bottomRight,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                  8.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .surfaceContainer,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(8),
+                                                            ),
+                                                            child: const Padding(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                      8.0),
+                                                              child: SizedBox(
+                                                                width: 12,
+                                                                height: 12,
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                ],
-                                              )
-                                            : widget.video != null
-                                                ? dismissing
-                                                    ? widget.thumbnail != null
-                                                        ? Image(
-                                                            fit: BoxFit.cover,
-                                                            image: widget
-                                                                .thumbnail!,
-                                                          )
-                                                        : Container(
-                                                            color: Colors.black,
-                                                          )
-                                                    : VideoPlayer(
-                                                        widget.video!,
-                                                        controller: widget
-                                                            .videoController,
-                                                        showProgressBar: true,
-                                                        canGoFullscreen: false,
-                                                        thumbnail:
-                                                            widget.thumbnail,
-                                                        key: widget.contentKey,
-                                                      )
-                                                : const Placeholder()),
+                                                  ],
+                                                )
+                                              : widget.video != null
+                                                  ? dismissing
+                                                      ? widget.thumbnail != null
+                                                          ? Image(
+                                                              fit: BoxFit.cover,
+                                                              image: widget
+                                                                  .thumbnail!,
+                                                            )
+                                                          : Container(
+                                                              color: Colors.black,
+                                                            )
+                                                      : VideoPlayer(
+                                                          widget.video!,
+                                                          controller: widget
+                                                              .videoController,
+                                                          showProgressBar: true,
+                                                          canGoFullscreen: false,
+                                                          thumbnail:
+                                                              widget.thumbnail,
+                                                          key: widget.contentKey,
+                                                        )
+                                                  : const Placeholder()),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
                         if (widget.image != null)
                           Positioned(
