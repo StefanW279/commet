@@ -213,6 +213,13 @@ class MessageInputState extends State<MessageInput> {
   }
 
   static bool _handleUnfocusedKey(KeyEvent event) {
+    // Escape is a control key, not text to replay into the message composer.
+    // In particular, its character value can be the ESC control character. Let
+    // other keyboard handlers (such as the lightbox) process it instead.
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      return false;
+    }
+
     final input = _activeInstance;
 
     if (input == null ||

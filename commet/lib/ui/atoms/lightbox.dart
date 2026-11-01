@@ -9,6 +9,7 @@ import 'package:commet/ui/molecules/video_player/video_player.dart';
 import 'package:commet/ui/molecules/video_player/video_player_controller.dart';
 import 'package:commet/utils/image/lod_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tiamat/atoms/popup_dialog.dart';
 import 'dart:ui' as ui;
 
@@ -77,6 +78,11 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   double aspectRatio = 1;
   bool dismissing = false;
   final controller = TransformationController();
+  Size viewerSize = Size.zero;
+  Matrix4? fitTransform;
+  Size? fitImageSize;
+  double viewerScale = 1.0;
+  bool adjustingTransform = false;
   bool loadingHighQuality = false;
 
   StreamSubscription? onLodChanged;
@@ -102,9 +108,55 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
       ConstantTween(0.0).animate(_controller);
   late final Animation<double> scale = ConstantTween(1.0).animate(_controller);
 
+  void onTransformChanged() {
+    if (adjustingTransform || fitImageSize == null || viewerSize == Size.zero) {
+      return;
+    }
+
+    final matrix = controller.value;
+    final nextScale = matrix.getMaxScaleOnAxis();
+    final imageWidth = fitImageSize!.width * nextScale;
+    final imageHeight = fitImageSize!.height * nextScale;
+
+    // Keep the image centered on axes where it still fits. When it overflows,
+    // constrain translation to the interval between its two edges and the
+    // viewport edges. These limits are recalculated for every scale change.
+    final minX = imageWidth > viewerSize.width
+        ? viewerSize.width - imageWidth
+        : (viewerSize.width - imageWidth) / 2;
+    final maxX = imageWidth > viewerSize.width ? 0.0 : minX;
+    final minY = imageHeight > viewerSize.height
+        ? viewerSize.height - imageHeight
+        : (viewerSize.height - imageHeight) / 2;
+    final maxY = imageHeight > viewerSize.height ? 0.0 : minY;
+
+    final nextX = matrix.entry(0, 3).clamp(minX, maxX).toDouble();
+    final nextY = matrix.entry(1, 3).clamp(minY, maxY).toDouble();
+
+    if ((nextX - matrix.entry(0, 3)).abs() > 0.001 ||
+        (nextY - matrix.entry(1, 3)).abs() > 0.001) {
+      final corrected = matrix.clone()
+        ..[12] = nextX
+        ..[13] = nextY;
+      adjustingTransform = true;
+      controller.value = corrected;
+      adjustingTransform = false;
+    }
+
+    if ((nextScale - viewerScale).abs() > 0.001 && mounted) {
+      setState(() {
+        viewerScale = nextScale;
+      });
+    }
+  }
+
   @override
   void dispose() {
     onLodChanged?.cancel();
+    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
+    controller.removeListener(onTransformChanged);
+    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -112,6 +164,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    controller.addListener(onTransformChanged);
+    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
     _controller.stop(canceled: true);
 
     if (widget.aspectRatio != null) {
@@ -215,6 +269,49 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     return completer.future;
   }
 
+  void resetZoom() {
+    controller.value = fitTransform?.clone() ?? Matrix4.identity();
+  }
+
+  void zoomBy(double factor) {
+    final currentScale = controller.value.getMaxScaleOnAxis();
+    final nextScale = (currentScale * factor).clamp(1.0, 3.5).toDouble();
+    if (nextScale <= 1.0) {
+      resetZoom();
+      return;
+    }
+
+    // Scale around the viewport center, preserving the image's fitted offset.
+    final scaleFactor = nextScale / currentScale;
+    final centerX = viewerSize.width / 2;
+    final centerY = viewerSize.height / 2;
+    controller.value = Matrix4.identity()
+      ..translate(centerX, centerY)
+      ..scale(scaleFactor)
+      ..translate(-centerX, -centerY)
+      ..multiply(controller.value);
+  }
+
+  void toggleZoom() {
+    if (controller.value.getMaxScaleOnAxis() > 1.0) {
+      resetZoom();
+    } else {
+      zoomBy(2);
+    }
+  }
+
+  bool _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.escape) {
+      if (!dismissing && mounted) {
+        dismiss();
+      }
+      // Consume Escape before it reaches a focused chat text field.
+      return true;
+    }
+    return false;
+  }
+
   void dismiss() {
     setState(() {
       dismissing = true;
@@ -225,13 +322,11 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        dismiss();
-      },
+      onTap: dismiss,
       child: Container(
         color: Colors.transparent,
         child: Padding(
-          padding: const EdgeInsets.all(BuildConfig.MOBILE ? 10 : 100.0),
+          padding: const EdgeInsets.all(BuildConfig.MOBILE ? 2 : 20.0),
           child: ScaledSafeArea(
             child: RotatedBox(
               quarterTurns: rotate ? 1 : 0,
@@ -241,86 +336,202 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                   turns: rotate ? rotationAnimation : rotation,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: InteractiveViewer(
-                      trackpadScrollCausesScale: true,
-                      transformationController: controller,
-                      maxScale: 3.5,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: AspectRatio(
-                                aspectRatio: aspectRatio,
-                                child: widget.customWidget ??
-                                    (widget.image != null
-                                        ? Stack(
-                                            fit: StackFit.expand,
-                                            children: [
-                                              Image(
-                                                fit: BoxFit.cover,
-                                                image: widget.image!,
-                                                isAntiAlias: true,
-                                                filterQuality:
-                                                    FilterQuality.medium,
-                                              ),
-                                              if (loadingHighQuality)
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomRight,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .surfaceContainer,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Keep the image at its natural aspect ratio, but
+                            // let the viewer itself occupy the full lightbox.
+                            // This way zooming can use the surrounding space,
+                            // while zero boundary margin keeps the image edges
+                            // from being panned past the viewport.
+                            final availableRatio =
+                                constraints.maxWidth / constraints.maxHeight;
+                            // Fit the image inside the viewport without
+                            // changing its aspect ratio. The viewer itself
+                            // remains full-sized; with unconstrained=false the
+                            // child would expand to the viewport and allow
+                            // panning into empty space around smaller images.
+                            final imageWidth = aspectRatio > availableRatio
+                                ? constraints.maxWidth
+                                : constraints.maxHeight * aspectRatio;
+                            final imageHeight = aspectRatio > availableRatio
+                                ? constraints.maxWidth / aspectRatio
+                                : constraints.maxHeight;
+
+                            final nextViewerSize = Size(
+                              constraints.maxWidth,
+                              constraints.maxHeight,
+                            );
+                            final imageSize = Size(imageWidth, imageHeight);
+                            final offsetX =
+                                (constraints.maxWidth - imageWidth) / 2;
+                            final offsetY =
+                                (constraints.maxHeight - imageHeight) / 2;
+                            final nextFitTransform = Matrix4.identity()
+                              ..translate(offsetX, offsetY);
+
+                            if (fitImageSize != imageSize ||
+                                viewerSize != nextViewerSize) {
+                              viewerSize = nextViewerSize;
+                              fitImageSize = imageSize;
+                              fitTransform = nextFitTransform;
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (mounted &&
+                                    controller.value.getMaxScaleOnAxis() <=
+                                        1.0001) {
+                                  controller.value = fitTransform!.clone();
+                                }
+                              });
+                            }
+
+                            return SizedBox.expand(
+                              child: InteractiveViewer(
+                                // Keep the transformed child at the fitted
+                                // image dimensions. With constrained=true the
+                                // child fills the viewport, so the fit offset
+                                // is applied on top of an already centered image.
+                                constrained: false,
+                                trackpadScrollCausesScale: true,
+                                transformationController: controller,
+                                minScale: 1.0,
+                                maxScale: 3.5,
+                                // Let the custom scale-aware clamp below own
+                                // all pan limits. InteractiveViewer's zero
+                                // margin otherwise applies a second, viewport-
+                                // sized constraint that fights the fitted image.
+                                boundaryMargin: const EdgeInsets.all(
+                                  double.infinity,
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: SizedBox(
+                                  width: imageWidth,
+                                  height: imageHeight,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      onDoubleTap: toggleZoom,
+                                      child: widget.customWidget ??
+                                          (widget.image != null
+                                              ? Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    Image(
+                                                      fit: BoxFit.contain,
+                                                      image: widget.image!,
+                                                      isAntiAlias: true,
+                                                      filterQuality:
+                                                          FilterQuality.medium,
+                                                    ),
+                                                    if (loadingHighQuality)
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .bottomRight,
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
                                                                   .all(8.0),
-                                                          child: SizedBox(
-                                                              width: 12,
-                                                              height: 12,
-                                                              child:
-                                                                  CircularProgressIndicator()),
-                                                        )),
-                                                  ),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .surfaceContainer,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
+                                                            ),
+                                                            child:
+                                                                const Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: SizedBox(
+                                                                width: 12,
+                                                                height: 12,
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
                                                 )
-                                            ],
-                                          )
-                                        : widget.video != null
-                                            ? dismissing
-                                                ? widget.thumbnail != null
-                                                    ? Image(
-                                                        fit: BoxFit.cover,
-                                                        image:
-                                                            widget.thumbnail!,
-                                                      )
-                                                    : Container(
-                                                        color: Colors.black,
-                                                      )
-                                                : VideoPlayer(
-                                                    widget.video!,
-                                                    controller:
-                                                        widget.videoController,
-                                                    showProgressBar: true,
-                                                    canGoFullscreen: false,
-                                                    thumbnail: widget.thumbnail,
-                                                    key: widget.contentKey,
-                                                  )
-                                            : const Placeholder())),
-                          ),
+                                              : widget.video != null
+                                                  ? dismissing
+                                                      ? widget.thumbnail != null
+                                                          ? Image(
+                                                              fit: BoxFit.cover,
+                                                              image: widget
+                                                                  .thumbnail!,
+                                                            )
+                                                          : Container(
+                                                              color:
+                                                                  Colors.black,
+                                                            )
+                                                      : VideoPlayer(
+                                                          widget.video!,
+                                                          controller: widget
+                                                              .videoController,
+                                                          showProgressBar: true,
+                                                          canGoFullscreen:
+                                                              false,
+                                                          thumbnail:
+                                                              widget.thumbnail,
+                                                          key:
+                                                              widget.contentKey,
+                                                        )
+                                                  : const Placeholder()),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      ),
+                        if (widget.image != null)
+                          Positioned(
+                            right: 8,
+                            bottom: 8,
+                            child: Material(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(24),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    tooltip: "Zoom in",
+                                    visualDensity: VisualDensity.compact,
+                                    color: Colors.white,
+                                    onPressed: () => zoomBy(1.25),
+                                    icon: const Icon(Icons.add),
+                                  ),
+                                  IconButton(
+                                    tooltip: "Zoom out",
+                                    visualDensity: VisualDensity.compact,
+                                    color: Colors.white,
+                                    onPressed: () => zoomBy(0.8),
+                                    icon: const Icon(Icons.remove),
+                                  ),
+                                  IconButton(
+                                    tooltip: "Reset zoom",
+                                    visualDensity: VisualDensity.compact,
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      resetZoom();
+                                    },
+                                    icon: const Icon(Icons.fit_screen),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
