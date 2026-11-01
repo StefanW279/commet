@@ -322,8 +322,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: dismiss,
-        child: Container(
+      onTap: dismiss,
+      child: Container(
         color: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.all(BuildConfig.MOBILE ? 2 : 20.0),
@@ -427,22 +427,29 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                     ),
                                                     if (loadingHighQuality)
                                                       Align(
-                                                        alignment:
-                                                            Alignment.bottomRight,
+                                                        alignment: Alignment
+                                                            .bottomRight,
                                                         child: Padding(
                                                           padding:
-                                                              const EdgeInsets.all(8.0),
+                                                              const EdgeInsets
+                                                                  .all(8.0),
                                                           child: Container(
-                                                            decoration: BoxDecoration(
-                                                              color: Theme.of(context)
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
                                                                   .colorScheme
                                                                   .surfaceContainer,
                                                               borderRadius:
-                                                                  BorderRadius.circular(8),
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
                                                             ),
-                                                            child: const Padding(
+                                                            child:
+                                                                const Padding(
                                                               padding:
-                                                                  EdgeInsets.all(8.0),
+                                                                  EdgeInsets
+                                                                      .all(8.0),
                                                               child: SizedBox(
                                                                 width: 12,
                                                                 height: 12,
@@ -460,19 +467,24 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                       ? widget.thumbnail != null
                                                           ? Image(
                                                               fit: BoxFit.cover,
-                                                              image: widget.thumbnail!,
+                                                              image: widget
+                                                                  .thumbnail!,
                                                             )
                                                           : Container(
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                             )
                                                       : VideoPlayer(
                                                           widget.video!,
-                                                          controller:
-                                                              widget.videoController,
+                                                          controller: widget
+                                                              .videoController,
                                                           showProgressBar: true,
-                                                          canGoFullscreen: false,
-                                                          thumbnail: widget.thumbnail,
-                                                          key: widget.contentKey,
+                                                          canGoFullscreen:
+                                                              false,
+                                                          thumbnail:
+                                                              widget.thumbnail,
+                                                          key:
+                                                              widget.contentKey,
                                                         )
                                                   : const Placeholder()),
                                     ),
