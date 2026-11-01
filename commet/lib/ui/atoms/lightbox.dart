@@ -77,6 +77,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
   double aspectRatio = 1;
   bool dismissing = false;
   final controller = TransformationController();
+  Size viewerSize = Size.zero;
   bool loadingHighQuality = false;
 
   StreamSubscription? onLodChanged;
@@ -225,10 +226,16 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
       return;
     }
 
-    // Scale the existing transform so zooming does not discard the current
-    // pan offset. InteractiveViewer still handles gesture-based panning.
+    // Scale around the viewport center so the image does not drift toward
+    // the top-left when using the zoom buttons.
     final scaleFactor = nextScale / currentScale;
-    controller.value = controller.value.clone()..scale(scaleFactor);
+    final centerX = viewerSize.width / 2;
+    final centerY = viewerSize.height / 2;
+    controller.value = Matrix4.identity()
+      ..translate(centerX, centerY)
+      ..scale(scaleFactor)
+      ..translate(-centerX, -centerY)
+      ..multiply(controller.value);
   }
 
   void toggleZoom() {
@@ -287,20 +294,25 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                 ? constraints.maxWidth / aspectRatio
                                 : constraints.maxHeight;
 
+                            viewerSize = Size(
+                              constraints.maxWidth,
+                              constraints.maxHeight,
+                            );
+
                             return SizedBox.expand(
                               child: InteractiveViewer(
-                                constrained: false,
-                                alignment: Alignment.center,
                                 trackpadScrollCausesScale: true,
                                 transformationController: controller,
                                 minScale: 1.0,
                                 maxScale: 3.5,
                                 boundaryMargin: EdgeInsets.zero,
                                 clipBehavior: Clip.hardEdge,
-                                child: SizedBox(
-                                  width: imageWidth,
-                                  height: imageHeight,
-                                  child: ClipRRect(
+                                child: SizedBox.expand(
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: imageWidth,
+                                      height: imageHeight,
+                                      child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: GestureDetector(
                                       onTap: () {},
@@ -374,6 +386,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                           key: widget.contentKey,
                                                         )
                                                   : const Placeholder()),
+                                      ),
                                     ),
                                   ),
                                 ),
