@@ -33,8 +33,6 @@ class Preferences {
 
   static const String _syncedCalendarUrls = "synced_calendar_urls";
 
-  static const String _runningDonationCheckFlow = "running_donation_check_flow";
-
   static const String _systemHotkey = "system_wide_hotkey";
 
   static final StreamController onSettingChangedController =
@@ -185,40 +183,6 @@ class Preferences {
   Future<void> setCalendarSources(String roomId, Map<String, dynamic> sources) {
     return _preferences!
         .setString(_syncedCalendarUrls + ".${roomId}", jsonEncode(sources));
-  }
-
-  (String, DateTime)? get runningDonationCheckFlow {
-    var result = _preferences!.getString(_runningDonationCheckFlow);
-
-    if (result != null) {
-      var data = jsonDecode(result);
-      var user = data["user"] as String;
-      var timestamp = data["time"] as int;
-
-      var time = DateTime.fromMillisecondsSinceEpoch(timestamp);
-
-      return (user, time);
-    }
-
-    return null;
-  }
-
-  Future<void> setRunningDonationCheckFlow(
-      String value, DateTime timestamp) async {
-    _preferences!.setString(
-        _runningDonationCheckFlow,
-        jsonEncode({
-          "user": value,
-          "time": timestamp.millisecondsSinceEpoch,
-        }));
-
-    onSettingChangedController.add(null);
-  }
-
-  Future<void> clearRunningDonationCheckFlow() async {
-    _preferences!.remove(_runningDonationCheckFlow);
-
-    onSettingChangedController.add(null);
   }
 
   String getHotkeyId(String name) {

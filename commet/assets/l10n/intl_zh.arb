@@ -1947,63 +1947,9 @@
         "type": "text",
         "placeholders": {}
     },
-    "titleConfirmingDonation": "确认捐赠",
-    "@titleConfirmingDonation": {
-        "description": "Title for the popup shown while waiting for the user to finish the donation flow, which checks for completion of the donation",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonationInstructions": "请按照浏览器中的说明操作。请耐心等待，收到捐赠后您的奖励可能需要一两分钟才会出现。",
-    "@labelDonationInstructions": {
-        "description": "Explains to the user to follow the donation instructions shown in the opened web page. Also asks for patience if the confirmation is taking a while to complete after donating",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonationConfirmationSucceeded": "感谢您的慷慨捐赠！",
-    "@labelDonationConfirmationSucceeded": {
-        "description": "Text that is shown when the donation flow was successful, and the donation has been confirmed",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonationConfirmationFailed": "找不到任何捐赠 :( 请考虑捐赠以支持 Commet 的开发！",
-    "@labelDonationConfirmationFailed": {
-        "description": "Text that is shown when the donation flow was failed, and the no donation was found",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelConfirmCancelDonationConfirmation": "您确定要关闭而不接受任何奖励吗？",
-    "@labelConfirmCancelDonationConfirmation": {
-        "description": "Text that is shown when the user attempts to cancel the donation confirmation flow before the confirmation has finished",
-        "type": "text",
-        "placeholders": {}
-    },
     "labelNoAccount": "无账号",
     "@labelNoAccount": {
         "description": "When the user is prompted to select an account to use for some action, this option is shown when the action can be completed without picking any account",
-        "type": "text",
-        "placeholders": {}
-    },
-    "promptPickDonationAccount": "选择一个账号进行捐赠",
-    "@promptPickDonationAccount": {
-        "description": "Prompt the user to select an account to link to their donation",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonateAnonymously": "不关联账号进行捐赠",
-    "@labelDonateAnonymously": {
-        "description": "Prompt the user to donate to the project, without linking to their user account",
-        "type": "text",
-        "placeholders": {}
-    },
-    "promptDonate": "捐赠",
-    "@promptDonate": {
-        "description": "Prompt the user to donate to the project",
-        "type": "text",
-        "placeholders": {}
-    },
-    "promptDonationsRefreshAwards": "刷新奖励",
-    "@promptDonationsRefreshAwards": {
-        "description": "Prompt the user to refresh any awards they may have received for donating to the project",
         "type": "text",
         "placeholders": {}
     },

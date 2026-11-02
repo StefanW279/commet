@@ -2005,12 +2005,6 @@
         "type": "text",
         "placeholders": {}
     },
-    "titleConfirmingDonation": "Bestätige Spende",
-    "@titleConfirmingDonation": {
-        "description": "Title for the popup shown while waiting for the user to finish the donation flow, which checks for completion of the donation",
-        "type": "text",
-        "placeholders": {}
-    },
     "labelSettingsAppExperiments": "Experimente",
     "@labelSettingsAppExperiments": {
         "description": "Label for the App Experiments settings page",
@@ -2092,45 +2086,9 @@
         "type": "text",
         "placeholders": {}
     },
-    "promptDonate": "Spenden",
-    "@promptDonate": {
-        "description": "Prompt the user to donate to the project",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonationInstructions": "Folge den Anweisungen in deinem Browser. Es kann wenige Minuten dauern, bis deine Spende eingegangen ist und du deine Belohnung erhälst.",
-    "@labelDonationInstructions": {
-        "description": "Explains to the user to follow the donation instructions shown in the opened web page. Also asks for patience if the confirmation is taking a while to complete after donating",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonationConfirmationSucceeded": "Vielen Dank für Ihre großzügige Spende!",
-    "@labelDonationConfirmationSucceeded": {
-        "description": "Text that is shown when the donation flow was successful, and the donation has been confirmed",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonationConfirmationFailed": "Wir konnten keine Spenden finden. Bitte erwägen Sie, zu spenden, um die Entwicklung von Commet zu unterstützen!",
-    "@labelDonationConfirmationFailed": {
-        "description": "Text that is shown when the donation flow was failed, and the no donation was found",
-        "type": "text",
-        "placeholders": {}
-    },
     "labelNoAccount": "Kein Account",
     "@labelNoAccount": {
         "description": "When the user is prompted to select an account to use for some action, this option is shown when the action can be completed without picking any account",
-        "type": "text",
-        "placeholders": {}
-    },
-    "promptPickDonationAccount": "Wähle ein Konto aus, mit dem du spenden möchtest",
-    "@promptPickDonationAccount": {
-        "description": "Prompt the user to select an account to link to their donation",
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelDonateAnonymously": "Spende, ohne einen Account zu verlinken",
-    "@labelDonateAnonymously": {
-        "description": "Prompt the user to donate to the project, without linking to their user account",
         "type": "text",
         "placeholders": {}
     },
@@ -2143,12 +2101,6 @@
     "labelAppBehaviourTitle": "App-Verhalten",
     "@labelAppBehaviourTitle": {
         "description": "Header for the app behaviour section in settings",
-        "type": "text",
-        "placeholders": {}
-    },
-    "promptDonationsRefreshAwards": "Belohnungen aktualisieren",
-    "@promptDonationsRefreshAwards": {
-        "description": "Prompt the user to refresh any awards they may have received for donating to the project",
         "type": "text",
         "placeholders": {}
     },
@@ -2276,12 +2228,6 @@
     },
     "labelVoipStreamResolutionDescription": "Die Auflösung deines Streams, Höher ist besser",
     "@labelVoipStreamResolutionDescription": {
-        "type": "text",
-        "placeholders": {}
-    },
-    "labelConfirmCancelDonationConfirmation": "Bist du sicher, dass du abbrechen willst, ohne eine Belohnung auszuwählen?",
-    "@labelConfirmCancelDonationConfirmation": {
-        "description": "Text that is shown when the user attempts to cancel the donation confirmation flow before the confirmation has finished",
         "type": "text",
         "placeholders": {}
     },
