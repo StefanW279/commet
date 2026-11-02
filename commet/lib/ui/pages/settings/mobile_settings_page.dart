@@ -1,5 +1,4 @@
 import 'package:commet/ui/atoms/scaled_safe_area.dart';
-import 'package:commet/ui/pages/settings/desktop_settings_page.dart';
 import 'package:commet/ui/pages/settings/settings_button.dart';
 import 'package:commet/ui/pages/settings/settings_category.dart';
 import 'package:flutter/material.dart' as m;
