@@ -6,6 +6,7 @@ import 'package:commet/ui/pages/settings/donation_rewards_confirmation.dart';
 import 'package:commet/ui/pages/settings/settings_button.dart';
 import 'package:commet/ui/pages/settings/settings_category.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart' as m;
 import 'package:intl/intl.dart';
 
@@ -55,7 +56,15 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
               child: categories[selectedCategoryIndex]
                       .tabs[selectedTabIndex]
                       .makeScrollable
-                  ? SingleChildScrollView(child: buildContent())
+                  ? ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          ...ScrollConfiguration.of(context).dragDevices,
+                          PointerDeviceKind.trackpad,
+                        },
+                      ),
+                      child: SingleChildScrollView(child: buildContent()),
+                    )
                   : buildContent(),
             )
           ],
