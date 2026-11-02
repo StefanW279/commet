@@ -10,10 +10,7 @@ import 'package:tiamat/tiamat.dart' as tiamat;
 import '../../navigation/navigation_utils.dart';
 
 class MobileSettingsPage extends StatefulWidget {
-  const MobileSettingsPage(
-      {required this.settings,
-      this.buttons,
-      super.key});
+  const MobileSettingsPage({required this.settings, this.buttons, super.key});
   final List<SettingsButton>? buttons;
   final List<SettingsCategory> settings;
   @override

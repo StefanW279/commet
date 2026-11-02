@@ -8,10 +8,7 @@ import 'package:tiamat/tiamat.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
 
 class DesktopSettingsPage extends StatefulWidget {
-  const DesktopSettingsPage(
-      {required this.settings,
-      this.buttons,
-      super.key});
+  const DesktopSettingsPage({required this.settings, this.buttons, super.key});
   final List<SettingsCategory> settings;
   final List<SettingsButton>? buttons;
   @override
