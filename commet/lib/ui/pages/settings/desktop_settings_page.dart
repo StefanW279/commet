@@ -248,6 +248,7 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
 
   ListView tabListBuilder(int categoryIndex) {
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, tabIndex) {
         return button(
