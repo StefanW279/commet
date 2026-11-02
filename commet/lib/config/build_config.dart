@@ -55,8 +55,6 @@ class BuildConfig {
 
   static const String appSchema = "commetchat";
 
-  static Uri donationRewardsApiHost = Uri.https("stripe-rewards.commet.chat");
-
   static const String _BUILD_DATE =
       String.fromEnvironment('BUILD_DATE', defaultValue: "0");
 
