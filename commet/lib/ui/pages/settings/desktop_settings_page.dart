@@ -2,6 +2,7 @@ import 'package:commet/ui/atoms/scaled_safe_area.dart';
 import 'package:commet/ui/pages/settings/settings_button.dart';
 import 'package:commet/ui/pages/settings/settings_category.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart' as m;
 
 import 'package:tiamat/tiamat.dart';
@@ -43,7 +44,15 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
               child: categories[selectedCategoryIndex]
                       .tabs[selectedTabIndex]
                       .makeScrollable
-                  ? SingleChildScrollView(child: buildContent())
+                  ? ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          ...ScrollConfiguration.of(context).dragDevices,
+                          PointerDeviceKind.trackpad,
+                        },
+                      ),
+                      child: SingleChildScrollView(child: buildContent()),
+                    )
                   : buildContent(),
             )
           ],
@@ -153,6 +162,7 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
 
   ListView tabListBuilder(int categoryIndex) {
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, tabIndex) {
         return button(
