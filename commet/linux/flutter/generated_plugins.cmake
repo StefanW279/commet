@@ -3,22 +3,22 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  app_links_linux
   desktop_drop
   desktop_webview_window
   dynamic_color
   file_selector_linux
   flutter_timezone
   flutter_webrtc
-  gtk
   hotkey_manager_linux
   livekit_client
   media_kit_libs_linux
   media_kit_video
   pasteboard
   screen_retriever_linux
-  sqlite3_flutter_libs
   tray_manager
   url_launcher_linux
+  webcrypto
   window_manager
   window_to_front
 )

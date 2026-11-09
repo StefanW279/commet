@@ -48,12 +48,14 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2.23.0
         with:
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.9'
           channel: 'stable'
 
       - name: Configure Flutter
         run: flutter config --enable-windows-desktop
-        
+      
+      - uses: ilammy/setup-nasm@v1
+      
       - name: Code Generation
         run: |
           cd .\commet
@@ -267,7 +269,7 @@ jobs:
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.23.0
         with:
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.9'
           channel: 'stable'
 
       - name: Setup Java
@@ -353,7 +355,7 @@ jobs:
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.23.0
         with:
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.9'
           channel: 'stable'
 
       - name: Setup Java
@@ -438,7 +440,7 @@ jobs:
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.23.0
         with:
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.9'
           channel: 'stable'
 
       - name: Bypass degraded Ubuntu mirror
@@ -460,6 +462,8 @@ jobs:
           
       - name: Build Linux
         run: |
+          export CXXFLAGS="-Wno-error=uninitialized"
+          export CFLAGS="-Wno-error=uninitialized"
           cd $PROJECT_PATH
           dart run scripts/build_release.dart --platform linux --version_tag 'v0.0.0-artifact' --git_hash ${{ github.sha }} --build_detail flatpak
 
@@ -498,7 +502,7 @@ jobs:
       - name: Setup Flutter 
         uses: subosito/flutter-action@v2.23.0
         with:
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.9'
           channel: 'stable'
 
       - name: Bypass degraded Ubuntu mirror

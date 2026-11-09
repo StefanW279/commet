@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:matrix/encryption/utils/pickle_key.dart';
+
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -51,14 +53,16 @@ class MatrixBackgroundRoom implements Room {
     }
 
     for (var postLoad in nonPreloadState) {
-      _stateEvents
-          .add(matrix.BasicEvent.fromJson(jsonDecode(postLoad.content)));
+      _stateEvents.add(
+        matrix.BasicEvent.fromJson(jsonDecode(postLoad.content)),
+      );
     }
   }
 
   Future<void> init() async {
-    var event = _stateEvents
-        .firstWhereOrNull((e) => e.type == matrix.EventTypes.RoomName);
+    var event = _stateEvents.firstWhereOrNull(
+      (e) => e.type == matrix.EventTypes.RoomName,
+    );
 
     if (event != null) {
       displayName = event.content["name"] as String;
@@ -79,17 +83,22 @@ class MatrixBackgroundRoom implements Room {
 
     if (avatarId != null) {
       avatar = await MatrixBackgroundMember.uriToCachedMxcImageProvider(
-          Uri.parse(avatarId!));
+        Uri.parse(avatarId!),
+      );
     }
   }
 
-  String? get avatarId => _stateEvents
-      .firstWhereOrNull((e) => e.type == matrix.EventTypes.RoomAvatar)
-      ?.content["url"] as String?;
+  String? get avatarId =>
+      _stateEvents
+              .firstWhereOrNull((e) => e.type == matrix.EventTypes.RoomAvatar)
+              ?.content["url"]
+          as String?;
 
   @override
   Future<TimelineEvent<Client>?> addReaction(
-      TimelineEvent<Client> reactingTo, Emoticon reaction) {
+    TimelineEvent<Client> reactingTo,
+    Emoticon reaction,
+  ) {
     throw UnimplementedError();
   }
 
@@ -132,10 +141,11 @@ class MatrixBackgroundRoom implements Room {
   @override
   Future<Member> fetchMember(String id) async {
     var db = backgroundClient.database.db;
-    var data = await (db.select(db.roomMembers)
-          ..where(
-              (tbl) => tbl.roomId.equals(identifier) & tbl.userId.equals(id)))
-        .getSingleOrNull();
+    var data =
+        await (db.select(db.roomMembers)..where(
+              (tbl) => tbl.roomId.equals(identifier) & tbl.userId.equals(id),
+            ))
+            .getSingleOrNull();
 
     MatrixBackgroundMember result = MatrixBackgroundMember(id);
     if (data != null) {
@@ -165,7 +175,7 @@ class MatrixBackgroundRoom implements Room {
   T? getComponent<T extends RoomComponent<Client, Room>>() {
     throw UnimplementedError();
   }
-/*
+  /*
   vod.InboundGroupSession? _createSession(String sessionKey) {
     try {
       return vod.InboundGroupSession(sessionKey);
@@ -185,8 +195,14 @@ class MatrixBackgroundRoom implements Room {
     return null;
   }*/
 
-  Future<matrix.MatrixEvent?> attemptDecrypt(matrix.MatrixEvent result,
-      String cipherText, StoredInboundGroupSession session) async {
+  Future<matrix.MatrixEvent?> attemptDecrypt(
+    matrix.MatrixEvent result,
+    String cipherText,
+    StoredInboundGroupSession session,
+  ) async {
+    var key = jsonDecode(session.content);
+    var sessionKey = key["session_key"];
+
     if (vod.isInitialized() == false) {
       await vod.init();
     }
@@ -247,23 +263,26 @@ class MatrixBackgroundRoom implements Room {
     if (senderKey != null) {
       var database = backgroundClient.database;
 
-      var data = await (database.db.select(database.db.inboundGroupSession)
-            ..where((tbl) =>
-                tbl.roomId.equals(roomId) & tbl.senderKey.equals(senderKey)))
-          .get();
+      var data =
+          await (database.db.select(database.db.inboundGroupSession)..where(
+                (tbl) =>
+                    tbl.roomId.equals(roomId) & tbl.senderKey.equals(senderKey),
+              ))
+              .get();
 
       Log.i("Found ${data.length} sessions with matching sender_key");
       for (var entry in data) {
         Log.i("Got session via sender_key");
         session = StoredInboundGroupSession(
-            roomId: entry.roomId,
-            sessionId: entry.sessionId,
-            pickle: entry.pickle,
-            content: entry.content,
-            indexes: entry.indexes,
-            allowedAtIndex: entry.allowedAtIndex,
-            senderKey: entry.senderKey,
-            senderClaimedKeys: entry.senderClaimedKey);
+          roomId: entry.roomId,
+          sessionId: entry.sessionId,
+          pickle: entry.pickle,
+          content: entry.content,
+          indexes: entry.indexes,
+          allowedAtIndex: entry.allowedAtIndex,
+          senderKey: entry.senderKey,
+          senderClaimedKeys: entry.senderClaimedKey,
+        );
 
         var decrypted = await attemptDecrypt(result, ciphertext, session);
         if (decrypted != null) {
@@ -271,8 +290,10 @@ class MatrixBackgroundRoom implements Room {
         }
       }
     } else {
-      session = await backgroundClient.database
-          .getInboundGroupSession(result.roomId!, sessionId as String);
+      session = await backgroundClient.database.getInboundGroupSession(
+        result.roomId!,
+        sessionId as String,
+      );
 
       if (session != null) {
         var decrypted = await attemptDecrypt(result, ciphertext, session);
@@ -287,8 +308,10 @@ class MatrixBackgroundRoom implements Room {
 
   @override
   Future<TimelineEvent<Client>?> getEvent(String eventId) async {
-    var result =
-        await backgroundClient.api.getOneRoomEvent(identifier, eventId);
+    var result = await backgroundClient.api.getOneRoomEvent(
+      identifier,
+      eventId,
+    );
     Log.i("Received event: ${result}");
 
     if (result.type == matrix.EventTypes.Encrypted) {
@@ -380,7 +403,8 @@ class MatrixBackgroundRoom implements Room {
 
   @override
   Future<List<ProcessedAttachment>> processAttachments(
-      List<PendingFileAttachment> attachments) {
+    List<PendingFileAttachment> attachments,
+  ) {
     throw UnimplementedError();
   }
 
@@ -388,7 +412,9 @@ class MatrixBackgroundRoom implements Room {
 
   @override
   Future<void> removeReaction(
-      TimelineEvent<Client> reactingTo, Emoticon reaction) {
+    TimelineEvent<Client> reactingTo,
+    Emoticon reaction,
+  ) {
     throw UnimplementedError();
   }
 
@@ -398,11 +424,12 @@ class MatrixBackgroundRoom implements Room {
   }
 
   @override
-  Future<TimelineEvent<Client>?> sendMessage(
-      {String? message,
-      TimelineEvent<Client>? inReplyTo,
-      TimelineEvent<Client>? replaceEvent,
-      List<ProcessedAttachment>? processedAttachments}) {
+  Future<TimelineEvent<Client>?> sendMessage({
+    String? message,
+    TimelineEvent<Client>? inReplyTo,
+    TimelineEvent<Client>? replaceEvent,
+    List<ProcessedAttachment>? processedAttachments,
+  }) {
     throw UnimplementedError();
   }
 

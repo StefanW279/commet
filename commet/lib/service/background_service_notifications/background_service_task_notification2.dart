@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:commet/cache/file_cache.dart';
 import 'package:commet/client/components/direct_messages/direct_message_component.dart';
@@ -90,9 +91,12 @@ class BackgroundNotificationsManager2 {
       Log.onError(e, s);
 
       try {
-        NotificationManager.notify(ErrorNotificationContent(
+        NotificationManager.notify(
+          ErrorNotificationContent(
             title: "An error occurred while processing notifications",
-            content: "${e} \n\n ${s}"));
+            content: "${e} \n\n ${s}",
+          ),
+        );
       } catch (_) {}
     }
 
@@ -137,9 +141,12 @@ class BackgroundNotificationsManager2 {
 
       final clients = preferences.getRegisteredMatrixClients();
       if (clients?.contains(localClientId) != true) {
-        NotificationManager.notify(ErrorNotificationContent(
+        NotificationManager.notify(
+          ErrorNotificationContent(
             title: "An error occurred while processing notifications",
-            content: "Failed to find client: $localClientId"));
+            content: "Failed to find client: $localClientId",
+          ),
+        );
         return;
       }
 
@@ -193,9 +200,12 @@ class BackgroundNotificationsManager2 {
       }
 
       if (room == null || client == null) {
-        NotificationManager.notify(ErrorNotificationContent(
+        NotificationManager.notify(
+          ErrorNotificationContent(
             title: "An error occurred while processing notifications",
-            content: "Failed to find room: $roomId  $data"));
+            content: "Failed to find room: $roomId  $data",
+          ),
+        );
         return;
       }
 
@@ -225,7 +235,8 @@ class BackgroundNotificationsManager2 {
 
       if (event == null) {
         throw Exception(
-            "Unable to fetch room event for notification\n${exception}");
+          "Unable to fetch room event for notification\n${exception}",
+        );
       }
 
       Log.e("got event: ${event}");
@@ -233,19 +244,20 @@ class BackgroundNotificationsManager2 {
       var member = await room.fetchMember(event.senderId);
 
       var content = MessageNotificationContent(
-          senderName: member.displayName,
-          senderId: event.senderId,
-          roomName: room.displayName,
-          content: event.plainTextBody,
-          eventId: eventId,
-          roomId: roomId,
-          clientId: client.identifier,
-          senderImage: member.avatar,
-          roomImageId: room.avatarId,
-          senderImageId: member.avatarId,
-          roomImage: room.avatar,
-          room: room,
-          isDirectMessage: isDirectMessage);
+        senderName: member.displayName,
+        senderId: event.senderId,
+        roomName: room.displayName,
+        content: event.plainTextBody,
+        eventId: eventId,
+        roomId: roomId,
+        clientId: client.identifier,
+        senderImage: member.avatar,
+        roomImageId: room.avatarId,
+        senderImageId: member.avatarId,
+        roomImage: room.avatar,
+        room: room,
+        isDirectMessage: isDirectMessage,
+      );
 
       Log.i("Sender image: ${member.avatar}");
 
@@ -254,9 +266,12 @@ class BackgroundNotificationsManager2 {
       Log.e("An error occured while processing the notification service loop");
       Log.onError(e, s);
 
-      NotificationManager.notify(ErrorNotificationContent(
+      NotificationManager.notify(
+        ErrorNotificationContent(
           title: "An error occurred while processing notifications",
-          content: "${e} \n\n ${s}"));
+          content: "${e} \n\n ${s}",
+        ),
+      );
     }
   }
 }

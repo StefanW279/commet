@@ -15,28 +15,29 @@ import 'package:flutter/material.dart' as material;
 import 'package:intl/intl.dart' as intl;
 
 class Message extends StatefulWidget {
-  const Message(
-      {super.key,
-      required this.senderName,
-      required this.senderColor,
-      required this.sentTimeStamp,
-      required this.body,
-      required this.currentUserIdentifier,
-      this.senderAvatar,
-      this.replyBody,
-      this.replySenderColor,
-      this.replySenderName,
-      this.edited = false,
-      this.showDetailed = false,
-      this.onDoubleTap,
-      this.reactions,
-      this.onReactionTapped,
-      this.onLongPress,
-      this.links,
-      this.loadingUrlPreviews = false,
-      this.isInReply = false,
-      this.child,
-      this.showSender = true});
+  const Message({
+    super.key,
+    required this.senderName,
+    required this.senderColor,
+    required this.sentTimeStamp,
+    required this.body,
+    required this.currentUserIdentifier,
+    this.senderAvatar,
+    this.replyBody,
+    this.replySenderColor,
+    this.replySenderName,
+    this.edited = false,
+    this.showDetailed = false,
+    this.onDoubleTap,
+    this.reactions,
+    this.onReactionTapped,
+    this.onLongPress,
+    this.links,
+    this.loadingUrlPreviews = false,
+    this.isInReply = false,
+    this.child,
+    this.showSender = true,
+  });
   final double avatarSize = 32;
 
   final bool showSender;
@@ -77,21 +78,24 @@ class _MessageState extends State<Message> {
   bool hovered = false;
   bool editMode = false;
 
-  String get messageEditedMarker => Intl.message("(Edited)",
-      name: "messageEditedMarker",
-      desc: "Short text to mark that a message has been edited");
+  String get messageEditedMarker => Intl.message(
+    "(Edited)",
+    name: "messageEditedMarker",
+    desc: "Short text to mark that a message has been edited",
+  );
 
   @override
   Widget build(BuildContext context) {
     return material.Material(
-        color: material.Colors.transparent,
-        child: BuildConfig.MOBILE
-            ? material.InkWell(
-                onLongPress: widget.onLongPress,
-                onDoubleTap: widget.onDoubleTap,
-                child: buildContent(),
-              )
-            : buildContent());
+      color: material.Colors.transparent,
+      child: BuildConfig.MOBILE
+          ? material.InkWell(
+              onLongPress: widget.onLongPress,
+              onDoubleTap: widget.onDoubleTap,
+              child: buildContent(),
+            )
+          : buildContent(),
+    );
   }
 
   @override
@@ -122,10 +126,7 @@ class _MessageState extends State<Message> {
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              senderName(),
-                              timeStamp(),
-                            ],
+                            children: [senderName(), timeStamp()],
                           ),
                         ),
                       body(),
@@ -137,7 +138,7 @@ class _MessageState extends State<Message> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ],
@@ -193,15 +194,14 @@ class _MessageState extends State<Message> {
         textBaseline: TextBaseline.ideographic,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
-            width: widget.avatarSize / 2,
-          ),
+          SizedBox(width: widget.avatarSize / 2),
           SizedBox(
             width: 30,
             height: 20,
             child: CustomPaint(
               painter: ReplyLinePainter(
-                  pathColor: Theme.of(context).colorScheme.secondary),
+                pathColor: Theme.of(context).colorScheme.secondary,
+              ),
             ),
           ),
           tiamat.Text.name(
@@ -218,7 +218,7 @@ class _MessageState extends State<Message> {
                 color: material.Theme.of(context).colorScheme.secondary,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -227,21 +227,23 @@ class _MessageState extends State<Message> {
   Widget timeStamp() {
     final use24HourTime = preferences.use24HourTime.value;
     return Padding(
-        padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-        child: SizedBox(
-            child: tiamat.Text.labelLow(widget.showDetailed
-                ? use24HourTime
-                    ? intl.DateFormat.yMMMMd()
-                        .add_Hms()
-                        .format(widget.sentTimeStamp.toLocal())
-                    : intl.DateFormat.yMMMMd()
-                        .add_jms()
-                        .format(widget.sentTimeStamp.toLocal())
-                : use24HourTime
-                    ? intl.DateFormat.Hm()
-                        .format(widget.sentTimeStamp.toLocal())
-                    : intl.DateFormat.jm()
-                        .format(widget.sentTimeStamp.toLocal()))));
+      padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+      child: SizedBox(
+        child: tiamat.Text.labelLow(
+          widget.showDetailed
+              ? MediaQuery.of(context).alwaysUse24HourFormat
+                    ? intl.DateFormat.yMMMMd().add_Hms().format(
+                        widget.sentTimeStamp.toLocal(),
+                      )
+                    : intl.DateFormat.yMMMMd().add_jms().format(
+                        widget.sentTimeStamp.toLocal(),
+                      )
+              : MediaQuery.of(context).alwaysUse24HourFormat
+              ? intl.DateFormat.Hm().format(widget.sentTimeStamp.toLocal())
+              : intl.DateFormat.jm().format(widget.sentTimeStamp.toLocal()),
+        ),
+      ),
+    );
   }
 
   Widget body() {
@@ -254,17 +256,19 @@ class _MessageState extends State<Message> {
 
   Widget reactions() {
     return Wrap(
-        spacing: 3,
-        runSpacing: 3,
-        direction: material.Axis.horizontal,
-        children: widget.reactions!.keys.map((key) {
-          var value = widget.reactions![key]!;
-          return EmojiReaction(
-              emoji: key,
-              onTapped: widget.onReactionTapped,
-              numReactions: value.length,
-              highlighted: value.contains(widget.currentUserIdentifier));
-        }).toList());
+      spacing: 3,
+      runSpacing: 3,
+      direction: material.Axis.horizontal,
+      children: widget.reactions!.keys.map((key) {
+        var value = widget.reactions![key]!;
+        return EmojiReaction(
+          emoji: key,
+          onTapped: widget.onReactionTapped,
+          numReactions: value.length,
+          highlighted: value.contains(widget.currentUserIdentifier),
+        );
+      }).toList(),
+    );
   }
 }
 
@@ -273,11 +277,12 @@ class ReplyLinePainter extends CustomPainter {
   double strokeWidth;
   double radius;
   double padding;
-  ReplyLinePainter(
-      {this.pathColor = Colors.white,
-      this.strokeWidth = 2,
-      this.radius = 3,
-      this.padding = 2}) {
+  ReplyLinePainter({
+    this.pathColor = Colors.white,
+    this.strokeWidth = 2,
+    this.radius = 3,
+    this.padding = 2,
+  }) {
     _paint = Paint()
       ..color = pathColor
       ..style = PaintingStyle.stroke
@@ -292,8 +297,10 @@ class ReplyLinePainter extends CustomPainter {
     Path path = Path();
     path.moveTo(0, size.height - padding);
     path.lineTo(0, (size.height / 2) + radius);
-    path.relativeArcToPoint(Offset(radius, -radius),
-        radius: Radius.circular(radius));
+    path.relativeArcToPoint(
+      Offset(radius, -radius),
+      radius: Radius.circular(radius),
+    );
     path.lineTo(size.width - 5, size.height / 2);
     canvas.drawPath(path, _paint);
   }
@@ -309,11 +316,12 @@ class ThreadLinePainter extends CustomPainter {
   double strokeWidth;
   double radius;
   double padding;
-  ThreadLinePainter(
-      {this.pathColor = Colors.white,
-      this.strokeWidth = 1.5,
-      this.radius = 3,
-      this.padding = 2}) {
+  ThreadLinePainter({
+    this.pathColor = Colors.white,
+    this.strokeWidth = 1.5,
+    this.radius = 3,
+    this.padding = 2,
+  }) {
     _paint = Paint()
       ..color = pathColor
       ..style = PaintingStyle.stroke

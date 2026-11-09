@@ -21,29 +21,28 @@ export 'package:commet/client/space.dart';
 export 'package:commet/client/peer.dart';
 export 'package:commet/client/timeline.dart';
 
-enum PresenceStatus {
-  online,
-  idle,
-  doNotDisturb,
-  invisible,
-}
+enum PresenceStatus { online, idle, doNotDisturb, invisible }
 
 extension PresenceStatusLabel on PresenceStatus {
   String get label => switch (this) {
-        PresenceStatus.online => Intl.message("Online", name: "presenceOnline"),
-        PresenceStatus.idle => Intl.message("Idle", name: "presenceIdle"),
-        PresenceStatus.doNotDisturb =>
-          Intl.message("Do Not Disturb", name: "presenceDoNotDisturb"),
-        PresenceStatus.invisible =>
-          Intl.message("Invisible", name: "presenceInvisible"),
-      };
+    PresenceStatus.online => Intl.message("Online", name: "presenceOnline"),
+    PresenceStatus.idle => Intl.message("Idle", name: "presenceIdle"),
+    PresenceStatus.doNotDisturb => Intl.message(
+      "Do Not Disturb",
+      name: "presenceDoNotDisturb",
+    ),
+    PresenceStatus.invisible => Intl.message(
+      "Invisible",
+      name: "presenceInvisible",
+    ),
+  };
 
   IconData get icon => switch (this) {
-        PresenceStatus.online => Icons.circle,
-        PresenceStatus.idle => Icons.nightlight_round,
-        PresenceStatus.doNotDisturb => Icons.do_not_disturb_on,
-        PresenceStatus.invisible => Icons.visibility_off,
-      };
+    PresenceStatus.online => Icons.circle,
+    PresenceStatus.idle => Icons.nightlight_round,
+    PresenceStatus.doNotDisturb => Icons.do_not_disturb_on,
+    PresenceStatus.invisible => Icons.visibility_off,
+  };
 }
 
 enum LoginType { loginPassword, token }
@@ -57,13 +56,7 @@ class ClientConnectionStatusUpdate {
 
 enum ClientConnectionStatus { unknown, connected, connecting, disconnected }
 
-enum RoomType {
-  defaultRoom,
-  photoAlbum,
-  space,
-  voipRoom,
-  calendar;
-}
+enum RoomType { defaultRoom, photoAlbum, space, voipRoom, calendar }
 
 extension ToIcon on RoomType {
   IconData get icon {
@@ -171,7 +164,7 @@ abstract class Client {
   NotifyingListFilter<Room> get favoriteRooms;
 
   StoredStreamController<ClientConnectionStatusUpdate>
-      get connectionStatusChanged;
+  get connectionStatusChanged;
 
   Future<void> init(bool loadingFromCache, {bool isBackgroundService = false});
 

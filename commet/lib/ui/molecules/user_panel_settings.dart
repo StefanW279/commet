@@ -21,11 +21,11 @@ class UserPanelSettings extends StatefulWidget {
 
 class _UserPanelSettingsState extends State<UserPanelSettings> {
   Color _presenceColor(PresenceStatus status) => switch (status) {
-        PresenceStatus.online => const Color(0xFF23A55A),
-        PresenceStatus.idle => const Color(0xFFF0B232),
-        PresenceStatus.doNotDisturb => const Color(0xFFF23F42),
-        PresenceStatus.invisible => const Color(0xFF80848E),
-      };
+    PresenceStatus.online => const Color(0xFF23A55A),
+    PresenceStatus.idle => const Color(0xFFF0B232),
+    PresenceStatus.doNotDisturb => const Color(0xFFF23F42),
+    PresenceStatus.invisible => const Color(0xFF80848E),
+  };
   StreamSubscription? sub;
 
   @override
@@ -57,8 +57,10 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
               width: height,
               height: height,
               child: PopupMenuButton<PresenceStatus>(
-                tooltip:
-                    Intl.message("Set presence", name: "presenceSetTooltip"),
+                tooltip: Intl.message(
+                  "Set presence",
+                  name: "presenceSetTooltip",
+                ),
                 padding: EdgeInsets.zero,
                 icon: Icon(
                   widget.client!.currentPresenceStatus.icon,
@@ -70,8 +72,11 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                     await widget.client!.setPresence(status);
                     if (mounted) setState(() {});
                   } catch (error, stackTrace) {
-                    Log.onError(error, stackTrace,
-                        content: "Unable to update presence");
+                    Log.onError(
+                      error,
+                      stackTrace,
+                      content: "Unable to update presence",
+                    );
                   }
                 },
                 itemBuilder: (context) => [
@@ -80,8 +85,11 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                       value: status,
                       child: Row(
                         children: [
-                          Icon(status.icon,
-                              size: 18, color: _presenceColor(status)),
+                          Icon(
+                            status.icon,
+                            size: 18,
+                            color: _presenceColor(status),
+                          ),
                           const SizedBox(width: 12),
                           Text(status.label),
                           const Spacer(),
@@ -103,7 +111,7 @@ class _UserPanelSettingsState extends State<UserPanelSettings> {
                 NavigationUtils.navigateTo(context, const AppSettingsPage());
               },
             ),
-          )
+          ),
         ],
       ),
     );

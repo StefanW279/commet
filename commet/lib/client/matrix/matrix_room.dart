@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
+
 import 'package:commet/client/components/component_registry.dart';
 import 'package:commet/client/components/direct_messages/direct_message_component.dart';
 import 'package:commet/client/components/emoticon/emoticon.dart';
@@ -62,6 +63,7 @@ import 'package:matrix/src/utils/markdown.dart' as mx_markdown;
 
 import '../attachment.dart';
 import '../client.dart';
+
 import 'package:matrix/matrix.dart' as matrix;
 
 class MatrixRoom extends Room {
@@ -217,7 +219,10 @@ class MatrixRoom extends Room {
   StreamSubscription? _onUpdateSubscription;
 
   MatrixRoom(
-      MatrixClient client, matrix.Room room, matrix.Client matrixClient) {
+    MatrixClient client,
+    matrix.Room room,
+    matrix.Client matrixClient,
+  ) {
     _matrixRoom = room;
     _client = client;
 
@@ -260,15 +265,26 @@ class MatrixRoom extends Room {
 
   Future<void> updateAvatar({bool fromCache = true}) async {
     if (_matrixRoom.avatar != null) {
-      _avatar = MatrixMxcImage(_matrixRoom.avatar!, _matrixRoom.client,
-          thumbnailHeight: 64, fullResHeight: 128, autoLoadFullRes: false);
+      _avatar = MatrixMxcImage(
+        _matrixRoom.avatar!,
+        _matrixRoom.client,
+        thumbnailHeight: 64,
+        fullResHeight: 128,
+        autoLoadFullRes: false,
+      );
     } else if (_matrixRoom.isDirectChat) {
-      var user = _matrixRoom
-          .unsafeGetUserFromMemoryOrFallback(_matrixRoom.directChatMatrixID!);
+      var user = _matrixRoom.unsafeGetUserFromMemoryOrFallback(
+        _matrixRoom.directChatMatrixID!,
+      );
       var url = user.avatarUrl;
       if (url != null) {
-        _avatar = MatrixMxcImage(url, _matrixRoom.client,
-            thumbnailHeight: 64, fullResHeight: 128, autoLoadFullRes: false);
+        _avatar = MatrixMxcImage(
+          url,
+          _matrixRoom.client,
+          thumbnailHeight: 64,
+          fullResHeight: 128,
+          autoLoadFullRes: false,
+        );
       }
     }
 
@@ -281,8 +297,9 @@ class MatrixRoom extends Room {
     }
 
     if (eventUpdate.content["type"] == matrix.EventTypes.Message) {
-      var roomEvent =
-          await matrixRoom.getEventById(eventUpdate.content['event_id']);
+      var roomEvent = await matrixRoom.getEventById(
+        eventUpdate.content['event_id'],
+      );
 
       if (roomEvent == null) {
         return;
@@ -320,8 +337,10 @@ class MatrixRoom extends Room {
     handleNotification(event);
   }
 
-  Future<void> handleNotification(TimelineEvent event,
-      {Function(String reason)? onNotificationRejected}) async {
+  Future<void> handleNotification(
+    TimelineEvent event, {
+    Function(String reason)? onNotificationRejected,
+  }) async {
     if (!shouldNotify(event, onNotificationRejected: onNotificationRejected)) {
       onNotificationRejected?.call("shouldNotify returned false");
       return;
@@ -337,15 +356,20 @@ class MatrixRoom extends Room {
       // let push notifications handle it
       if (BuildConfig.ANDROID) {
         onNotificationRejected?.call(
-            "Notifications should be handled by a push service on Android, but we are in the desktop notifications handler");
+          "Notifications should be handled by a push service on Android, but we are in the desktop notifications handler",
+        );
         return;
       }
 
-      var notification =
-          await MessageNotificationContent.fromEvent(event, this);
+      var notification = await MessageNotificationContent.fromEvent(
+        event,
+        this,
+      );
       if (notification != null) {
-        NotificationManager.notify(notification,
-            onNotificationRejected: onNotificationRejected);
+        NotificationManager.notify(
+          notification,
+          onNotificationRejected: onNotificationRejected,
+        );
       } else {
         onNotificationRejected?.call("Notification content was null");
       }
@@ -353,18 +377,22 @@ class MatrixRoom extends Room {
   }
 
   @override
-  bool shouldNotify(TimelineEvent event,
-      {Function(String reason)? onNotificationRejected}) {
+  bool shouldNotify(
+    TimelineEvent event, {
+    Function(String reason)? onNotificationRejected,
+  }) {
     if ((client as MatrixClient).firstSyncComplete == false) {
       return false;
     }
 
     // never notify for a message that came from an account we are logged in to!
-    if (clientManager?.clients
-            .any((element) => element.self?.identifier == event.senderId) ==
+    if (clientManager?.clients.any(
+          (element) => element.self?.identifier == event.senderId,
+        ) ==
         true) {
-      onNotificationRejected
-          ?.call("Message came from a user logged in to this client");
+      onNotificationRejected?.call(
+        "Message came from a user logged in to this client",
+      );
       return false;
     }
 
@@ -388,14 +416,18 @@ class MatrixRoom extends Room {
 
   @override
   Future<List<ProcessedAttachment>> processAttachments(
-      List<PendingFileAttachment> attachments) async {
-    return await Future.wait(attachments.map((e) async {
-      return (await processAttachment(e))!;
-    }));
+    List<PendingFileAttachment> attachments,
+  ) async {
+    return await Future.wait(
+      attachments.map((e) async {
+        return (await processAttachment(e))!;
+      }),
+    );
   }
 
   Future<MatrixProcessedAttachment?> processAttachment(
-      PendingFileAttachment attachment) async {
+    PendingFileAttachment attachment,
+  ) async {
     await attachment.resolve();
     if (attachment.data == null) return null;
 
@@ -422,12 +454,14 @@ class MatrixRoom extends Room {
 
         final name = attachment.name ?? "unknown${fileExtension}";
 
-        return MatrixProcessedAttachment(await matrix.MatrixImageFile.create(
+        return MatrixProcessedAttachment(
+          await matrix.MatrixImageFile.create(
             bytes: attachment.data!,
             name: name,
             mimeType: attachment.mimeType,
-            nativeImplementations:
-                (client as MatrixClient).nativeImplentations));
+            nativeImplementations: (client as MatrixClient).nativeImplentations,
+          ),
+        );
       }
     } catch (error, stack) {
       // This image is probably corrupt, since it has a mime type we should be able to display,
@@ -441,11 +475,12 @@ class MatrixRoom extends Room {
       var decodedImage = await decodeImageFromList(attachment.thumbnailFile!);
 
       thumbnailImageFile = matrix.MatrixImageFile(
-          bytes: attachment.thumbnailFile!,
-          width: decodedImage.width,
-          height: decodedImage.height,
-          mimeType: attachment.thumbnailMime,
-          name: "thumbnail");
+        bytes: attachment.thumbnailFile!,
+        width: decodedImage.width,
+        height: decodedImage.height,
+        mimeType: attachment.thumbnailMime,
+        name: "thumbnail",
+      );
     }
 
     final name = attachment.name ?? "Unknown${fileExtension}";
@@ -465,20 +500,25 @@ class MatrixRoom extends Room {
     }
 
     return MatrixProcessedAttachment(
-        matrix.MatrixFile(
-            bytes: attachment.data!, name: name, mimeType: attachment.mimeType),
-        thumbnailFile: thumbnailImageFile);
+      matrix.MatrixFile(
+        bytes: attachment.data!,
+        name: name,
+        mimeType: attachment.mimeType,
+      ),
+      thumbnailFile: thumbnailImageFile,
+    );
   }
 
   @override
-  Future<TimelineEvent?> sendMessage(
-      {String? message,
-      TimelineEvent? inReplyTo,
-      TimelineEvent? replaceEvent,
-      String? threadRootEventId,
-      String? threadLastEventId,
-      Map<String, dynamic>? fileExtraContent,
-      List<ProcessedAttachment>? processedAttachments}) async {
+  Future<TimelineEvent?> sendMessage({
+    String? message,
+    TimelineEvent? inReplyTo,
+    TimelineEvent? replaceEvent,
+    String? threadRootEventId,
+    String? threadLastEventId,
+    Map<String, dynamic>? fileExtraContent,
+    List<ProcessedAttachment>? processedAttachments,
+  }) async {
     matrix.Event? replyingTo;
 
     if (inReplyTo != null) {
@@ -487,28 +527,32 @@ class MatrixRoom extends Room {
 
     if (processedAttachments != null) {
       Future.wait(
-          processedAttachments.whereType<MatrixProcessedAttachment>().map((e) {
-        return _matrixRoom.sendFileEvent(e.file,
+        processedAttachments.whereType<MatrixProcessedAttachment>().map((e) {
+          return _matrixRoom.sendFileEvent(
+            e.file,
             threadLastEventId: threadLastEventId,
             threadRootEventId: threadRootEventId,
             extraContent: fileExtraContent,
-            thumbnail: e.thumbnailFile);
-      }));
+            thumbnail: e.thumbnailFile,
+          );
+        }),
+      );
     }
 
     if (message != null && message.trim().isNotEmpty) {
       final event = <String, dynamic>{
         'msgtype': matrix.MessageTypes.Text,
-        'body': message
+        'body': message,
       };
 
       var emoticons = getComponent<MatrixRoomEmoticonComponent>();
-      final html = mx_markdown.markdown(message,
-          getEmotePacks: emoticons != null
-              ? () =>
-                  emoticons.getEmotePacksFlat(matrix.ImagePackUsage.emoticon)
-              : null,
-          getMention: _matrixRoom.getMention);
+      final html = mx_markdown.markdown(
+        message,
+        getEmotePacks: emoticons != null
+            ? () => emoticons.getEmotePacksFlat(matrix.ImagePackUsage.emoticon)
+            : null,
+        getMention: _matrixRoom.getMention,
+      );
 
       if (HtmlUnescape().convert(html.replaceAll(RegExp(r'<br />\n?'), '\n')) !=
           event['body']) {
@@ -533,19 +577,14 @@ class MatrixRoom extends Room {
 
       event["m.mentions"] = mentions;
 
-      // Matrix events have a hard size limit. The Matrix SDK currently rejects
-      // client-server event bodies larger than 60,000 bytes. Leave some room
-      // for reply/edit metadata added by sendEvent().
       const maxTextEventBytes = 50000;
       var estimatedEventBytes = utf8.encode(jsonEncode(event)).length;
 
       if (replaceEvent != null) {
-        // sendEvent() duplicates the content into m.new_content for edits.
         estimatedEventBytes *= 2;
       }
 
       if (replyingTo != null) {
-        // sendEvent() embeds the replied-to message in the reply fallback.
         estimatedEventBytes += utf8.encode(replyingTo.body).length;
         estimatedEventBytes += utf8.encode(replyingTo.formattedText).length;
       }
@@ -573,11 +612,13 @@ class MatrixRoom extends Room {
         return null;
       }
 
-      var id = await _matrixRoom.sendEvent(event,
-          inReplyTo: replyingTo,
-          editEventId: replaceEvent?.eventId,
-          threadLastEventId: threadLastEventId,
-          threadRootEventId: threadRootEventId);
+      var id = await _matrixRoom.sendEvent(
+        event,
+        inReplyTo: replyingTo,
+        editEventId: replaceEvent?.eventId,
+        threadLastEventId: threadLastEventId,
+        threadRootEventId: threadRootEventId,
+      );
 
       if (id != null) {
         var event = await _matrixRoom.getEventById(id);
@@ -613,31 +654,55 @@ class MatrixRoom extends Room {
           event.content['url'] is String || event.content.containsKey('file')
               ? MatrixTimelineEventSticker(event, client: c)
               : null,
-        matrix.EventTypes.Encrypted =>
-          MatrixTimelineEventEncrypted(event, client: c),
-        matrix.EventTypes.RoomCreate =>
-          MatrixTimelineEventCreateRoom(event, client: c),
-        matrix.EventTypes.RoomPowerLevels =>
-          MatrixTimelineEventPowerLevels(event, client: c),
-        matrix.EventTypes.Reaction =>
-          MatrixTimelineEventAddReaction(event, client: c),
-        matrix.EventTypes.RoomMember =>
-          MatrixTimelineEventMembership(event, client: c),
-        matrix.EventTypes.Redaction =>
-          MatrixTimelineEventRedaction(event, client: c),
-        matrix.EventTypes.CallInvite =>
-          MatrixTimelineEventCall(event, client: c),
-        matrix.EventTypes.CallAnswer =>
-          MatrixTimelineEventCall(event, client: c),
-        matrix.EventTypes.CallHangup =>
-          MatrixTimelineEventCall(event, client: c),
-        matrix.EventTypes.CallReject =>
-          MatrixTimelineEventCall(event, client: c),
-        matrix.EventTypes.RoomPinnedEvents =>
-          MatrixTimelineEventPinnedMessages(event, client: c),
-        "chat.commet.calendar_events" =>
-          MatrixTimelineEventEditCalendar(event, client: c),
-        _ => null
+        matrix.EventTypes.Encrypted => MatrixTimelineEventEncrypted(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.RoomCreate => MatrixTimelineEventCreateRoom(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.RoomPowerLevels => MatrixTimelineEventPowerLevels(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.Reaction => MatrixTimelineEventAddReaction(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.RoomMember => MatrixTimelineEventMembership(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.Redaction => MatrixTimelineEventRedaction(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.CallInvite => MatrixTimelineEventCall(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.CallAnswer => MatrixTimelineEventCall(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.CallHangup => MatrixTimelineEventCall(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.CallReject => MatrixTimelineEventCall(
+          event,
+          client: c,
+        ),
+        matrix.EventTypes.RoomPinnedEvents => MatrixTimelineEventPinnedMessages(
+          event,
+          client: c,
+        ),
+        "chat.commet.calendar_events" => MatrixTimelineEventEditCalendar(
+          event,
+          client: c,
+        ),
+        _ => null,
       };
 
       if (result != null) {
@@ -672,7 +737,9 @@ class MatrixRoom extends Room {
 
   @override
   Future<TimelineEvent?> addReaction(
-      TimelineEvent reactingTo, Emoticon reaction) async {
+    TimelineEvent reactingTo,
+    Emoticon reaction,
+  ) async {
     var recent = client.getComponent<RecentEmoticonComponent>();
     recent?.reactedEmoticon(this, reaction);
 
@@ -687,7 +754,9 @@ class MatrixRoom extends Room {
 
   @override
   Future<void> removeReaction(
-      TimelineEvent reactingTo, Emoticon reaction) async {
+    TimelineEvent reactingTo,
+    Emoticon reaction,
+  ) async {
     return (timeline! as MatrixTimeline).removeReaction(reactingTo, reaction);
   }
 
@@ -727,9 +796,9 @@ class MatrixRoom extends Room {
     final comp = client.getComponent<DirectMessagesComponent>();
 
     if (comp?.isRoomDirectMessage(this) == true) {
-      var user = await client
-          .getComponent<UserProfileComponent>()!
-          .getProfile(comp!.getDirectMessagePartnerId(this)!);
+      var user = await client.getComponent<UserProfileComponent>()!.getProfile(
+        comp!.getDirectMessagePartnerId(this)!,
+      );
 
       if (user.avatar != null) {
         return user.avatar;
@@ -768,8 +837,11 @@ class MatrixRoom extends Room {
 
   @override
   Future<List<Member>> fetchMembersList({bool cache = false}) async {
-    var results = await _matrixRoom
-        .requestParticipants([matrix.Membership.join], true, cache);
+    var results = await _matrixRoom.requestParticipants(
+      [matrix.Membership.join],
+      true,
+      cache,
+    );
 
     return results.map((e) => MatrixMember(_client, e)).toList();
   }
@@ -780,7 +852,9 @@ class MatrixRoom extends Room {
   @override
   Member getMemberOrFallback(String id) {
     return MatrixMember(
-        _client, _matrixRoom.unsafeGetUserFromMemoryOrFallback(id));
+      _client,
+      _matrixRoom.unsafeGetUserFromMemoryOrFallback(id),
+    );
   }
 
   @override
@@ -811,21 +885,24 @@ class MatrixRoom extends Room {
 
     if (roomVersion != null && roomVersion >= 12) {
       if (_matrixRoom.roomVersion != null && creator != null) {
-        var additionalCreators =
-            creationEvent?.content.tryGetList<String>("additional_creators");
+        var additionalCreators = creationEvent?.content.tryGetList<String>(
+          "additional_creators",
+        );
 
         for (var id in [
           creator,
-          if (additionalCreators != null) ...additionalCreators
+          if (additionalCreators != null) ...additionalCreators,
         ]) {
           result.add((getMemberOrFallback(id), MatrixRole(150)));
         }
       }
     }
 
-    result.addAll(ids
-        .map((e) => (getMemberOrFallback(e), MatrixRole(roles[e])))
-        .where((element) => element.$2.rank != 0));
+    result.addAll(
+      ids
+          .map((e) => (getMemberOrFallback(e), MatrixRole(roles[e])))
+          .where((element) => element.$2.rank != 0),
+    );
 
     result;
 
@@ -836,7 +913,7 @@ class MatrixRoom extends Room {
 
   @override
   Role getMemberRole(String identifier) {
-    return MatrixRole(_matrixRoom.getPowerLevelByUserId(identifier));
+    return MatrixRole(_matrixRoom.getPowerLevelByUserId(identifier).level);
   }
 
   void _updateDisplayName() {
@@ -857,8 +934,9 @@ class MatrixRoom extends Room {
           }
         }
 
-        var name =
-            matrixRoom.unsafeGetUserFromMemoryOrFallback(partner).displayName;
+        var name = matrixRoom
+            .unsafeGetUserFromMemoryOrFallback(partner)
+            .displayName;
         if (name != null) {
           _displayName = name;
         }
@@ -899,9 +977,11 @@ class MatrixRoom extends Room {
         return preferences.previewMediaInPrivateRooms.value;
 
       case matrix.JoinRules.restricted:
-        if (_client.spaces.any((e) =>
-            e.visibility is RoomVisibilityPublic &&
-            e.containsRoom(_matrixRoom.id))) {
+        if (_client.spaces.any(
+          (e) =>
+              e.visibility is RoomVisibilityPublic &&
+              e.containsRoom(_matrixRoom.id),
+        )) {
           // if any public space contains this room, consider the room public
           // this is kind of flawed, because there could be public spaces we are not a member of
           return preferences.previewMediaInPublicRooms.value;
@@ -952,14 +1032,16 @@ class MatrixRoom extends Room {
 
   @override
   List<Role> get availableRoles => [
-        MatrixRole(100),
-        MatrixRole(50),
-        if (getComponent<MatrixCalendarRoomComponent>()?.hasCalendar == true)
-          MatrixRole(25,
-              nameOverride: "Calendar Moderator",
-              iconOverride: Icons.calendar_month),
-        MatrixRole(0),
-      ];
+    MatrixRole(100),
+    MatrixRole(50),
+    if (getComponent<MatrixCalendarRoomComponent>()?.hasCalendar == true)
+      MatrixRole(
+        25,
+        nameOverride: "Calendar Moderator",
+        iconOverride: Icons.calendar_month,
+      ),
+    MatrixRole(0),
+  ];
 
   @override
   Future<void> setMemberRole(String id, Role role) async {
@@ -1029,14 +1111,16 @@ class MatrixRoom extends Room {
       case matrix.JoinRules.private:
         return RoomVisibilityPrivate();
       case matrix.JoinRules.restricted:
-        return RoomVisibilityRestricted(matrixRoom
-                .getState(matrix.EventTypes.RoomJoinRules)
-                ?.content
-                .tryGetList<Map<String, dynamic>>("allow")
-                ?.map((i) => i.tryGet<String>("room_id"))
-                .nonNulls
-                .toList() ??
-            []);
+        return RoomVisibilityRestricted(
+          matrixRoom
+                  .getState(matrix.EventTypes.RoomJoinRules)
+                  ?.content
+                  .tryGetList<Map<String, dynamic>>("allow")
+                  ?.map((i) => i.tryGet<String>("room_id"))
+                  .nonNulls
+                  .toList() ??
+              [],
+        );
       case matrix.JoinRules.knockRestricted:
         return RoomVisibilityPrivate();
       case null:
@@ -1047,24 +1131,33 @@ class MatrixRoom extends Room {
   @override
   Future<void> setVisibility(RoomVisibility visibility) async {
     var state = switch (visibility) {
-      final RoomVisibilityPrivate _ => matrix.StateEvent(content: {
-          "join_rule": "invite",
-        }, type: matrix.EventTypes.RoomJoinRules),
+      final RoomVisibilityPrivate _ => matrix.StateEvent(
+        content: {"join_rule": "invite"},
+        type: matrix.EventTypes.RoomJoinRules,
+      ),
       final RoomVisibilityPublic _ => matrix.StateEvent(
-          content: {"join_rule": "public"},
-          type: matrix.EventTypes.RoomJoinRules),
-      final RoomVisibilityRestricted restricted => matrix.StateEvent(content: {
+        content: {"join_rule": "public"},
+        type: matrix.EventTypes.RoomJoinRules,
+      ),
+      final RoomVisibilityRestricted restricted => matrix.StateEvent(
+        content: {
           "join_rule": "restricted",
           "allow": [
             for (var i in restricted.spaces)
               {"room_id": i, "type": "m.room_membership"},
-          ]
-        }, type: matrix.EventTypes.RoomJoinRules),
+          ],
+        },
+        type: matrix.EventTypes.RoomJoinRules,
+      ),
       RoomVisibility() => throw UnimplementedError(),
     };
 
-    await _matrixRoom.client
-        .setRoomStateWithKey(_matrixRoom.id, state.type, "", state.content);
+    await _matrixRoom.client.setRoomStateWithKey(
+      _matrixRoom.id,
+      state.type,
+      "",
+      state.content,
+    );
   }
 
   Set<String> _findEventMentions(html_dom.Document document) {

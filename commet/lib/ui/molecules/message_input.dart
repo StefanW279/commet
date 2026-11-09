@@ -37,6 +37,7 @@ import 'package:matrix/matrix.dart' as matrix;
 import 'package:pasteboard/pasteboard.dart';
 import 'package:path/path.dart' as path;
 import 'package:tiamat/tiamat.dart' as tiamat;
+
 import '../../client/attachment.dart';
 import '../../client/components/emoticon/emoticon.dart';
 
@@ -48,61 +49,68 @@ class AttachmentPicker {
 
   Function() execute;
 
-  AttachmentPicker(
-      {required this.icon, required this.label, required this.execute});
+  AttachmentPicker({
+    required this.icon,
+    required this.label,
+    required this.execute,
+  });
 }
 
 class MessageInput extends StatefulWidget {
-  const MessageInput(
-      {super.key,
-      required this.client,
-      this.room,
-      this.maxHeight = 200,
-      this.onSendMessage,
-      this.isRoomE2EE = false,
-      this.onFocusChanged,
-      this.readIndicator,
-      this.relatedEventBody,
-      this.relatedEventSenderColor,
-      this.relatedEventSenderName,
-      this.interactionType,
-      this.focusKeyboard,
-      this.setInputText,
-      this.isProcessing = false,
-      this.initialText,
-      this.enabled = true,
-      this.editLastMessage,
-      this.hintText,
-      this.attachments,
-      this.addAttachment,
-      this.onTextUpdated,
-      this.removeAttachment,
-      this.typingIndicatorWidget,
-      this.availibleEmoticons,
-      this.availibleStickers,
-      this.compact = false,
-      this.gifComponent,
-      this.enableKeyboardAdapter = true,
-      this.onReadReceiptsClicked,
-      this.findOverrideClient,
-      this.onTapOverrideClient,
-      this.disableEnterToSend = false,
-      this.sendGif,
-      this.sendFavoriteGif,
-      this.showGifSearch = true,
-      this.size = 35,
-      this.iconScale = 0.5,
-      this.showAttachmentButton = true,
-      this.sendSticker,
-      this.processAutofill,
-      this.cancelReply});
+  const MessageInput({
+    super.key,
+    required this.client,
+    this.room,
+    this.maxHeight = 200,
+    this.onSendMessage,
+    this.isRoomE2EE = false,
+    this.onFocusChanged,
+    this.readIndicator,
+    this.relatedEventBody,
+    this.relatedEventSenderColor,
+    this.relatedEventSenderName,
+    this.interactionType,
+    this.focusKeyboard,
+    this.setInputText,
+    this.isProcessing = false,
+    this.initialText,
+    this.enabled = true,
+    this.editLastMessage,
+    this.hintText,
+    this.attachments,
+    this.addAttachment,
+    this.onTextUpdated,
+    this.removeAttachment,
+    this.typingIndicatorWidget,
+    this.availibleEmoticons,
+    this.availibleStickers,
+    this.compact = false,
+    this.gifComponent,
+    this.enableKeyboardAdapter = true,
+    this.onReadReceiptsClicked,
+    this.findOverrideClient,
+    this.onTapOverrideClient,
+    this.disableEnterToSend = false,
+    this.sendGif,
+    this.sendFavoriteGif,
+    this.showGifSearch = true,
+    this.size = 35,
+    this.iconScale = 0.5,
+    this.showAttachmentButton = true,
+    this.sendSticker,
+    this.processAutofill,
+    this.cancelReply,
+  });
   final double maxHeight;
   final double size;
   final double iconScale;
   final bool isRoomE2EE;
   final bool disableEnterToSend;
-  final MessageInputSendResult Function(String message,
-      {Client? overrideClient})? onSendMessage;
+  final MessageInputSendResult Function(
+    String message, {
+    Client? overrideClient,
+  })?
+  onSendMessage;
   final Widget? readIndicator;
   final String? relatedEventBody;
   final String? relatedEventSenderName;
@@ -263,8 +271,10 @@ class MessageInputState extends State<MessageInput> {
 
   void onSetInputText(String newText) {
     controller.text = newText;
-    controller.selection =
-        TextSelection(baseOffset: newText.length, extentOffset: newText.length);
+    controller.selection = TextSelection(
+      baseOffset: newText.length,
+      extentOffset: newText.length,
+    );
 
     onTextfieldUpdated(newText);
   }
@@ -295,10 +305,14 @@ class MessageInputState extends State<MessageInput> {
     }
 
     controller = RichTextEditingController(
-        client: widget.client, room: widget.room, text: widget.initialText);
+      client: widget.client,
+      room: widget.room,
+      text: widget.initialText,
+    );
     controller.addListener(controllerListener);
-    keyboardFocusSubscription =
-        widget.focusKeyboard?.listen((_) => onKeyboardFocusRequested());
+    keyboardFocusSubscription = widget.focusKeyboard?.listen(
+      (_) => onKeyboardFocusRequested(),
+    );
 
     setInputTextSubscription = widget.setInputText?.listen(onSetInputText);
     onScopePopInvoked = EventBus.onPopInvoked.stream.listen(onPopped);
@@ -306,8 +320,9 @@ class MessageInputState extends State<MessageInput> {
     textFocus = FocusNode(onKeyEvent: onKey);
     textFocus.addListener(onTextFocusChanged);
 
-    preferencesSubscription =
-        preferences.onSettingChanged.listen((_) => setState(() {}));
+    preferencesSubscription = preferences.onSettingChanged.listen(
+      (_) => setState(() {}),
+    );
 
     if (preferences.autoFocusMessageTextBox.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -425,8 +440,10 @@ class MessageInputState extends State<MessageInput> {
         if (controller.text.trim().isEmpty) return;
       }
 
-      var result = widget.onSendMessage
-          ?.call(controller.text.trim(), overrideClient: senderOverride);
+      var result = widget.onSendMessage?.call(
+        controller.text.trim(),
+        overrideClient: senderOverride,
+      );
 
       if (result == MessageInputSendResult.success) {
         controller.text = "";
@@ -437,8 +454,9 @@ class MessageInputState extends State<MessageInput> {
   void showMoreAttachmentOptions() {}
 
   // This duration is to try and hide the transition from keyboard popup animation
-  Debouncer removeHeightOverrideDebouncer =
-      Debouncer(delay: Duration(seconds: 1));
+  Debouncer removeHeightOverrideDebouncer = Debouncer(
+    delay: Duration(seconds: 1),
+  );
 
   bool get isInEmojiPicker => showEmotePicker && !textFocus.hasFocus;
 
@@ -561,9 +579,11 @@ class MessageInputState extends State<MessageInput> {
         autofillScrollController.position.viewportDimension * 0.25;
 
     if (distance > maxDistance) {
-      autofillScrollController.animateTo(offset,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOutExpo);
+      autofillScrollController.animateTo(
+        offset,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOutExpo,
+      );
     }
   }
 
@@ -590,11 +610,13 @@ class MessageInputState extends State<MessageInput> {
       return;
     }
 
-    var startFill =
-        getAutofillTextRange(cursorPosition: controller.selection.baseOffset);
+    var startFill = getAutofillTextRange(
+      cursorPosition: controller.selection.baseOffset,
+    );
 
-    var endFill =
-        getAutofillTextRange(cursorPosition: controller.selection.extentOffset);
+    var endFill = getAutofillTextRange(
+      cursorPosition: controller.selection.extentOffset,
+    );
 
     var len = controller.selection.start - controller.selection.end;
 
@@ -636,8 +658,10 @@ class MessageInputState extends State<MessageInput> {
     if (len == 0) {
       extentOffset = baseOffset;
     }
-    controller.selection =
-        TextSelection(baseOffset: baseOffset, extentOffset: extentOffset);
+    controller.selection = TextSelection(
+      baseOffset: baseOffset,
+      extentOffset: extentOffset,
+    );
 
     prevSelection = controller.selection;
   }
@@ -646,8 +670,9 @@ class MessageInputState extends State<MessageInput> {
     if (BuildConfig.MOBILE) return KeyEventResult.ignored;
 
     if (!preferences.disableTextCursorManagement.value) {
-      if (HardwareKeyboard.instance
-          .isLogicalKeyPressed(LogicalKeyboardKey.backspace)) {
+      if (HardwareKeyboard.instance.isLogicalKeyPressed(
+        LogicalKeyboardKey.backspace,
+      )) {
         var selection = controller.selection.baseOffset;
         var selectionEnd = controller.selection.extentOffset;
 
@@ -664,16 +689,20 @@ class MessageInputState extends State<MessageInput> {
         var text = controller.text.substring(range.$1, range.$2);
 
         if (isKnownAutofillMatch(text)) {
-          controller.text =
-              controller.text.replaceRange(selection, selectionEnd, "");
+          controller.text = controller.text.replaceRange(
+            selection,
+            selectionEnd,
+            "",
+          );
           onTextfieldUpdated(controller.text);
           return KeyEventResult.handled;
         }
       }
     }
 
-    if (HardwareKeyboard.instance
-        .isLogicalKeyPressed(LogicalKeyboardKey.keyV)) {
+    if (HardwareKeyboard.instance.isLogicalKeyPressed(
+      LogicalKeyboardKey.keyV,
+    )) {
       if (HardwareKeyboard.instance.isControlPressed) {
         readClipboard();
         return KeyEventResult.ignored;
@@ -706,8 +735,9 @@ class MessageInputState extends State<MessageInput> {
     }
 
     if (widget.disableEnterToSend != true) {
-      if (HardwareKeyboard.instance
-          .isLogicalKeyPressed(LogicalKeyboardKey.enter)) {
+      if (HardwareKeyboard.instance.isLogicalKeyPressed(
+        LogicalKeyboardKey.enter,
+      )) {
         if (autoFillSelection != null && autoFillRange != null) {
           applyAutoFill(autoFillResults![autoFillSelection!]);
           return KeyEventResult.handled;
@@ -722,14 +752,16 @@ class MessageInputState extends State<MessageInput> {
       }
     }
 
-    if (HardwareKeyboard.instance
-        .isLogicalKeyPressed(LogicalKeyboardKey.escape)) {
+    if (HardwareKeyboard.instance.isLogicalKeyPressed(
+      LogicalKeyboardKey.escape,
+    )) {
       doCancelInteraction();
       return KeyEventResult.handled;
     }
 
-    if (HardwareKeyboard.instance
-            .isLogicalKeyPressed(LogicalKeyboardKey.arrowUp) &&
+    if (HardwareKeyboard.instance.isLogicalKeyPressed(
+          LogicalKeyboardKey.arrowUp,
+        ) &&
         controller.text.isEmpty) {
       widget.editLastMessage?.call();
     }
@@ -750,8 +782,11 @@ class MessageInputState extends State<MessageInput> {
       replacement = "$replacement ";
     }
 
-    controller.text = controller.text
-        .replaceRange(autoFillRange!.$1, autoFillRange!.$2, replacement);
+    controller.text = controller.text.replaceRange(
+      autoFillRange!.$1,
+      autoFillRange!.$2,
+      replacement,
+    );
     setState(() {
       autoFillSelection = null;
       autoFillResults = null;
@@ -805,35 +840,36 @@ class MessageInputState extends State<MessageInput> {
                     child: Padding(
                       padding: padding,
                       child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (widget.enabled && widget.showAttachmentButton)
-                              addAttachmentButton(),
-                            Flexible(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surfaceContainerLow),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      textInput(context),
-                                      if (widget.enabled) toggleEmojiButton(),
-                                    ],
-                                  ),
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.enabled && widget.showAttachmentButton)
+                            addAttachmentButton(),
+                          Flexible(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerLow,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    textInput(context),
+                                    if (widget.enabled) toggleEmojiButton(),
+                                  ],
                                 ),
                               ),
                             ),
-                            if (widget.enabled) sendMessageButton()
-                          ]),
+                          ),
+                          if (widget.enabled) sendMessageButton(),
+                        ],
+                      ),
                     ),
                   ),
                   if (!widget.compact)
@@ -841,16 +877,16 @@ class MessageInputState extends State<MessageInput> {
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 30),
-                              if (senderOverride != null) senderOverrideView(),
-                              if (autoFillResults != null)
-                                autofillResultsList(),
-                              if (autoFillResults == null)
-                                const Expanded(child: SizedBox()),
-                            ]),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 30),
+                            if (senderOverride != null) senderOverrideView(),
+                            if (autoFillResults != null) autofillResultsList(),
+                            if (autoFillResults == null)
+                              const Expanded(child: SizedBox()),
+                          ],
+                        ),
                       ),
                     ),
                 ],
@@ -886,21 +922,16 @@ class MessageInputState extends State<MessageInput> {
                 padding: const EdgeInsets.all(2),
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: 5,
-                    ),
+                    SizedBox(width: 5),
                     tiamat.Avatar(
-                        radius: 10,
-                        image: profile.avatar,
-                        placeholderColor: profile.defaultColor,
-                        placeholderText: profile.displayName),
-                    SizedBox(
-                      width: 10,
+                      radius: 10,
+                      image: profile.avatar,
+                      placeholderColor: profile.defaultColor,
+                      placeholderText: profile.displayName,
                     ),
+                    SizedBox(width: 10),
                     tiamat.Text.labelLow("Sending as: ${profile.displayName}"),
-                    SizedBox(
-                      width: 5,
-                    )
+                    SizedBox(width: 5),
                   ],
                 ),
               ),
@@ -918,14 +949,8 @@ class MessageInputState extends State<MessageInput> {
           return const LinearGradient(
             begin: Alignment.centerRight,
             end: Alignment.center,
-            colors: [
-              Colors.purple,
-              Colors.transparent,
-            ],
-            stops: [
-              0.0,
-              0.1,
-            ],
+            colors: [Colors.purple, Colors.transparent],
+            stops: [0.0, 0.1],
           ).createShader(rect);
         },
         blendMode: BlendMode.dstOut,
@@ -940,8 +965,11 @@ class MessageInputState extends State<MessageInput> {
                   final offset = event.scrollDelta.dy;
 
                   autofillScrollController.jumpTo(
-                      (autofillScrollController.offset + offset).clamp(0,
-                          autofillScrollController.position.maxScrollExtent));
+                    (autofillScrollController.offset + offset).clamp(
+                      0,
+                      autofillScrollController.position.maxScrollExtent,
+                    ),
+                  );
                 }
               },
               child: ListView.builder(
@@ -973,13 +1001,18 @@ class MessageInputState extends State<MessageInput> {
                                 EmojiWidget(data.emoticon),
                               if (data is AutofillSearchResultAvatar)
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 3, 0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    3,
+                                    0,
+                                  ),
                                   child: tiamat.Avatar(
-                                      image: data.image,
-                                      radius: 10,
-                                      placeholderColor: data.fallbackColor,
-                                      placeholderText: data.result),
+                                    image: data.image,
+                                    radius: 10,
+                                    placeholderColor: data.fallbackColor,
+                                    placeholderText: data.result,
+                                  ),
                                 ),
                               tiamat.Text.labelLow(
                                 data.result,
@@ -1010,106 +1043,116 @@ class MessageInputState extends State<MessageInput> {
 
     double targetValue = canSend ? 1 : 0;
     return Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0, end: targetValue),
-          duration: Durations.medium1,
-          builder: (context, value, child) {
-            return ClipRRect(
-              borderRadius: BorderRadiusGeometry.circular(widget.size),
-              child: Material(
-                child: AdaptiveContextMenu(
-                  modal: true,
-                  items: canSend
-                      ? List.empty()
-                      : [
-                          if (pollComponent != null)
-                            tiamat.ContextMenuItem(
-                              text: "Poll",
-                              icon: Icons.poll,
-                              onPressed: () async {
-                                var createArgs =
-                                    await AdaptiveDialog.show<PollCreateArgs>(
-                                        context,
-                                        title: "Create Poll",
-                                        builder: (context) => PollCreator());
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+      child: TweenAnimationBuilder(
+        tween: Tween<double>(begin: 0, end: targetValue),
+        duration: Durations.medium1,
+        builder: (context, value, child) {
+          return ClipRRect(
+            borderRadius: BorderRadiusGeometry.circular(widget.size),
+            child: Material(
+              child: AdaptiveContextMenu(
+                modal: true,
+                items: canSend
+                    ? List.empty()
+                    : [
+                        if (pollComponent != null)
+                          tiamat.ContextMenuItem(
+                            text: "Poll",
+                            icon: Icons.poll,
+                            onPressed: () async {
+                              var createArgs =
+                                  await AdaptiveDialog.show<PollCreateArgs>(
+                                    context,
+                                    title: "Create Poll",
+                                    builder: (context) => PollCreator(),
+                                  );
 
-                                if (createArgs != null) {
-                                  print(createArgs);
-                                  pollComponent.createPoll(
-                                      widget.room!, createArgs);
-                                }
-                              },
-                            )
-                        ],
-                  child: SizedBox(
-                      width: widget.size,
-                      height: widget.size,
-                      child: tiamat.CircleButton(
-                        icon: canSend ? Icons.send : Icons.more_horiz,
-                        radius: widget.size * widget.iconScale,
-                        onPressed: canSend
-                            ? () {
-                                sendMessage();
+                              if (createArgs != null) {
+                                print(createArgs);
+                                pollComponent.createPoll(
+                                  widget.room!,
+                                  createArgs,
+                                );
                               }
-                            : null,
-                        color: Color.lerp(
-                            Theme.of(context).colorScheme.primary.withAlpha(0),
-                            Theme.of(context).colorScheme.primary,
-                            value),
-                        iconColor: Color.lerp(
-                            Theme.of(context).colorScheme.secondary,
-                            Theme.of(context).colorScheme.onPrimary,
-                            value),
-                      )),
+                            },
+                          ),
+                      ],
+                child: SizedBox(
+                  width: widget.size,
+                  height: widget.size,
+                  child: tiamat.CircleButton(
+                    icon: canSend ? Icons.send : Icons.more_horiz,
+                    radius: widget.size * widget.iconScale,
+                    onPressed: canSend
+                        ? () {
+                            sendMessage();
+                          }
+                        : null,
+                    color: Color.lerp(
+                      Theme.of(context).colorScheme.primary.withAlpha(0),
+                      Theme.of(context).colorScheme.primary,
+                      value,
+                    ),
+                    iconColor: Color.lerp(
+                      Theme.of(context).colorScheme.secondary,
+                      Theme.of(context).colorScheme.onPrimary,
+                      value,
+                    ),
+                  ),
                 ),
               ),
-            );
-          },
-        ));
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Widget toggleEmojiButton() {
     var button = SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: RandomEmojiButton(
-            size: widget.size,
-            onTap: toggleEmojiOverlay,
-            toggled: MediaQuery.of(context).mobile
-                ? (emojiTooltipController.value == TooltipStatus.isShowing ||
-                    (emotePickerActive == true))
-                : false));
+      width: widget.size,
+      height: widget.size,
+      child: RandomEmojiButton(
+        size: widget.size,
+        onTap: toggleEmojiOverlay,
+        toggled: MediaQuery.of(context).mobile
+            ? (emojiTooltipController.value == TooltipStatus.isShowing ||
+                  (emotePickerActive == true))
+            : false,
+      ),
+    );
 
     if (MediaQuery.of(context).mobile) return button;
 
     return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 2, 0),
-        child: JustTheTooltip(
-          isModal: true,
-          preferredDirection: AxisDirection.up,
-          controller: emojiTooltipController,
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
-          onDismiss: () {
-            if (MediaQuery.of(context).desktop) {
-              textFocus.requestFocus();
-            }
-          },
-          content: ClipRRect(
-            borderRadius: BorderRadiusGeometry.circular(8),
-            child: Material(
-              child: Container(
-                color: Theme.of(context).colorScheme.surfaceContainerLow,
-                child: SizedBox(
-                  height: 500,
-                  width: 500,
-                  child: buildEmojiPicker(skipIfNeverOpened: false),
-                ),
+      padding: const EdgeInsets.fromLTRB(0, 0, 2, 0),
+      child: JustTheTooltip(
+        isModal: true,
+        preferredDirection: AxisDirection.up,
+        controller: emojiTooltipController,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+        onDismiss: () {
+          if (MediaQuery.of(context).desktop) {
+            textFocus.requestFocus();
+          }
+        },
+        content: ClipRRect(
+          borderRadius: BorderRadiusGeometry.circular(8),
+          child: Material(
+            child: Container(
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
+              child: SizedBox(
+                height: 500,
+                width: 500,
+                child: buildEmojiPicker(skipIfNeverOpened: false),
               ),
             ),
           ),
-          child: button,
-        ));
+        ),
+        child: button,
+      ),
+    );
   }
 
   Expanded textInput(BuildContext context) {
@@ -1134,12 +1177,17 @@ class MessageInputState extends State<MessageInput> {
               keyboardType: TextInputType.multiline,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.fromLTRB(8, padding / 2, 4, padding / 2),
-                  border: InputBorder.none,
-                  isDense: true,
-                  hintStyle: hintStyle,
-                  hintText: widget.hintText),
+                contentPadding: EdgeInsets.fromLTRB(
+                  8,
+                  padding / 2,
+                  4,
+                  padding / 2,
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                hintStyle: hintStyle,
+                hintText: widget.hintText,
+              ),
             ),
           ),
         ],
@@ -1175,13 +1223,15 @@ class MessageInputState extends State<MessageInput> {
 
     if (recent != null && recent.isNotEmpty) {
       availableEmoji.insert(
-          0,
-          DynamicEmoticonPack(
-              identifier: "dynamic_pack_frequently_used_typing",
-              displayName: "Frequently Used",
-              icon: Icons.schedule,
-              emoticons: recent,
-              usage: EmoticonUsage.all));
+        0,
+        DynamicEmoticonPack(
+          identifier: "dynamic_pack_frequently_used_typing",
+          displayName: "Frequently Used",
+          icon: Icons.schedule,
+          emoticons: recent,
+          usage: EmoticonUsage.all,
+        ),
+      );
     }
 
     return (!hasEmotePickerOpened && skipIfNeverOpened)
@@ -1191,10 +1241,12 @@ class MessageInputState extends State<MessageInput> {
             emojiSearchFocus: emojiSearchFocus,
             stickerSearchFocus: stickerSearchFocus,
             gifSearchFocus: gifSearchFocus,
-            searchDelegate: (search) => AutofillUtils.searchEmoticon(search,
-                    client: widget.client, room: widget.room, limit: 50)
-                .whereType<AutofillSearchResultEmoticon>()
-                .toList(),
+            searchDelegate: (search) => AutofillUtils.searchEmoticon(
+              search,
+              client: widget.client,
+              room: widget.room,
+              limit: 50,
+            ).whereType<AutofillSearchResultEmoticon>().toList(),
             stickers: widget.availibleStickers ?? [],
             onEmojiPressed: insertEmoticon,
             packListAxis: BuildConfig.DESKTOP ? Axis.vertical : Axis.horizontal,
@@ -1218,7 +1270,8 @@ class MessageInputState extends State<MessageInput> {
               setState(() {
                 clearKeyboardOverride(debounce: false);
               });
-            });
+            },
+          );
   }
 
   Future<void> handlePickedAttachment(PendingFileAttachment attachment) async {
@@ -1227,9 +1280,7 @@ class MessageInputState extends State<MessageInput> {
         scrollable: false,
         context,
         builder: (context) {
-          return AttachmentProcessor(
-            attachment: attachment,
-          );
+          return AttachmentProcessor(attachment: attachment);
         },
       );
 
@@ -1243,85 +1294,104 @@ class MessageInputState extends State<MessageInput> {
     var pickers = [
       if (PlatformUtils.isAndroid)
         AttachmentPicker(
-            icon: Icons.photo,
-            label: "Gallery",
-            execute: () async {
-              var picker = ImagePicker();
-              var result = await picker.pickMultiImage();
-              for (var file in result) {
-                var data = await file.readAsBytes();
-                await handlePickedAttachment(PendingFileAttachment(
-                    name: file.name,
-                    mimeType: file.mimeType,
-                    size: data.lengthInBytes,
-                    data: data));
-              }
-            }),
-      AttachmentPicker(
-          icon: Icons.attach_file,
-          label: "File",
+          icon: Icons.photo,
+          label: "Gallery",
           execute: () async {
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                type: FileType.any, withData: true, allowMultiple: true);
-            if (result == null) return;
-
-            for (var file in result.files) {
-              var attachment = PendingFileAttachment(
-                  name: file.name,
-                  path: PlatformUtils.isWeb ? null : file.path,
-                  data: file.bytes,
-                  size: file.bytes?.length);
-
-              await handlePickedAttachment(attachment);
-            }
-          }),
-      if (PlatformUtils.isAndroid && preferences.developerMode.value)
-        AttachmentPicker(
-            icon: Icons.perm_media,
-            label: "Media",
-            execute: () async {
-              var picker = ImagePicker();
-              var result = await picker.pickMultipleMedia();
-              for (var file in result) {
-                var data = await file.readAsBytes();
-                await handlePickedAttachment(PendingFileAttachment(
-                    name: file.name,
-                    mimeType: file.mimeType,
-                    size: data.lengthInBytes,
-                    data: data));
-              }
-            }),
-      if (PlatformUtils.isAndroid)
-        AttachmentPicker(
-            icon: Icons.camera_alt,
-            label: "Take a photo",
-            execute: () async {
-              var picker = ImagePicker();
-              var file = await picker.pickImage(source: ImageSource.camera);
-              if (file == null) return;
-
+            var picker = ImagePicker();
+            var result = await picker.pickMultiImage();
+            for (var file in result) {
               var data = await file.readAsBytes();
-              await handlePickedAttachment(PendingFileAttachment(
+              await handlePickedAttachment(
+                PendingFileAttachment(
                   name: file.name,
                   mimeType: file.mimeType,
                   size: data.lengthInBytes,
-                  data: data));
-            }),
+                  data: data,
+                ),
+              );
+            }
+          },
+        ),
+      AttachmentPicker(
+        icon: Icons.attach_file,
+        label: "File",
+        execute: () async {
+          FilePickerResult? result = await FilePicker.platform.pickFiles(
+            type: FileType.any,
+            withData: true,
+            allowMultiple: true,
+          );
+          if (result == null) return;
+
+          for (var file in result.files) {
+            var attachment = PendingFileAttachment(
+              name: file.name,
+              path: PlatformUtils.isWeb ? null : file.path,
+              data: file.bytes,
+              size: file.bytes?.length,
+            );
+
+            await handlePickedAttachment(attachment);
+          }
+        },
+      ),
+      if (PlatformUtils.isAndroid && preferences.developerMode.value)
+        AttachmentPicker(
+          icon: Icons.perm_media,
+          label: "Media",
+          execute: () async {
+            var picker = ImagePicker();
+            var result = await picker.pickMultipleMedia();
+            for (var file in result) {
+              var data = await file.readAsBytes();
+              await handlePickedAttachment(
+                PendingFileAttachment(
+                  name: file.name,
+                  mimeType: file.mimeType,
+                  size: data.lengthInBytes,
+                  data: data,
+                ),
+              );
+            }
+          },
+        ),
+      if (PlatformUtils.isAndroid)
+        AttachmentPicker(
+          icon: Icons.camera_alt,
+          label: "Take a photo",
+          execute: () async {
+            var picker = ImagePicker();
+            var file = await picker.pickImage(source: ImageSource.camera);
+            if (file == null) return;
+
+            var data = await file.readAsBytes();
+            await handlePickedAttachment(
+              PendingFileAttachment(
+                name: file.name,
+                mimeType: file.mimeType,
+                size: data.lengthInBytes,
+                data: data,
+              ),
+            );
+          },
+        ),
     ];
 
     if (pickers.length == 1) {
       pickers.first.execute();
     } else {
-      final picker = await AdaptiveDialog.pickOne(context,
-          items: pickers,
-          itemBuilder: (context, item, onTapped) => SizedBox(
-                height: 50,
-                child: tiamat.TextButton(
-                  item.label,
-                  icon: item.icon,
-                  onTap: onTapped,
-                ),
-              ));
+      final picker = await AdaptiveDialog.pickOne(
+        context,
+        items: pickers,
+        itemBuilder: (context, item, onTapped) => SizedBox(
+          height: 50,
+          child: tiamat.TextButton(
+            item.label,
+            icon: item.icon,
+            onTap: onTapped,
+          ),
+        ),
+      );
 
       picker?.execute();
     }
@@ -1371,8 +1441,10 @@ class MessageInputState extends State<MessageInput> {
 
     controller.text = text.replaceRange(start, end, slug);
     var newOffset = start + slug.length;
-    controller.selection =
-        TextSelection(baseOffset: newOffset, extentOffset: newOffset);
+    controller.selection = TextSelection(
+      baseOffset: newOffset,
+      extentOffset: newOffset,
+    );
   }
 
   Widget interactionText() {
@@ -1391,11 +1463,13 @@ class MessageInputState extends State<MessageInput> {
                 onPressed: doCancelInteraction,
               ),
             ),
-            Icon(widget.interactionType == EventInteractionType.reply
-                ? Icons.keyboard_arrow_right_rounded
-                : widget.interactionType == EventInteractionType.edit
-                    ? Icons.edit
-                    : null),
+            Icon(
+              widget.interactionType == EventInteractionType.reply
+                  ? Icons.keyboard_arrow_right_rounded
+                  : widget.interactionType == EventInteractionType.edit
+                  ? Icons.edit
+                  : null,
+            ),
             tiamat.Text.name(
               widget.relatedEventSenderName!,
               color: widget.relatedEventSenderColor,
@@ -1410,7 +1484,7 @@ class MessageInputState extends State<MessageInput> {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -1444,7 +1518,9 @@ class MessageInputState extends State<MessageInput> {
   }
 
   Widget contextMenuBuilder(
-      BuildContext buildContext, EditableTextState editableTextState) {
+    BuildContext buildContext,
+    EditableTextState editableTextState,
+  ) {
     return AdaptiveTextSelectionToolbar.editable(
       anchors: editableTextState.contextMenuAnchors,
       clipboardStatus: ClipboardStatus.pasteable,
@@ -1466,7 +1542,9 @@ class MessageInputState extends State<MessageInput> {
       // to apply the normal behavior when click on select all
       onSelectAll: () =>
           editableTextState.selectAll(SelectionChangedCause.toolbar),
-      onLiveTextInput: null, onLookUp: null, onSearchWeb: null,
+      onLiveTextInput: null,
+      onLookUp: null,
+      onSearchWeb: null,
       onShare: null,
     );
   }
@@ -1479,10 +1557,9 @@ class MessageInputState extends State<MessageInput> {
     final files = await Pasteboard.files();
     if (files.isNotEmpty) {
       for (final file in files) {
-        await handlePickedAttachment(PendingFileAttachment(
-          name: path.basename(file),
-          path: file,
-        ));
+        await handlePickedAttachment(
+          PendingFileAttachment(name: path.basename(file), path: file),
+        );
       }
       return true;
     }
@@ -1492,13 +1569,13 @@ class MessageInputState extends State<MessageInput> {
       return false;
     }
 
-    var processedAttachment =
-        await AdaptiveDialog.show<PendingFileAttachment>(context,
-            scrollable: false,
-            builder: (context) => AttachmentProcessor(
-                  attachment:
-                      PendingFileAttachment(data: image, size: image.length),
-                ));
+    var processedAttachment = await AdaptiveDialog.show<PendingFileAttachment>(
+      context,
+      scrollable: false,
+      builder: (context) => AttachmentProcessor(
+        attachment: PendingFileAttachment(data: image, size: image.length),
+      ),
+    );
 
     if (processedAttachment != null) {
       setState(() {

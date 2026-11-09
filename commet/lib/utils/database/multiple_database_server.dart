@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:commet/client/matrix/database/matrix_database_io.dart';
 import 'package:commet/debug/log.dart';
+import 'package:commet/main.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/isolate.dart';
 
@@ -37,15 +38,13 @@ final class MultiDatabaseServer {
         return;
       }
 
-      final isolate = _activeIsolates.putIfAbsent(
-        name,
-        () {
-          return DriftIsolate.inCurrent(
-              serialize: true,
-              // obviously you can pass a path instead of a name and use that to open the right NativeDatabase
-              () => setupNativeDatabase(File(name), readOnly: readOnly));
-        },
-      );
+      final isolate = _activeIsolates.putIfAbsent(name, () {
+        return DriftIsolate.inCurrent(
+          serialize: true,
+          // obviously you can pass a path instead of a name and use that to open the right NativeDatabase
+          () => setupNativeDatabase(File(name), readOnly: readOnly),
+        );
+      });
 
       port.send(isolate.connectPort);
     });
@@ -55,36 +54,33 @@ final class MultiDatabaseServer {
 class DatabaseIsolate {
   static final receiveConnectPort = ReceivePort();
   static SendPort? connectToServer;
-  static Future<void>? _startFuture;
+  static String get isolateName => isHeadless
+      ? "chat.commet.commetapp.database_isolate.background_worker"
+      : "chat.commet.commetapp.database_isolate";
 
-  static const isolateName = "chat.commet.commetapp.database_isolate";
+  static Future<void> start() async {
+    Log.i("Starting database server: $isolateName");
 
-  static Future<void> start() {
-    return _startFuture ??= _start();
-  }
-
-  static Future<void> _start() async {
     connectToServer = IsolateNameServer.lookupPortByName(isolateName);
-    if (connectToServer != null) {
-      return;
+    if (connectToServer == null) {
+      Isolate.spawn(
+        (SendPort port) {
+          final server = MultiDatabaseServer();
+          port.send(server._receiveConnections.sendPort);
+        },
+        receiveConnectPort.sendPort,
+        debugName: "Database Isolate",
+      );
     }
-
-    Isolate.spawn(
-      (SendPort port) {
-        final server = MultiDatabaseServer();
-        port.send(server._receiveConnections.sendPort);
-      },
-      receiveConnectPort.sendPort,
-      debugName: "Database Isolate",
-    );
-
-    connectToServer = await receiveConnectPort.first as SendPort;
-    IsolateNameServer.registerPortWithName(connectToServer!, isolateName);
   }
 
-  static Future<DatabaseConnection> connect(String databaseName,
-      {bool readOnly = false}) async {
-    await start();
+  static Future<DatabaseConnection> connect(
+    String databaseName, {
+    bool readOnly = false,
+  }) async {
+    if (connectToServer == null) {
+      await start();
+    }
 
     final response = ReceivePort();
 

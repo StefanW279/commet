@@ -41,9 +41,7 @@ class MatrixBackgroundClient implements Client {
   late final List<Component<MatrixBackgroundClient>> componentsInternal;
 
   MatrixBackgroundClient({required this.databaseId}) {
-    componentsInternal = [
-      MatrixBackgroundClientDirectMessagesComponent(this),
-    ];
+    componentsInternal = [MatrixBackgroundClientDirectMessagesComponent(this)];
   }
 
   @override
@@ -83,18 +81,23 @@ class MatrixBackgroundClient implements Client {
 
   @override
   StoredStreamController<ClientConnectionStatusUpdate>
-      get connectionStatusChanged =>
-          StoredStreamController<ClientConnectionStatusUpdate>.new();
+  get connectionStatusChanged =>
+      StoredStreamController<ClientConnectionStatusUpdate>.new();
 
   @override
-  Future<void> init(bool loadingFromCache,
-      {bool isBackgroundService = false}) async {
+  Future<void> init(
+    bool loadingFromCache, {
+    bool isBackgroundService = false,
+  }) async {
     Log.i(
-        "Using shared database isolate: ${preferences.useSharedIsolateInBackgroundTasks.value}");
+      "Using shared database isolate: ${preferences.useSharedIsolateInBackgroundTasks.value}",
+    );
 
-    final db = await getMatrixDatabase(databaseId,
-        onDatabaseIsolate: preferences.useSharedIsolateInBackgroundTasks.value,
-        readOnly: true);
+    final db = await getMatrixDatabase(
+      databaseId,
+      onDatabaseIsolate: preferences.useSharedIsolateInBackgroundTasks.value,
+      readOnly: true,
+    );
 
     if (db is MatrixSdkDriftDatabase) {
       database = db;
@@ -118,11 +121,13 @@ class MatrixBackgroundClient implements Client {
 
     allRooms = await database.db.select(database.db.roomData).get();
 
-    preloadRoomStates =
-        await database.db.select(database.db.preloadRoomState).get();
+    preloadRoomStates = await database.db
+        .select(database.db.preloadRoomState)
+        .get();
 
-    nonPreloadRoomStates =
-        await database.db.select(database.db.nonPreloadRoomState).get();
+    nonPreloadRoomStates = await database.db
+        .select(database.db.nonPreloadRoomState)
+        .get();
   }
 
   @override
@@ -182,10 +187,12 @@ class MatrixBackgroundClient implements Client {
       this,
       roomId: identifier,
       data: data,
-      preloadState:
-          preloadRoomStates.where((e) => e.roomId == identifier).toList(),
-      nonPreloadState:
-          nonPreloadRoomStates.where((e) => e.roomId == identifier).toList(),
+      preloadState: preloadRoomStates
+          .where((e) => e.roomId == identifier)
+          .toList(),
+      nonPreloadState: nonPreloadRoomStates
+          .where((e) => e.roomId == identifier)
+          .toList(),
     );
   }
 

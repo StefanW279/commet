@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:commet/client/client.dart';
 import 'package:commet/client/components/push_notification/notification_content.dart';
 import 'package:commet/client/components/push_notification/notification_manager.dart';
@@ -34,8 +35,9 @@ class WindowsNotifier implements Notifier {
     final dir = await getTemporaryDirectory();
     var file = p.join(dir.path, "chat.commet.app", "commet_app_icon.png");
 
-    ByteData data = await rootBundle
-        .load("assets/images/app_icon/app_icon_transparent_cropped.png");
+    ByteData data = await rootBundle.load(
+      "assets/images/app_icon/app_icon_transparent_cropped.png",
+    );
 
     var imageFile = File(file);
     imageFile.createSync(recursive: true);
@@ -96,7 +98,8 @@ class WindowsNotifier implements Notifier {
         final clientId = args['client_id'];
         final session = clientManager?.callManager.currentSessions
             .where(
-                (e) => e.sessionId == callId && e.client.identifier == clientId)
+              (e) => e.sessionId == callId && e.client.identifier == clientId,
+            )
             .firstOrNull;
 
         if (args['action'] == "reject_call") {
@@ -136,7 +139,8 @@ class WindowsNotifier implements Notifier {
   }
 
   Future<void> displayCallNotificationContent(
-      CallNotificationContent content) async {
+    CallNotificationContent content,
+  ) async {
     String? avatarFilePath;
 
     var client = clientManager?.getClient(content.clientId);
@@ -147,12 +151,13 @@ class WindowsNotifier implements Notifier {
     }
 
     var avatar = await ShortcutsManager.getCachedAvatarImage(
-        placeholderColor: room.getColorOfUser(content.senderId),
-        placeholderText: content.roomName,
-        identifier: content.senderId,
-        format: ShortcutIconFormat.png,
-        shouldZoomOut: false,
-        imageProvider: content.senderImage);
+      placeholderColor: room.getColorOfUser(content.senderId),
+      placeholderText: content.roomName,
+      identifier: content.senderId,
+      format: ShortcutIconFormat.png,
+      shouldZoomOut: false,
+      imageProvider: content.senderImage,
+    );
 
     avatarFilePath = avatar == null ? "" : avatar.toFilePath();
 
@@ -164,7 +169,8 @@ class WindowsNotifier implements Notifier {
     var defaultAction =
         "action=open_room&amp;client_id=${f(content.clientId)}&amp;room_id=${f(content.roomId)}&amp;call_id=${f(content.callId)}";
 
-    var header = '''<header
+    var header =
+        '''<header
         id="${f(content.roomId)}"
         title="${content.roomName}"
         arguments="$defaultAction"/>''';
@@ -173,7 +179,8 @@ class WindowsNotifier implements Notifier {
       header = "";
     }
 
-    var xml = """
+    var xml =
+        """
 <?xml version="1.0" encoding="UTF-8"?>
 <toast launch="$defaultAction">
    $header
@@ -196,7 +203,8 @@ class WindowsNotifier implements Notifier {
   }
 
   Future<void> displayMessageNotification(
-      MessageNotificationContent content) async {
+    MessageNotificationContent content,
+  ) async {
     String? avatarFilePath;
 
     var client = clientManager?.getClient(content.clientId);
@@ -207,12 +215,13 @@ class WindowsNotifier implements Notifier {
     }
 
     var avatar = await ShortcutsManager.getCachedAvatarImage(
-        placeholderColor: room.getColorOfUser(content.senderId),
-        placeholderText: content.senderName,
-        identifier: content.senderId,
-        format: ShortcutIconFormat.png,
-        shouldZoomOut: false,
-        imageProvider: content.senderImage);
+      placeholderColor: room.getColorOfUser(content.senderId),
+      placeholderText: content.senderName,
+      identifier: content.senderId,
+      format: ShortcutIconFormat.png,
+      shouldZoomOut: false,
+      imageProvider: content.senderImage,
+    );
 
     avatarFilePath = avatar == null ? "" : avatar.toFilePath();
 
@@ -224,7 +233,8 @@ class WindowsNotifier implements Notifier {
     var defaultAction =
         "action=open_room&amp;client_id=${f(content.clientId)}&amp;room_id=${f(content.roomId)}&amp;event_id=${f(content.eventId)}";
 
-    var header = '''<header
+    var header =
+        '''<header
         id="${f(content.roomId)}"
         title="${content.roomName}"
         arguments="$defaultAction"/>''';
@@ -233,7 +243,8 @@ class WindowsNotifier implements Notifier {
       header = "";
     }
 
-    var xml = """
+    var xml =
+        """
 <?xml version="1.0" encoding="UTF-8"?>
 <toast launch="$defaultAction">
    $header
@@ -257,8 +268,11 @@ class WindowsNotifier implements Notifier {
 
     final tag = content.eventId;
     _notificationTagsByRoom.putIfAbsent(content.roomId, () => {}).add(tag);
-    await WinToast.instance()
-        .showCustomToast(xml: xml, tag: tag, group: content.roomId);
+    await WinToast.instance().showCustomToast(
+      xml: xml,
+      tag: tag,
+      group: content.roomId,
+    );
   }
 
   @override

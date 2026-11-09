@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:commet/client/alert.dart';
 import 'package:commet/client/auth.dart';
@@ -28,7 +29,9 @@ import 'package:commet/utils/notifying_list_filter.dart';
 import 'package:commet/utils/stored_stream_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:crypto/crypto.dart';
+
 import 'dart:convert';
+
 import 'package:commet/client/client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +42,7 @@ import 'package:flutter_vodozemac/flutter_vodozemac.dart' as vodozemac;
 import '../../ui/atoms/code_block.dart';
 import 'matrix_room.dart';
 import 'matrix_space.dart';
+
 import 'package:vodozemac/vodozemac.dart' as vod;
 
 const String commetDndPresenceMarker = "commet:dnd";
@@ -100,10 +104,11 @@ class MatrixClient extends Client {
       },
       onFilterParamsChanged: [
         _matrixClient.onSync.stream.where((sync) {
-          return sync.rooms?.join?.values.any((i) =>
-                  i.accountData?.any((i) => i.type == "m.tag") == true) ==
+          return sync.rooms?.join?.values.any(
+                (i) => i.accountData?.any((i) => i.type == "m.tag") == true,
+              ) ==
               true;
-        })
+        }),
       ],
     );
 
@@ -169,24 +174,23 @@ class MatrixClient extends Client {
       StoredStreamController<ClientConnectionStatusUpdate>();
 
   static String get matrixClientOlmMissingMessage => Intl.message(
-        "libolm is not installed or was not found. End to End Encryption will not be available until this is resolved",
-        name: "matrixClientOlmMissingMessage",
-        desc:
-            "Text that explains to the user that libolm dependency is not found",
-      );
+    "libolm is not installed or was not found. End to End Encryption will not be available until this is resolved",
+    name: "matrixClientOlmMissingMessage",
+    desc: "Text that explains to the user that libolm dependency is not found",
+  );
 
   static String get matrixClientVodozemacMissingMessage => Intl.message(
-        "vodozemac is not installed or was not found. End to End Encryption will not be available until this is resolved",
-        name: "matrixClientVodozemacMissingMessage",
-        desc:
-            "Text that explains to the user that vodozemac dependency is not found",
-      );
+    "vodozemac is not installed or was not found. End to End Encryption will not be available until this is resolved",
+    name: "matrixClientVodozemacMissingMessage",
+    desc:
+        "Text that explains to the user that vodozemac dependency is not found",
+  );
 
   static String get matrixClientEncryptionWarningTitle => Intl.message(
-        "Encryption Warning",
-        name: "matrixClientEncryptionWarningTitle",
-        desc: "Title of a warning about encryption",
-      );
+    "Encryption Warning",
+    name: "matrixClientEncryptionWarningTitle",
+    desc: "Title of a warning about encryption",
+  );
 
   static Future<void> loadFromDB(
     ClientManager manager, {
@@ -204,33 +208,30 @@ class MatrixClient extends Client {
           var client = await MatrixClient.create(clientName);
           manager.addClient(client);
           futures.add(
-            Diagnostics.general.timeAsync(
-              "Initializing client $clientName",
-              () async {
-                try {
-                  await client.init(
-                    true,
-                    isBackgroundService: isBackgroundService,
-                  );
-                } catch (error, trace) {
-                  Log.onError(
-                    error,
-                    trace,
-                    content: "Unable to load client $clientName from database",
-                  );
+            Diagnostics.general.timeAsync("Initializing client $clientName", () async {
+              try {
+                await client.init(
+                  true,
+                  isBackgroundService: isBackgroundService,
+                );
+              } catch (error, trace) {
+                Log.onError(
+                  error,
+                  trace,
+                  content: "Unable to load client $clientName from database",
+                );
 
-                  client.self = ErrorProfile();
-                  manager.alertManager.addAlert(
-                    Alert(
-                      AlertType.warning,
-                      messageGetter: () =>
-                          "One of the registered accounts (${clientName.substring(0, 8)}...) was unable to load correctly, please check the logs for more details",
-                      titleGetter: () => "Unable to load account",
-                    ),
-                  );
-                }
-              },
-            ),
+                client.self = ErrorProfile();
+                manager.alertManager.addAlert(
+                  Alert(
+                    AlertType.warning,
+                    messageGetter: () =>
+                        "One of the registered accounts (${clientName.substring(0, 8)}...) was unable to load correctly, please check the logs for more details",
+                    titleGetter: () => "Unable to load account",
+                  ),
+                );
+              }
+            }),
           );
         }
       }
@@ -259,11 +260,11 @@ class MatrixClient extends Client {
 
   static matrix.NativeImplementations get nativeImplementations =>
       BuildConfig.WEB
-          ? const matrix.NativeImplementationsDummy()
-          : matrix.NativeImplementationsIsolate(
-              compute,
-              vodozemacInit: vodozemac.init,
-            );
+      ? const matrix.NativeImplementationsDummy()
+      : matrix.NativeImplementationsIsolate(
+          compute,
+          vodozemacInit: vodozemac.init,
+        );
   @override
   Future<void> init(
     bool loadingFromCache, {
@@ -301,8 +302,9 @@ class MatrixClient extends Client {
 
     if (_matrixClient.isLogged()) {
       try {
-        final serverPresence =
-            await _matrixClient.getPresence(_matrixClient.userID!);
+        final serverPresence = await _matrixClient.getPresence(
+          _matrixClient.userID!,
+        );
         final serverStatus = _presenceStatusFromServer(serverPresence);
 
         if (serverStatus != null) {
@@ -404,7 +406,8 @@ class MatrixClient extends Client {
     }
 
     final savedMessage = preferences.getPresenceStatusMessage(_id);
-    final statusMessage = current.statusMsg == commetDndPresenceMarker ||
+    final statusMessage =
+        current.statusMsg == commetDndPresenceMarker ||
             current.statusMsg == commetIdlePresenceMarker
         ? savedMessage
         : current.statusMsg;
@@ -417,15 +420,16 @@ class MatrixClient extends Client {
   }
 
   PresenceStatus? _presenceStatusFromServer(
-      matrix.GetPresenceResponse presence) {
+    matrix.GetPresenceResponse presence,
+  ) {
     return switch (presence.statusMsg) {
       commetDndPresenceMarker => PresenceStatus.doNotDisturb,
       commetIdlePresenceMarker => PresenceStatus.idle,
       _ => switch (presence.presence) {
-          matrix.PresenceType.online => PresenceStatus.online,
-          matrix.PresenceType.offline => PresenceStatus.invisible,
-          matrix.PresenceType.unavailable => PresenceStatus.idle,
-        },
+        matrix.PresenceType.online => PresenceStatus.online,
+        matrix.PresenceType.offline => PresenceStatus.invisible,
+        matrix.PresenceType.unavailable => PresenceStatus.idle,
+      },
     };
   }
 
@@ -500,20 +504,23 @@ class MatrixClient extends Client {
       var data = await _matrixClient.database.getUserProfile(id);
       if (data != null) {
         self = MatrixProfile(
-            this,
-            matrix.Profile(
-              userId: id,
-              displayName: data.displayname,
-              avatarUrl: data.avatarUrl,
-            ));
+          this,
+          matrix.Profile(
+            userId: id,
+            displayName: data.displayname,
+            avatarUrl: data.avatarUrl,
+          ),
+        );
 
         // Update own profile, but lets not wait for it before continuing
         _matrixClient.getProfileFromUserId(id).then((profile) {
           self = MatrixProfile(this, profile);
         });
       } else {
-        self = MatrixProfile(this,
-            await _matrixClient.getProfileFromUserId(_matrixClient.userID!));
+        self = MatrixProfile(
+          this,
+          await _matrixClient.getProfileFromUserId(_matrixClient.userID!),
+        );
       }
     }
   }
@@ -566,8 +573,8 @@ class MatrixClient extends Client {
       powerLevelAdditions = {
         "events": {
           "org.matrix.msc3401.call": 0,
-          "org.matrix.msc3401.call.member": 0
-        }
+          "org.matrix.msc3401.call.member": 0,
+        },
       };
     }
 
@@ -617,21 +624,25 @@ class MatrixClient extends Client {
         ...initialState,
         for (var i in restricted.spaces)
           matrix.StateEvent(
-              stateKey: i,
-              type: matrix.EventTypes.SpaceParent,
-              content: {
-                "canonical": true,
-                "via": [
-                  if (self?.identifier.domain != null) self?.identifier.domain
-                ]
-              }),
-        matrix.StateEvent(content: {
-          "join_rule": "restricted",
-          "allow": [
-            for (var i in restricted.spaces)
-              {"room_id": i, "type": "m.room_membership"},
-          ]
-        }, type: matrix.EventTypes.RoomJoinRules)
+            stateKey: i,
+            type: matrix.EventTypes.SpaceParent,
+            content: {
+              "canonical": true,
+              "via": [
+                if (self?.identifier.domain != null) self?.identifier.domain,
+              ],
+            },
+          ),
+        matrix.StateEvent(
+          content: {
+            "join_rule": "restricted",
+            "allow": [
+              for (var i in restricted.spaces)
+                {"room_id": i, "type": "m.room_membership"},
+            ],
+          },
+          type: matrix.EventTypes.RoomJoinRules,
+        ),
       ];
     }
 
@@ -663,10 +674,14 @@ class MatrixClient extends Client {
           "events": <String, dynamic>{
             ...?currentPerms["events"] as Map<String, dynamic>?,
             ...?powerLevelAdditions["events"] as Map<String, dynamic>?,
-          }
+          },
         };
         _matrixClient.setRoomStateWithKey(
-            id, matrix.EventTypes.RoomPowerLevels, "", newPerms);
+          id,
+          matrix.EventTypes.RoomPowerLevels,
+          "",
+          newPerms,
+        );
       }
     }
 
@@ -738,8 +753,9 @@ class MatrixClient extends Client {
 
   @override
   Future<void> setAvatar(Uint8List bytes, String mimeType) async {
-    await _matrixClient.setAvatar(matrix.MatrixImageFile(
-        bytes: bytes, name: "avatar", mimeType: mimeType));
+    await _matrixClient.setAvatar(
+      matrix.MatrixImageFile(bytes: bytes, name: "avatar", mimeType: mimeType),
+    );
 
     await _updateOwnProfile();
     // TODO: Handle refresh avatar
@@ -886,7 +902,8 @@ class MatrixClient extends Client {
   void onSyncStatusChanged(matrix.SyncStatusUpdate event) {
     ClientConnectionStatus value = ClientConnectionStatus.unknown;
 
-    var connected = _matrixClient.onSync.value != null &&
+    var connected =
+        _matrixClient.onSync.value != null &&
         event.status != matrix.SyncStatus.error &&
         _matrixClient.prevBatch != null;
 
@@ -1018,8 +1035,9 @@ class MatrixClient extends Client {
     var data = await matrixClient.getWellknown();
     Log.i(data);
 
-    var prop =
-        data.additionalProperties.tryGetMap<String, dynamic>("io.element.e2ee");
+    var prop = data.additionalProperties.tryGetMap<String, dynamic>(
+      "io.element.e2ee",
+    );
 
     var value = prop?.tryGet<bool>("force_disable");
 

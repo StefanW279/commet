@@ -18,19 +18,14 @@ class SettingsPage extends StatelessWidget {
 
   Widget pickChatView(BuildContext context) {
     if (MediaQuery.of(context).desktop) {
-      return DesktopSettingsPage(
-        settings: settings,
-        buttons: buttons,
-      );
+      return DesktopSettingsPage(settings: settings, buttons: buttons);
     }
     if (MediaQuery.of(context).mobile) {
-      return MobileSettingsPage(
-        settings: settings,
-        buttons: buttons,
-      );
+      return MobileSettingsPage(settings: settings, buttons: buttons);
     }
 
     throw Exception(
-        "No SettingsPage has been defined for the current build config");
+      "No SettingsPage has been defined for the current build config",
+    );
   }
 }

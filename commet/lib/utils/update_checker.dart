@@ -12,16 +12,18 @@ import 'package:http/http.dart' as http;
 class UpdateChecker {
   static bool foundUpdate = false;
 
-  static String get labelUpdateAvailable => Intl.message("Update Available",
-      name: "labelUpdateAvailable",
-      desc: "Label for the the info popup when an update is available");
+  static String get labelUpdateAvailable => Intl.message(
+    "Update Available",
+    name: "labelUpdateAvailable",
+    desc: "Label for the the info popup when an update is available",
+  );
 
   static String descriptionUpdateAvailable(String version) => Intl.message(
-      "There is a newer version of Commet available: ${version}",
-      name: "descriptionUpdateAvailable",
-      args: [version],
-      desc:
-          "describes the update, showing the version code for the available update");
+    "There is a newer version of Commet available: ${version}",
+    name: "descriptionUpdateAvailable",
+    args: [version],
+    desc: "describes the update, showing the version code for the available update",
+  );
 
   static Future<void> checkForUpdates() async {
     if (foundUpdate) return;
@@ -37,7 +39,8 @@ class UpdateChecker {
     const String key = "name";
 
     var url = Uri.parse(
-        "https://api.github.com/repos/StefanW279/commet/releases/latest");
+      "https://api.github.com/repos/StefanW279/commet/releases/latest",
+    );
 
     var response = await http.get(url);
 
@@ -82,12 +85,17 @@ class UpdateChecker {
 
       if (available) {
         var tag = fields[key];
-        clientManager!.alertManager.addAlert(Alert(AlertType.info,
+        clientManager!.alertManager.addAlert(
+          Alert(
+            AlertType.info,
             messageGetter: () => descriptionUpdateAvailable(tag),
-            titleGetter: () => labelUpdateAvailable));
+            titleGetter: () => labelUpdateAvailable,
+          ),
+        );
       } else {
         Log.i(
-            "Found an update, but it's version is not newer than the current one, current: ${b_version} remote: ${a_version}");
+          "Found an update, but it's version is not newer than the current one, current: ${b_version} remote: ${a_version}",
+        );
       }
 
       return;

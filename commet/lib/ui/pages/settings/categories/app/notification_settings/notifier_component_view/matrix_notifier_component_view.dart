@@ -32,60 +32,63 @@ class _MatrixNotifierComponentViewState
     super.initState();
   }
 
-  String get labelThisDevice => Intl.message(
-        "This Device",
-        name: "labelThisDevice",
-        desc: "",
-      );
+  String get labelThisDevice =>
+      Intl.message("This Device", name: "labelThisDevice", desc: "");
 
-  String get labelOtherDevices => Intl.message(
-        "Other Devices",
-        name: "labelOtherDevices",
-        desc: "",
-      );
+  String get labelOtherDevices =>
+      Intl.message("Other Devices", name: "labelOtherDevices", desc: "");
 
   @override
   Widget build(BuildContext context) {
     if (pushers == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
-    final ourPushers = pushers!.where((e) =>
-        e.deviceDisplayName ==
-        widget.component.client.getMatrixClient().clientName);
+    final ourPushers = pushers!.where(
+      (e) =>
+          e.deviceDisplayName ==
+          widget.component.client.getMatrixClient().clientName,
+    );
 
-    final otherPushers = pushers!.where((e) =>
-        e.deviceDisplayName !=
-        widget.component.client.getMatrixClient().clientName);
+    final otherPushers = pushers!.where(
+      (e) =>
+          e.deviceDisplayName !=
+          widget.component.client.getMatrixClient().clientName,
+    );
 
-    return Column(children: [
-      Panel(
-        header: labelThisDevice,
-        mode: TileType.surfaceContainerLowest,
-        child: Column(
+    return Column(
+      children: [
+        Panel(
+          header: labelThisDevice,
+          mode: TileType.surfaceContainerLowest,
+          child: Column(
             children: ourPushers
-                .map((e) => Padding(
+                .map(
+                  (e) => Padding(
                     padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                    child: buildPusher(e)))
-                .toList()),
-      ),
-      const SizedBox(
-        height: 10,
-      ),
-      Panel(
-        header: labelOtherDevices,
-        mode: TileType.surfaceContainerLowest,
-        child: Column(
+                    child: buildPusher(e),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Panel(
+          header: labelOtherDevices,
+          mode: TileType.surfaceContainerLowest,
+          child: Column(
             children: otherPushers
-                .map((e) => Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      child: buildPusher(e),
-                    ))
-                .toList()),
-      ),
-    ]);
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                    child: buildPusher(e),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget buildPusher(matrix.Pusher pusher) {
@@ -95,10 +98,11 @@ class _MatrixNotifierComponentViewState
       var uri = Uri.parse(pusher.pushkey);
       if (uri.scheme == "http" || uri.scheme == "https") {
         var redacted = Uri(
-            host: uri.host,
-            port: uri.port,
-            scheme: uri.scheme,
-            path: "${uri.path.substring(0, 6)}...");
+          host: uri.host,
+          port: uri.port,
+          scheme: uri.scheme,
+          path: "${uri.path.substring(0, 6)}...",
+        );
 
         keyDisplay = Uri.decodeFull(redacted.toString());
       }
@@ -116,10 +120,14 @@ class _MatrixNotifierComponentViewState
               tiamat.Text.label(pusher.appDisplayName),
               tiamat.Text.labelLow(pusher.appId),
               tiamat.Text.labelLow("key: $keyDisplay"),
-              tiamat.Text.labelLow("device: ${pusher.deviceDisplayName}",
-                  maxLines: 1, overflow: TextOverflow.ellipsis),
               tiamat.Text.labelLow(
-                  "data: ${const JsonEncoder.withIndent("  ").convert(pusher.data.toJson())}"),
+                "device: ${pusher.deviceDisplayName}",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              tiamat.Text.labelLow(
+                "data: ${const JsonEncoder.withIndent("  ").convert(pusher.data.toJson())}",
+              ),
               tiamat.Text.labelLow("kind: ${pusher.kind}"),
             ],
           ),

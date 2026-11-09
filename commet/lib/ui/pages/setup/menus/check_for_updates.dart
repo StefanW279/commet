@@ -7,20 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
 import 'package:intl/intl.dart';
 
-String get promptCheckForUpdates => Intl.message("Check for updates",
-    desc: "Title for the check for updates setting",
-    name: "promptCheckForUpdates");
+String get promptCheckForUpdates => Intl.message(
+  "Check for updates",
+  desc: "Title for the check for updates setting",
+  name: "promptCheckForUpdates",
+);
 
 String get promptCheckForUpdatesDescription => Intl.message(
-    "Automatically check if there is a newer version of Commet available",
-    desc: "Description for the check for updates setting",
-    name: "promptCheckForUpdatesDescription");
+  "Automatically check if there is a newer version of Commet available",
+  desc: "Description for the check for updates setting",
+  name: "promptCheckForUpdatesDescription",
+);
 
 String get promptCheckForUpdatesDescriptionFirstLogin => Intl.message(
-      "Would you like Commet to automatically check for new updates?",
-      name: "promptCheckForUpdatesDescriptionFirstLogin",
-      desc: "",
-    );
+  "Would you like Commet to automatically check for new updates?",
+  name: "promptCheckForUpdatesDescriptionFirstLogin",
+  desc: "",
+);
 
 class UpdateCheckerSetup implements SetupMenu {
   StreamController<SetupMenuState> controller = StreamController();
@@ -37,14 +40,15 @@ class UpdateCheckerSetup implements SetupMenu {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-              decoration: BoxDecoration(
-                color: ColorScheme.of(context).surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CheckForUpdatesSettingWidget(),
-              )),
+            decoration: BoxDecoration(
+              color: ColorScheme.of(context).surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CheckForUpdatesSettingWidget(),
+            ),
+          ),
         ),
       ],
     );

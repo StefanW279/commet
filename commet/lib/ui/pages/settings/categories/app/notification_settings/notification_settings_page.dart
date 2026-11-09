@@ -53,124 +53,116 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     }
   }
 
-  String get notificationSettingsNotSupported =>
-      Intl.message("Push notifications are not supported on this system",
-          name: "notificationSettingsNotSupported",
-          desc: "Message to display when push notifications are not supported");
+  String get notificationSettingsNotSupported => Intl.message(
+    "Push notifications are not supported on this system",
+    name: "notificationSettingsNotSupported",
+    desc: "Message to display when push notifications are not supported",
+  );
 
   String get labelPushNotifications => Intl.message(
-        "Push Notifications",
-        name: "labelPushNotifications",
-        desc: "",
-      );
+    "Push Notifications",
+    name: "labelPushNotifications",
+    desc: "",
+  );
 
-  String get labelUnifiedPush => Intl.message(
-        "Unified Push",
-        name: "labelUnifiedPush",
-        desc: "",
-      );
+  String get labelUnifiedPush =>
+      Intl.message("Unified Push", name: "labelUnifiedPush", desc: "");
 
   String get labelRegisteredPushers => Intl.message(
-        "Registered Pushers",
-        name: "labelRegisteredPushers",
-        desc: "",
-      );
+    "Registered Pushers",
+    name: "labelRegisteredPushers",
+    desc: "",
+  );
 
   String get labelSilenceNotifications => Intl.message(
-        "Silence Notifications",
-        name: "labelSilenceNotifications",
-        desc: "",
-      );
+    "Silence Notifications",
+    name: "labelSilenceNotifications",
+    desc: "",
+  );
 
   String get labelSilenceNotificationsDescription => Intl.message(
-        "When another device or client is active, silence notifications on this device",
-        name: "labelSilenceNotificationsDescription",
-        desc: "",
-      );
+    "When another device or client is active, silence notifications on this device",
+    name: "labelSilenceNotificationsDescription",
+    desc: "",
+  );
 
   String get labelShowNotifications => Intl.message(
-        "Show notifications",
-        name: "labelShowNotifications",
-        desc: "",
-      );
+    "Show notifications",
+    name: "labelShowNotifications",
+    desc: "",
+  );
 
   String get labelShowNotificationsDescription => Intl.message(
-        "Enable or disable the display of notifications entirely",
-        name: "labelShowNotificationsDescription",
-        desc: "",
-      );
+    "Enable or disable the display of notifications entirely",
+    name: "labelShowNotificationsDescription",
+    desc: "",
+  );
 
   String get labelHideNotificationsCurrentRoom => Intl.message(
-        "Hide notifications for current room",
-        name: "labelHideNotificationsCurrentRoom",
-        desc: "",
-      );
+    "Hide notifications for current room",
+    name: "labelHideNotificationsCurrentRoom",
+    desc: "",
+  );
 
   String get labelHideNotificationsCurrentRoomDescription => Intl.message(
-        "When receiving a message, if you have the chat selected and the app is in focus, dont show the notification",
-        name: "labelHideNotificationsCurrentRoomDescription",
-        desc: "",
-      );
+    "When receiving a message, if you have the chat selected and the app is in focus, dont show the notification",
+    name: "labelHideNotificationsCurrentRoomDescription",
+    desc: "",
+  );
 
   String get labelNotificationBadges => Intl.message(
-        "Notification Badges",
-        name: "labelNotificationBadges",
-        desc: "",
-      );
+    "Notification Badges",
+    name: "labelNotificationBadges",
+    desc: "",
+  );
 
   String get labelNotificationBadgesDescription => Intl.message(
-        "Show a badge with the number of unread messages in the system taskbar",
-        name: "labelNotificationBadgesDescription",
-        desc: "",
-      );
+    "Show a badge with the number of unread messages in the system taskbar",
+    name: "labelNotificationBadgesDescription",
+    desc: "",
+  );
 
   String get labelMessageBodyFormatting => Intl.message(
-        "Message Body Formatting",
-        name: "labelMessageBodyFormatting",
-        desc: "",
-      );
+    "Message Body Formatting",
+    name: "labelMessageBodyFormatting",
+    desc: "",
+  );
 
   String get labelMessageBodyFormattingDescription => Intl.message(
-        "Apply user formatting in message notifications",
-        name: "labelMessageBodyFormattingDescription",
-        desc: "",
-      );
+    "Apply user formatting in message notifications",
+    name: "labelMessageBodyFormattingDescription",
+    desc: "",
+  );
 
-  String get labelShowImages => Intl.message(
-        "Show Images",
-        name: "labelShowImages",
-        desc: "",
-      );
+  String get labelShowImages =>
+      Intl.message("Show Images", name: "labelShowImages", desc: "");
 
   String get labelShowImagesDescription => Intl.message(
-        "Show images in notifications, if allowed by 'General > Media Preview' settings",
-        name: "labelShowImagesDescription",
-        desc: "",
-      );
+    "Show images in notifications, if allowed by 'General > Media Preview' settings",
+    name: "labelShowImagesDescription",
+    desc: "",
+  );
 
-  String get labelPreviewUrls => Intl.message(
-        "Preview Urls",
-        name: "labelPreviewUrls",
-        desc: "",
-      );
+  String get labelPreviewUrls =>
+      Intl.message("Preview Urls", name: "labelPreviewUrls", desc: "");
 
   String get labelPreviewUrlsDescription => Intl.message(
-        "Fetch URL previews to show extra information about links in notifications",
-        name: "labelPreviewUrlsDescription",
-        desc: "",
-      );
+    "Fetch URL previews to show extra information about links in notifications",
+    name: "labelPreviewUrlsDescription",
+    desc: "",
+  );
 
   String get labelNotificationVolume => Intl.message(
-        "Notification volume",
-        name: "labelNotificationVolume",
-        desc: "",
-      );
+    "Notification volume",
+    name: "labelNotificationVolume",
+    desc: "",
+  );
 
   String get labelNotificationVolumeDescription => Intl.message(
-        "Controls the volume of notifications and ringtones",
-        name: "labelNotificationVolumeDescription",
-        desc: "",
-      );
+    "Controls the volume of notifications and ringtones",
+    name: "labelNotificationVolumeDescription",
+    desc: "",
+  );
 
   @override
   void initState() {
@@ -196,24 +188,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               if (notifier is UnifiedPushNotifier)
                 Column(
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     Panel(
-                        mode: tiamat.TileType.surfaceContainerLow,
-                        header: labelUnifiedPush,
-                        child: Column(
-                          children: [
-                            UnifiedPushSetupView(
-                              onToggled: (_) => setState(() {}),
-                            ),
-                            if (preferences.unifiedPushEnabled.value == true)
-                              pushGatewaySelector(),
-                          ],
-                        )),
-                    const SizedBox(
-                      height: 10,
+                      mode: tiamat.TileType.surfaceContainerLow,
+                      header: labelUnifiedPush,
+                      child: Column(
+                        children: [
+                          UnifiedPushSetupView(
+                            onToggled: (_) => setState(() {}),
+                          ),
+                          if (preferences.unifiedPushEnabled.value == true)
+                            pushGatewaySelector(),
+                        ],
+                      ),
                     ),
+                    const SizedBox(height: 10),
                   ],
                 ),
             ],
@@ -271,9 +260,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               if (PlatformUtils.isLinux)
                 Column(
                   children: [
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     BooleanPreferenceToggle(
                       preference: preferences.showNotificationBadgesInTaskbar,
                       title: labelNotificationBadges,
@@ -292,8 +279,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                       description: labelMessageBodyFormattingDescription,
                     ),
                     AnimatedOpacity(
-                      opacity:
-                          preferences.formatNotificationBody.value ? 1 : 0.3,
+                      opacity: preferences.formatNotificationBody.value
+                          ? 1
+                          : 0.3,
                       duration: Durations.short4,
                       child: IgnorePointer(
                         ignoring:
@@ -316,9 +304,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     ),
                   ],
                 ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
               DoublePreferenceSlider(
                 preference: preferences.notificationsVolume,
                 min: 0,
@@ -344,20 +330,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         tiamat.DropdownTextField(
-            key: pushGatewayKey,
-            initialValue: preferences.pushGateway,
-            textEditorPlaceholder: "push.example.com",
-            editableEntryPlaceholder: "Custom push gateway",
-            items: [
-              "push.kantengewichte.de",
-              if (notifier is UnifiedPushNotifier)
-                "matrix.gateway.unifiedpush.org"
-            ]),
+          key: pushGatewayKey,
+          initialValue: preferences.pushGateway,
+          textEditorPlaceholder: "push.example.com",
+          editableEntryPlaceholder: "Custom push gateway",
+          items: [
+            "push.kantengewichte.de",
+            if (notifier is UnifiedPushNotifier)
+              "matrix.gateway.unifiedpush.org",
+          ],
+        ),
         tiamat.Button(
           text: CommonStrings.promptApply,
           isLoading: isPushGatewayLoading,
           onTap: onPushGatewaySelected,
-        )
+        ),
       ],
     );
   }

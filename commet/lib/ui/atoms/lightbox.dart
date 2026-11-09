@@ -11,6 +11,7 @@ import 'package:commet/utils/image/lod_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiamat/atoms/popup_dialog.dart';
+
 import 'dart:ui' as ui;
 
 class Lightbox extends StatefulWidget {
@@ -46,31 +47,35 @@ class Lightbox extends StatefulWidget {
     Key? key,
   }) {
     return showGeneralDialog(
-        context: context,
-        barrierDismissible: false,
-        barrierLabel: "LIGHTBOX",
-        barrierColor: PopupDialog.barrierColor,
-        pageBuilder: (context, _, __) {
-          return Lightbox(
-            image: image,
-            video: video,
-            videoController: videoController,
-            aspectRatio: aspectRatio,
-            thumbnail: thumbnail,
-            contentKey: key,
-            customWidget: customWidget,
-            key: GlobalKey(),
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-        transitionBuilder: (context, animation, secondaryAnimation, child) =>
-            SlideTransition(
-              position:
-                  Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
-                      .animate(CurvedAnimation(
-                          parent: animation, curve: Curves.easeOutCubic)),
-              child: child,
-            ));
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: "LIGHTBOX",
+      barrierColor: PopupDialog.barrierColor,
+      pageBuilder: (context, _, __) {
+        return Lightbox(
+          image: image,
+          video: video,
+          videoController: videoController,
+          aspectRatio: aspectRatio,
+          thumbnail: thumbnail,
+          contentKey: key,
+          customWidget: customWidget,
+          key: GlobalKey(),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) =>
+          SlideTransition(
+            position: Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
+                .animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ),
+                ),
+            child: child,
+          ),
+    );
   }
 }
 
@@ -104,8 +109,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     curve: Curves.easeOut,
   ).drive(Tween(begin: 0.6, end: 1.0));
 
-  late final Animation<double> rotation =
-      ConstantTween(0.0).animate(_controller);
+  late final Animation<double> rotation = ConstantTween(0.0)
+      .animate(_controller);
   late final Animation<double> scale = ConstantTween(1.0).animate(_controller);
 
   void onTransformChanged() {
@@ -244,7 +249,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
     var screenRatio = size.width / size.height;
     bool prevValue = rotate;
     setState(() {
-      rotate = (aspectRatio < 1 && screenRatio > 1) ||
+      rotate =
+          (aspectRatio < 1 && screenRatio > 1) ||
           (aspectRatio > 1 && screenRatio < 1);
     });
 
@@ -261,11 +267,13 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
 
     widget.image!
         .resolve(const ImageConfiguration())
-        .addListener(ImageStreamListener((info, synchronousCall) {
-      if (!completer.isCompleted) {
-        completer.complete(info.image);
-      }
-    }));
+        .addListener(
+          ImageStreamListener((info, synchronousCall) {
+            if (!completer.isCompleted) {
+              completer.complete(info.image);
+            }
+          }),
+        );
     return completer.future;
   }
 
@@ -341,18 +349,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                       children: [
                         LayoutBuilder(
                           builder: (context, constraints) {
-                            // Keep the image at its natural aspect ratio, but
-                            // let the viewer itself occupy the full lightbox.
-                            // This way zooming can use the surrounding space,
-                            // while zero boundary margin keeps the image edges
-                            // from being panned past the viewport.
                             final availableRatio =
                                 constraints.maxWidth / constraints.maxHeight;
-                            // Fit the image inside the viewport without
-                            // changing its aspect ratio. The viewer itself
-                            // remains full-sized; with unconstrained=false the
-                            // child would expand to the viewport and allow
-                            // panning into empty space around smaller images.
                             final imageWidth = aspectRatio > availableRatio
                                 ? constraints.maxWidth
                                 : constraints.maxHeight * aspectRatio;
@@ -370,7 +368,7 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                             final offsetY =
                                 (constraints.maxHeight - imageHeight) / 2;
                             final nextFitTransform = Matrix4.identity()
-                              ..translate(offsetX, offsetY);
+                              ..translateByDouble(offsetX, offsetY, 0, 0);
 
                             if (fitImageSize != imageSize ||
                                 viewerSize != nextViewerSize) {
@@ -388,19 +386,11 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
 
                             return SizedBox.expand(
                               child: InteractiveViewer(
-                                // Keep the transformed child at the fitted
-                                // image dimensions. With constrained=true the
-                                // child fills the viewport, so the fit offset
-                                // is applied on top of an already centered image.
                                 constrained: false,
                                 trackpadScrollCausesScale: true,
                                 transformationController: controller,
                                 minScale: 1.0,
                                 maxScale: 3.5,
-                                // Let the custom scale-aware clamp below own
-                                // all pan limits. InteractiveViewer's zero
-                                // margin otherwise applies a second, viewport-
-                                // sized constraint that fights the fitted image.
                                 boundaryMargin: const EdgeInsets.all(
                                   double.infinity,
                                 ),
@@ -413,7 +403,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                     child: GestureDetector(
                                       onTap: () {},
                                       onDoubleTap: toggleZoom,
-                                      child: widget.customWidget ??
+                                      child:
+                                          widget.customWidget ??
                                           (widget.image != null
                                               ? Stack(
                                                   fit: StackFit.expand,
@@ -431,25 +422,24 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                             .bottomRight,
                                                         child: Padding(
                                                           padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
+                                                              const EdgeInsets.all(
+                                                                8.0,
+                                                              ),
                                                           child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Theme.of(
-                                                                      context)
+                                                            decoration: BoxDecoration(
+                                                              color: Theme.of(context)
                                                                   .colorScheme
                                                                   .surfaceContainer,
                                                               borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
+                                                                  BorderRadius.circular(
+                                                                    8,
+                                                                  ),
                                                             ),
-                                                            child:
-                                                                const Padding(
+                                                            child: const Padding(
                                                               padding:
-                                                                  EdgeInsets
-                                                                      .all(8.0),
+                                                                  EdgeInsets.all(
+                                                                    8.0,
+                                                                  ),
                                                               child: SizedBox(
                                                                 width: 12,
                                                                 height: 12,
@@ -463,8 +453,8 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                   ],
                                                 )
                                               : widget.video != null
-                                                  ? dismissing
-                                                      ? widget.thumbnail != null
+                                              ? dismissing
+                                                    ? widget.thumbnail != null
                                                           ? Image(
                                                               fit: BoxFit.cover,
                                                               image: widget
@@ -474,19 +464,17 @@ class _LightboxState extends State<Lightbox> with TickerProviderStateMixin {
                                                               color:
                                                                   Colors.black,
                                                             )
-                                                      : VideoPlayer(
-                                                          widget.video!,
-                                                          controller: widget
-                                                              .videoController,
-                                                          showProgressBar: true,
-                                                          canGoFullscreen:
-                                                              false,
-                                                          thumbnail:
-                                                              widget.thumbnail,
-                                                          key:
-                                                              widget.contentKey,
-                                                        )
-                                                  : const Placeholder()),
+                                                    : VideoPlayer(
+                                                        widget.video!,
+                                                        controller: widget
+                                                            .videoController,
+                                                        showProgressBar: true,
+                                                        canGoFullscreen: false,
+                                                        thumbnail:
+                                                            widget.thumbnail,
+                                                        key: widget.contentKey,
+                                                      )
+                                              : const Placeholder()),
                                     ),
                                   ),
                                 ),
