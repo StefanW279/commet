@@ -6,8 +6,10 @@ import 'package:intl/intl.dart';
 
 class NotificationModifierSuppressDnd implements NotificationModifier {
   @override
-  Future<NotificationContent?> process(NotificationContent content,
-      {Function(String reason)? onNotificationRejected}) async {
+  Future<NotificationContent?> process(
+    NotificationContent content, {
+    Function(String reason)? onNotificationRejected,
+  }) async {
     final clientId = switch (content) {
       MessageNotificationContent notification => notification.clientId,
       CallNotificationContent notification => notification.clientId,
@@ -23,16 +25,19 @@ class NotificationModifierSuppressDnd implements NotificationModifier {
     final client = clientManager?.getClient(clientId);
     final isDnd =
         client?.currentPresenceStatus == PresenceStatus.doNotDisturb ||
-            preferences.getPresenceStatus(clientId) ==
-                PresenceStatus.doNotDisturb.name;
+        preferences.getPresenceStatus(clientId) ==
+            PresenceStatus.doNotDisturb.name;
 
     if (!isDnd) {
       return content;
     }
 
-    onNotificationRejected?.call(Intl.message(
+    onNotificationRejected?.call(
+      Intl.message(
         "Notifications are suppressed while Do Not Disturb is enabled",
-        name: "notificationsSuppressedDoNotDisturb"));
+        name: "notificationsSuppressedDoNotDisturb",
+      ),
+    );
     return null;
   }
 }

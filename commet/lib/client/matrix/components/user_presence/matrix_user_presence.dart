@@ -69,10 +69,10 @@ class MatrixUserPresenceComponent
       commetDndPresenceMarker => UserPresenceStatus.doNotDisturb,
       commetIdlePresenceMarker => UserPresenceStatus.unavailable,
       _ => switch (presence.presence) {
-          PresenceType.offline => UserPresenceStatus.offline,
-          PresenceType.online => UserPresenceStatus.online,
-          PresenceType.unavailable => UserPresenceStatus.unavailable,
-        },
+        PresenceType.offline => UserPresenceStatus.offline,
+        PresenceType.online => UserPresenceStatus.online,
+        PresenceType.unavailable => UserPresenceStatus.unavailable,
+      },
     };
 
     UserPresenceMessage? message = null;
@@ -81,7 +81,9 @@ class MatrixUserPresenceComponent
         presence.statusMsg != commetDndPresenceMarker &&
         presence.statusMsg != commetIdlePresenceMarker) {
       message = UserPresenceMessage(
-          presence.statusMsg!, PresenceMessageType.userCustom);
+        presence.statusMsg!,
+        PresenceMessageType.userCustom,
+      );
     }
 
     return UserPresence(status, message: message);
@@ -95,12 +97,14 @@ class MatrixUserPresenceComponent
   Stream<(String, UserPresence)> get onPresenceChanged => _controller.stream;
 
   @override
-  Future<void> setStatus(UserPresenceStatus status,
-      {String? message, bool clearMessage = false}) async {
+  Future<void> setStatus(
+    UserPresenceStatus status, {
+    String? message,
+    bool clearMessage = false,
+  }) async {
     final self = client.self!.identifier;
 
-    final current = await client.matrixClient.getPresence(
-        self); /* TODO: fix this error, it is not a problem of the code, but of the network connection, only when running in background
+    final current = await client.matrixClient.getPresence(self); /* TODO: fix this error, it is not a problem of the code, but of the network connection, only when running in background
                                                                     ClientException with SocketException: Failed host lookup: 'matrix.kantengewichte.de' (OS Error: No address associated with hostname, errno = 7), uri=https://matrix.kantengewichte.de/_matrix/client/v3/presence/%40stefan%3Akantengewichte.de/status (IOClient.send)
                                                                     #0      IOClient.send (package:http/src/io_client.dart:227)
                                                                     <asynchronous suspension>
@@ -112,15 +116,16 @@ class MatrixUserPresenceComponent
                                                                     <asynchronous suspension>
 */
     await client.matrixClient.setPresence(
-        self,
-        statusMsg: clearMessage ? null : message ?? current.statusMsg,
-        switch (status) {
-          UserPresenceStatus.offline => PresenceType.offline,
-          UserPresenceStatus.unknown => PresenceType.offline,
-          UserPresenceStatus.online => PresenceType.online,
-          UserPresenceStatus.unavailable => PresenceType.unavailable,
-          UserPresenceStatus.doNotDisturb => PresenceType.unavailable,
-        });
+      self,
+      statusMsg: clearMessage ? null : message ?? current.statusMsg,
+      switch (status) {
+        UserPresenceStatus.offline => PresenceType.offline,
+        UserPresenceStatus.unknown => PresenceType.offline,
+        UserPresenceStatus.online => PresenceType.online,
+        UserPresenceStatus.unavailable => PresenceType.unavailable,
+        UserPresenceStatus.doNotDisturb => PresenceType.unavailable,
+      },
+    );
   }
 
   void handleRoomMemberEvent(BasicEvent event) {}

@@ -16,34 +16,31 @@ class ExperimentsSettingsPage extends StatefulWidget {
 
 class _ExperimentsSettingsPageState extends State<ExperimentsSettingsPage> {
   String get labelExperimentsUnderDevelopment => Intl.message(
-        "These features are still under development, and may contain bugs or security issues. Enable at your own risk",
-        name: "labelExperimentsUnderDevelopment",
-        desc: "",
-      );
+    "These features are still under development, and may contain bugs or security issues. Enable at your own risk",
+    name: "labelExperimentsUnderDevelopment",
+    desc: "",
+  );
 
-  String get labelExperiments => Intl.message(
-        "Experiments",
-        name: "labelExperiments",
-        desc: "",
-      );
+  String get labelExperiments =>
+      Intl.message("Experiments", name: "labelExperiments", desc: "");
 
   String get labelExperimentsEncryptedElementCall => Intl.message(
-        "Encrypted Element Call",
-        name: "labelExperimentsEncryptedElementCall",
-        desc: "",
-      );
+    "Encrypted Element Call",
+    name: "labelExperimentsEncryptedElementCall",
+    desc: "",
+  );
 
   String get labelExperimentsEncryptedElementCallDescription => Intl.message(
-        "Allow use of the experimental support for end to end encryption in element call",
-        name: "labelExperimentsEncryptedElementCallDescription",
-        desc: "",
-      );
+    "Allow use of the experimental support for end to end encryption in element call",
+    name: "labelExperimentsEncryptedElementCallDescription",
+    desc: "",
+  );
 
   String get labelExperimentsMustRestart => Intl.message(
-        "You must restart the app for changes to take effect",
-        name: "labelExperimentsMustRestart",
-        desc: "",
-      );
+    "You must restart the app for changes to take effect",
+    name: "labelExperimentsMustRestart",
+    desc: "",
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +60,7 @@ class _ExperimentsSettingsPageState extends State<ExperimentsSettingsPage> {
                 preference: preferences.experimentEnableE2eeElementCall,
                 title: labelExperimentsEncryptedElementCall,
                 description: labelExperimentsEncryptedElementCallDescription,
-              )
+              ),
             ],
           ),
         ),

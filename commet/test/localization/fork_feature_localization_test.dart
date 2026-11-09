@@ -14,11 +14,13 @@ void main() {
 
   test('fork feature localization resolves German translations', () {
     expect(
-        Intl.message('Draft: ${'Hallo'}',
-            name: 'draftPreview', args: ['Hallo']),
-        'Entwurf: Hallo');
-    expect(Intl.message('Use 24-hour time', name: 'use24HourTime'),
-        '24-Stunden-Format verwenden');
+      Intl.message('Draft: ${'Hallo'}', name: 'draftPreview', args: ['Hallo']),
+      'Entwurf: Hallo',
+    );
+    expect(
+      Intl.message('Use 24-hour time', name: 'use24HourTime'),
+      '24-Stunden-Format verwenden',
+    );
     expect(
       Intl.message(
         'Display times using the 24-hour clock instead of the 12-hour clock',

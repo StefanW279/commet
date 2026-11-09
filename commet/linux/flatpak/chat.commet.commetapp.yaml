@@ -27,7 +27,7 @@ finish-args:
 - "--talk-name=org.freedesktop.Flatpak"
 - "--talk-name=org.freedesktop.portal.Documents"
 - "--system-talk-name=org.freedesktop.NetworkManager"
-- "--env=LD_LIBRARY_PATH=/app/lib"
+- "--env=LD_LIBRARY_PATH=/app/lib:/app/lib64"
 modules:
 - name: intltool
   cleanup:

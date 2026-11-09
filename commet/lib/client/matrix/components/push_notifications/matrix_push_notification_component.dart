@@ -15,8 +15,11 @@ class MatrixPushNotificationComponent
 
   @override
   Future<void> ensurePushNotificationsRegistered(
-      String pushKey, Uri pushServer, String deviceName,
-      {Map<String, dynamic>? extraData}) async {
+    String pushKey,
+    Uri pushServer,
+    String deviceName, {
+    Map<String, dynamic>? extraData,
+  }) async {
     var matrixClient = client.getMatrixClient();
 
     Log.i("Current push key: $pushKey");
@@ -30,28 +33,34 @@ class MatrixPushNotificationComponent
     );
 
     if (pushers != null &&
-        pushers.any((element) =>
-            element.pushkey == pushKey &&
-            element.data.toJson() == data.toJson())) {
+        pushers.any(
+          (element) =>
+              element.pushkey == pushKey &&
+              element.data.toJson() == data.toJson(),
+        )) {
       return;
     }
 
     var pusher = Pusher(
-        appId: BuildConfig.WEB
-            ? "chat.commet.commetapp.web"
-            : "chat.commet.commetapp.android",
-        pushkey: pushKey,
-        appDisplayName: BuildConfig.appName,
-        data: data,
-        deviceDisplayName: deviceName,
-        kind: "http",
-        lang: "en");
+      appId: BuildConfig.WEB
+          ? "chat.commet.commetapp.web"
+          : "chat.commet.commetapp.android",
+      pushkey: pushKey,
+      appDisplayName: BuildConfig.appName,
+      data: data,
+      deviceDisplayName: deviceName,
+      kind: "http",
+      lang: "en",
+    );
 
     await matrixClient.postPusher(pusher, append: true);
   }
 
   Future<void> cleanOldPushers(
-      String? currentPushKey, String deviceName, Uri pushGateway) async {
+    String? currentPushKey,
+    String deviceName,
+    Uri pushGateway,
+  ) async {
     var matrixClient = client.getMatrixClient();
     var pushers = await matrixClient.getPushers();
 
@@ -89,10 +98,11 @@ class MatrixPushNotificationComponent
     }
 
     uri = Uri(
-        scheme: uri.scheme,
-        host: uri.host,
-        port: uri.port,
-        path: "/_matrix/push/v1/notify");
+      scheme: uri.scheme,
+      host: uri.host,
+      port: uri.port,
+      path: "/_matrix/push/v1/notify",
+    );
 
     await cleanOldPushers(key, name, uri);
 
@@ -100,8 +110,12 @@ class MatrixPushNotificationComponent
       return;
     }
 
-    await ensurePushNotificationsRegistered(key, uri, name,
-        extraData: extraData);
+    await ensurePushNotificationsRegistered(
+      key,
+      uri,
+      name,
+      extraData: extraData,
+    );
   }
 
   @override

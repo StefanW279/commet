@@ -14,15 +14,9 @@ class WebPushNotifier implements Notifier {
 
   String get _server => "https://${preferences.pushGateway}";
 
-  Future<dynamic> _call(
-    String function,
-    List<Object?> args,
-  ) async {
+  Future<dynamic> _call(String function, List<Object?> args) async {
     final List<JSAny?> jsArgs = args.map((e) => e?.jsify()).toList();
-    final promise = _global.callMethodVarArgs<JSPromise>(
-      function.toJS,
-      jsArgs,
-    );
+    final promise = _global.callMethodVarArgs<JSPromise>(function.toJS, jsArgs);
     final jsResult = await promise.toDart;
     return jsResult?.dartify();
   }
@@ -57,20 +51,14 @@ class WebPushNotifier implements Notifier {
     _initialized = true;
 
     try {
-      await _call(
-        "commetWebPushInit",
-        [_server],
-      );
+      await _call("commetWebPushInit", [_server]);
     } catch (e) {
       print("Web Push initialization failed: $e");
     }
   }
 
   Future<String?> _registerExistingSubscription() async {
-    final result = await _call(
-      "commetWebPushGetExisting",
-      [_server],
-    );
+    final result = await _call("commetWebPushGetExisting", [_server]);
 
     if (result == null) {
       return null;
@@ -105,10 +93,7 @@ class WebPushNotifier implements Notifier {
   @override
   Future<bool> requestPermission() async {
     try {
-      final result = await _call(
-        "commetWebPushSubscribe",
-        [_server],
-      );
+      final result = await _call("commetWebPushSubscribe", [_server]);
 
       if (result == null) {
         return false;
@@ -133,9 +118,7 @@ class WebPushNotifier implements Notifier {
 
   @override
   Map<String, dynamic>? extraRegistrationData() {
-    return {
-      "type": "webpush",
-    };
+    return {"type": "webpush"};
   }
 
   @override

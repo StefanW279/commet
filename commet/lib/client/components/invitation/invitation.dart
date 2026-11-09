@@ -8,13 +8,14 @@ class Invitation {
   ImageProvider? avatar;
   bool isDirect;
 
-  Invitation(
-      {required this.roomId,
-      this.displayName,
-      this.color,
-      this.avatar,
-      this.senderId,
-      required this.isDirect});
+  Invitation({
+    required this.roomId,
+    this.displayName,
+    this.color,
+    this.avatar,
+    this.senderId,
+    required this.isDirect,
+  });
 
   @override
   bool operator ==(Object other) {

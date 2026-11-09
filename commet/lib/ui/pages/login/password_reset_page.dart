@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class PasswordResetPage extends StatefulWidget {
-  const PasswordResetPage(
-      {super.key, required this.homeserver, this.onBackToLogin});
+  const PasswordResetPage({
+    super.key,
+    required this.homeserver,
+    this.onBackToLogin,
+  });
   final String homeserver;
   final VoidCallback? onBackToLogin;
   @override
@@ -42,11 +46,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
   Uri _appendApiPath(Uri base, String path) {
     final prefix = base.path.replaceFirst(RegExp(r'/+$'), '');
     final suffix = path.startsWith('/') ? path : '/$path';
-    return base.replace(
-      path: '$prefix$suffix',
-      query: null,
-      fragment: null,
-    );
+    return base.replace(path: '$prefix$suffix', query: null, fragment: null);
   }
 
   Future<Uri> _url(String path) async {
@@ -57,8 +57,9 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
       fragment: null,
     );
     try {
-      final response =
-          await http.get(discovery).timeout(const Duration(seconds: 8));
+      final response = await http
+          .get(discovery)
+          .timeout(const Duration(seconds: 8));
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final data = jsonDecode(response.body);
         if (data is Map<String, dynamic>) {
@@ -91,11 +92,13 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
       final message = body['error'];
-      throw Exception(message is String && message.isNotEmpty
-          ? message
-          : 'Homeserver request failed (HTTP ' +
-              response.statusCode.toString() +
-              ').');
+      throw Exception(
+        message is String && message.isNotEmpty
+            ? message
+            : 'Homeserver request failed (HTTP ' +
+                  response.statusCode.toString() +
+                  ').',
+      );
     }
     return body;
   }
@@ -124,7 +127,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
         body: jsonEncode({
           'email': _email.text.trim(),
           'client_secret': secret,
-          'send_attempt': 1
+          'send_attempt': 1,
         }),
       );
       final body = _check(response);
@@ -160,7 +163,7 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
         body: jsonEncode({
           'auth': {
             'type': 'm.login.email.identity',
-            'threepid_creds': {'sid': _sid, 'client_secret': _secret}
+            'threepid_creds': {'sid': _sid, 'client_secret': _secret},
           },
           'new_password': _password.text,
           'logout_devices': false,
@@ -189,64 +192,79 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
     final title = _done
         ? 'Password updated'
         : _requested
-            ? 'Set a new password'
-            : 'Forgot your password?';
+        ? 'Set a new password'
+        : 'Forgot your password?';
     final description = _done
         ? 'Your password has been changed. You can now sign in with your new password.'
         : _requested
-            ? 'Check your email and follow the verification link first. Then enter your new password below.'
-            : 'Enter the email address associated with your Matrix account and we’ll send you a password reset email.';
+        ? 'Check your email and follow the verification link first. Then enter your new password below.'
+        : 'Enter the email address associated with your Matrix account and we’ll send you a password reset email.';
 
     return Scaffold(
       body: SafeArea(
-          child: Center(
-              child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 440),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                    onPressed: back,
-                    icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                    label: const Text('Back to sign in'))),
-            const SizedBox(height: 36),
-            Center(
-                child: Container(
-                    width: 76,
-                    height: 76,
-                    decoration: BoxDecoration(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: back,
+                      icon: const Icon(Icons.arrow_back_rounded, size: 18),
+                      label: const Text('Back to sign in'),
+                    ),
+                  ),
+                  const SizedBox(height: 36),
+                  Center(
+                    child: Container(
+                      width: 76,
+                      height: 76,
+                      decoration: BoxDecoration(
                         color: colors.primaryContainer,
-                        borderRadius: BorderRadius.circular(24)),
-                    child: Icon(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Icon(
                         _done
                             ? Icons.check_circle_outline_rounded
                             : _requested
-                                ? Icons.lock_outline_rounded
-                                : Icons.lock_reset_rounded,
+                            ? Icons.lock_outline_rounded
+                            : Icons.lock_reset_rounded,
                         size: 36,
-                        color: colors.onPrimaryContainer))),
-            const SizedBox(height: 28),
-            Text(title,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w700, letterSpacing: -0.6)),
-            const SizedBox(height: 12),
-            Text(description,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyLarge
-                    ?.copyWith(color: colors.onSurfaceVariant, height: 1.55)),
-            const SizedBox(height: 32),
-            if (!_done)
-              Form(
-                  key: _formKey,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (!_requested) ...[
-                          TextFormField(
+                        color: colors.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.6,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    description,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: colors.onSurfaceVariant,
+                      height: 1.55,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  if (!_done)
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (!_requested) ...[
+                            TextFormField(
                               controller: _email,
                               enabled: !_busy,
                               autocorrect: false,
@@ -255,10 +273,11 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                               autofillHints: const [AutofillHints.email],
                               onFieldSubmitted: (_) => _requestToken(),
                               decoration: const InputDecoration(
-                                  labelText: 'Email address',
-                                  hintText: 'you@example.com',
-                                  prefixIcon: Icon(Icons.mail_outline_rounded),
-                                  border: OutlineInputBorder()),
+                                labelText: 'Email address',
+                                hintText: 'you@example.com',
+                                prefixIcon: Icon(Icons.mail_outline_rounded),
+                                border: OutlineInputBorder(),
+                              ),
                               validator: (value) {
                                 final email = value?.trim() ?? '';
                                 if (email.isEmpty)
@@ -267,96 +286,130 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
                                     .hasMatch(email))
                                   return 'Enter a valid email address';
                                 return null;
-                              }),
-                        ] else ...[
-                          TextFormField(
+                              },
+                            ),
+                          ] else ...[
+                            TextFormField(
                               controller: _password,
                               enabled: !_busy,
                               obscureText: true,
                               autofillHints: const [AutofillHints.newPassword],
                               decoration: const InputDecoration(
-                                  labelText: 'New password',
-                                  prefixIcon: Icon(Icons.lock_outline_rounded),
-                                  border: OutlineInputBorder()),
+                                labelText: 'New password',
+                                prefixIcon: Icon(Icons.lock_outline_rounded),
+                                border: OutlineInputBorder(),
+                              ),
                               validator: (value) {
                                 if ((value ?? '').isEmpty)
                                   return 'Enter a new password';
                                 if (value!.length < 8)
                                   return 'Use at least 8 characters';
                                 return null;
-                              }),
-                          const SizedBox(height: 16),
-                          TextFormField(
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
                               controller: _confirm,
                               enabled: !_busy,
                               obscureText: true,
                               textInputAction: TextInputAction.done,
                               onFieldSubmitted: (_) => _updatePassword(),
                               decoration: const InputDecoration(
-                                  labelText: 'Confirm new password',
-                                  prefixIcon: Icon(Icons.lock_outline_rounded),
-                                  border: OutlineInputBorder()),
+                                labelText: 'Confirm new password',
+                                prefixIcon: Icon(Icons.lock_outline_rounded),
+                                border: OutlineInputBorder(),
+                              ),
                               validator: (value) => value != _password.text
                                   ? 'Passwords do not match'
-                                  : null),
-                        ],
-                        if (_error != null) ...[
-                          const SizedBox(height: 12),
-                          Text(_error!, style: TextStyle(color: colors.error))
-                        ],
-                        const SizedBox(height: 20),
-                        FilledButton(
+                                  : null,
+                            ),
+                          ],
+                          if (_error != null) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              _error!,
+                              style: TextStyle(color: colors.error),
+                            ),
+                          ],
+                          const SizedBox(height: 20),
+                          FilledButton(
                             onPressed: _busy
                                 ? null
                                 : (_requested
-                                    ? _updatePassword
-                                    : _requestToken),
+                                      ? _updatePassword
+                                      : _requestToken),
                             style: FilledButton.styleFrom(
-                                minimumSize: const Size.fromHeight(52),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14))),
+                              minimumSize: const Size.fromHeight(52),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
                             child: _busy
                                 ? const SizedBox(
                                     width: 20,
                                     height: 20,
                                     child: CircularProgressIndicator(
-                                        strokeWidth: 2))
-                                : Text(_requested
-                                    ? 'Update password'
-                                    : 'Send reset email')),
-                        if (_requested)
-                          TextButton(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text(
+                                    _requested
+                                        ? 'Update password'
+                                        : 'Send reset email',
+                                  ),
+                          ),
+                          if (_requested)
+                            TextButton(
                               onPressed: _busy
                                   ? null
                                   : () => setState(() {
-                                        _requested = false;
-                                        _sid = null;
-                                        _secret = null;
-                                        _error = null;
-                                      }),
-                              child:
-                                  const Text('Use a different email address')),
-                      ]))
-            else
-              FilledButton(
-                  onPressed: back,
-                  style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52)),
-                  child: const Text('Back to sign in')),
-            const SizedBox(height: 28),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(Icons.shield_outlined,
-                  size: 16, color: colors.onSurfaceVariant),
-              const SizedBox(width: 8),
-              Flexible(
-                  child: Text('Your account security matters to us.',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: colors.onSurfaceVariant))),
-            ]),
-          ]),
+                                      _requested = false;
+                                      _sid = null;
+                                      _secret = null;
+                                      _error = null;
+                                    }),
+                              child: const Text(
+                                'Use a different email address',
+                              ),
+                            ),
+                        ],
+                      ),
+                    )
+                  else
+                    FilledButton(
+                      onPressed: back,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(52),
+                      ),
+                      child: const Text('Back to sign in'),
+                    ),
+                  const SizedBox(height: 28),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shield_outlined,
+                        size: 16,
+                        color: colors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          'Your account security matters to us.',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
-      ))),
+      ),
     );
   }
 }

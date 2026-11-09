@@ -5,17 +5,18 @@ import 'package:intl/intl.dart';
 import 'package:tiamat/tiamat.dart' as tiamat;
 
 class MatrixSessionView extends StatelessWidget {
-  const MatrixSessionView(
-      {this.displayName,
-      required this.deviceId,
-      this.lastSeenIp,
-      this.lastSeenTimestamp,
-      super.key,
-      this.verified = false,
-      this.isThisDevice = false,
-      this.inactive = false,
-      this.beginVerification,
-      this.removeSession});
+  const MatrixSessionView({
+    this.displayName,
+    required this.deviceId,
+    this.lastSeenIp,
+    this.lastSeenTimestamp,
+    super.key,
+    this.verified = false,
+    this.isThisDevice = false,
+    this.inactive = false,
+    this.beginVerification,
+    this.removeSession,
+  });
 
   final String? displayName;
   final String deviceId;
@@ -27,24 +28,31 @@ class MatrixSessionView extends StatelessWidget {
   final Function? beginVerification;
   final Function? removeSession;
 
-  String get promptMatrixVerifySession => Intl.message("Verify",
-      desc: "Text on the button to verify a session",
-      name: "promptMatrixVerifySession");
+  String get promptMatrixVerifySession => Intl.message(
+    "Verify",
+    desc: "Text on the button to verify a session",
+    name: "promptMatrixVerifySession",
+  );
 
-  String get promptMatrixThisDevice => Intl.message("This Device",
-      desc: "Text to indicate that this is the current device",
-      name: "promptMatrixThisDevice");
+  String get promptMatrixThisDevice => Intl.message(
+    "This Device",
+    desc: "Text to indicate that this is the current device",
+    name: "promptMatrixThisDevice",
+  );
 
-  String get promptMatrixInactive => Intl.message("Inactive",
-      desc: "Text to indicate that this session is inactive",
-      name: "promptMatrixInactive");
+  String get promptMatrixInactive => Intl.message(
+    "Inactive",
+    desc: "Text to indicate that this session is inactive",
+    name: "promptMatrixInactive",
+  );
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(5)),
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -87,20 +95,25 @@ class MatrixSessionView extends StatelessWidget {
                           ],
                         ),
                         if (lastSeenTimestamp != null)
-                          tiamat.Text.tiny(Intl.message("Last Seen: ",
+                          tiamat.Text.tiny(
+                            Intl.message(
+                                  "Last Seen: ",
                                   desc: "Label for the last seen timestamp",
-                                  name: "labelLastSeenTimestamp") +
-                              DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
-                                  .format(DateTime.fromMillisecondsSinceEpoch(
-                                      lastSeenTimestamp!))),
+                                  name: "labelLastSeenTimestamp",
+                                ) +
+                                DateFormat(DateFormat.YEAR_MONTH_WEEKDAY_DAY)
+                                    .format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                        lastSeenTimestamp!,
+                                      ),
+                                    ),
+                          ),
                         if (lastSeenIp != null)
                           const Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                             child: SizedBox(
                               width: 10,
-                              child: tiamat.Seperator(
-                                padding: 0,
-                              ),
+                              child: tiamat.Seperator(padding: 0),
                             ),
                           ),
                         if (lastSeenIp != null) tiamat.Text.tiny(lastSeenIp!),
@@ -108,7 +121,7 @@ class MatrixSessionView extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (MediaQuery.of(context).desktop) verifyButton()
+                if (MediaQuery.of(context).desktop) verifyButton(),
               ],
             ),
             if (MediaQuery.of(context).mobile) Align(child: verifyButton()),
@@ -135,7 +148,7 @@ class MatrixSessionView extends StatelessWidget {
               size: 24,
               onPressed: () => removeSession?.call(),
             ),
-          )
+          ),
       ],
     );
   }
@@ -143,8 +156,11 @@ class MatrixSessionView extends StatelessWidget {
   IconData getIcon() {
     if (displayName == null) return Icons.device_unknown;
 
-    if (["ios", "android", "mobile"]
-        .any((element) => displayName!.toLowerCase().contains(element))) {
+    if ([
+      "ios",
+      "android",
+      "mobile",
+    ].any((element) => displayName!.toLowerCase().contains(element))) {
       return Icons.smartphone;
     }
 

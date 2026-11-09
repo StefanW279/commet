@@ -21,8 +21,9 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
   int selectedCategoryIndex = 0;
   int selectedTabIndex = 0;
 
-  static ValueKey backButtonKey =
-      const ValueKey("DESKTOP_SETTINGS_PAGE_BACK_BUTTON");
+  static ValueKey backButtonKey = const ValueKey(
+    "DESKTOP_SETTINGS_PAGE_BACK_BUTTON",
+  );
 
   @override
   void initState() {
@@ -41,7 +42,8 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
           children: [
             tabSelector(context),
             Expanded(
-              child: categories[selectedCategoryIndex]
+              child:
+                  categories[selectedCategoryIndex]
                       .tabs[selectedTabIndex]
                       .makeScrollable
                   ? ScrollConfiguration(
@@ -54,7 +56,7 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
                       child: SingleChildScrollView(child: buildContent()),
                     )
                   : buildContent(),
-            )
+            ),
           ],
         ),
       ),
@@ -69,13 +71,16 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
       caulkClipBottomLeft: true,
       key: ValueKey(selectedTabIndex),
       child: ScaledSafeArea(
-          child: selectedCategoryIndex < categories.length &&
-                  selectedTabIndex <
-                      categories[selectedCategoryIndex].tabs.length
-              ? settingsTab(categories[selectedCategoryIndex]
-                  .tabs[selectedTabIndex]
-                  .pageBuilder)
-              : Container()),
+        child:
+            selectedCategoryIndex < categories.length &&
+                selectedTabIndex < categories[selectedCategoryIndex].tabs.length
+            ? settingsTab(
+                categories[selectedCategoryIndex]
+                    .tabs[selectedTabIndex]
+                    .pageBuilder,
+              )
+            : Container(),
+      ),
     );
   }
 
@@ -100,53 +105,60 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: CircleButton(
-                              key: backButtonKey,
-                              radius: 25,
-                              icon: m.Icons.arrow_back,
-                              onPressed: () => Navigator.of(context).pop(),
-                            )),
+                          alignment: Alignment.centerLeft,
+                          child: CircleButton(
+                            key: backButtonKey,
+                            radius: 25,
+                            icon: m.Icons.arrow_back,
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ),
                       ),
                       Flexible(
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                          child: ListView(children: [
-                            ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: categories.length,
-                              itemBuilder: (context, categoryIndex) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    if (categoryIndex != 0)
-                                      const tiamat.Seperator(),
-                                    if (categories[categoryIndex].title != null)
-                                      tiamat.Text.labelLow(
-                                          categories[categoryIndex].title!),
-                                    tabListBuilder(categoryIndex),
-                                    Seperator()
-                                  ],
-                                );
-                              },
-                            ),
-                            if (widget.buttons != null) const Seperator(),
-                            if (widget.buttons != null)
+                          child: ListView(
+                            children: [
                               ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: widget.buttons!.length,
-                                itemBuilder: (context, index) {
-                                  return button(
+                                itemCount: categories.length,
+                                itemBuilder: (context, categoryIndex) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (categoryIndex != 0)
+                                        const tiamat.Seperator(),
+                                      if (categories[categoryIndex].title !=
+                                          null)
+                                        tiamat.Text.labelLow(
+                                          categories[categoryIndex].title!,
+                                        ),
+                                      tabListBuilder(categoryIndex),
+                                      Seperator(),
+                                    ],
+                                  );
+                                },
+                              ),
+                              if (widget.buttons != null) const Seperator(),
+                              if (widget.buttons != null)
+                                ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: widget.buttons!.length,
+                                  itemBuilder: (context, index) {
+                                    return button(
                                       label: widget.buttons![index].label,
                                       icon: widget.buttons![index].icon,
                                       onTap: widget.buttons![index].onPress,
-                                      color: widget.buttons![index].color);
-                                },
-                              ),
-                          ]),
+                                      color: widget.buttons![index].color,
+                                    );
+                                  },
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -166,40 +178,44 @@ class DesktopSettingsPageState extends State<DesktopSettingsPage> {
       shrinkWrap: true,
       itemBuilder: (context, tabIndex) {
         return button(
-            label: categories[categoryIndex].tabs[tabIndex].label,
-            icon: categories[categoryIndex].tabs[tabIndex].icon,
-            highlighted: categoryIndex == selectedCategoryIndex &&
-                tabIndex == selectedTabIndex,
-            onTap: () {
-              setState(() {
-                selectedCategoryIndex = categoryIndex;
-                selectedTabIndex = tabIndex;
-              });
+          label: categories[categoryIndex].tabs[tabIndex].label,
+          icon: categories[categoryIndex].tabs[tabIndex].icon,
+          highlighted:
+              categoryIndex == selectedCategoryIndex &&
+              tabIndex == selectedTabIndex,
+          onTap: () {
+            setState(() {
+              selectedCategoryIndex = categoryIndex;
+              selectedTabIndex = tabIndex;
             });
+          },
+        );
       },
       itemCount: categories[categoryIndex].tabs.length,
     );
   }
 
-  Widget button(
-      {required String label,
-      IconData? icon,
-      bool highlighted = false,
-      Color? color,
-      Function()? onTap}) {
+  Widget button({
+    required String label,
+    IconData? icon,
+    bool highlighted = false,
+    Color? color,
+    Function()? onTap,
+  }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
       child: SizedBox(
-          height: 40,
-          width: 200,
-          child: TextButton(
-            label,
-            icon: icon,
-            highlighted: highlighted,
-            onTap: onTap,
-            textColor: color,
-            iconColor: color,
-          )),
+        height: 40,
+        width: 200,
+        child: TextButton(
+          label,
+          icon: icon,
+          highlighted: highlighted,
+          onTap: onTap,
+          textColor: color,
+          iconColor: color,
+        ),
+      ),
     );
   }
 

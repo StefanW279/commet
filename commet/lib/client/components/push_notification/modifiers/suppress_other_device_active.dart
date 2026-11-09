@@ -10,8 +10,10 @@ import 'package:matrix/matrix_api_lite/generated/model.dart' show Device;
 class NotificationModifierSuppressOtherActiveDevice
     implements NotificationModifier {
   @override
-  Future<NotificationContent?> process(NotificationContent content,
-      {Function(String reason)? onNotificationRejected}) async {
+  Future<NotificationContent?> process(
+    NotificationContent content, {
+    Function(String reason)? onNotificationRejected,
+  }) async {
     if (!preferences.silenceNotifications.value) {
       return content;
     }
@@ -27,7 +29,8 @@ class NotificationModifierSuppressOtherActiveDevice
         clients = [content.room!.client];
       } else {
         Log.w(
-            "Suppressing notifications for background client is not currently supported");
+          "Suppressing notifications for background client is not currently supported",
+        );
         return content;
       }
     } else {
@@ -63,10 +66,12 @@ class NotificationModifierSuppressOtherActiveDevice
 
         if (diff.inMinutes < 1) {
           Log.i(
-              "Suppressing this notification because there is another device which has been active recently!\nThe device which was active is: ${device.displayName} : ${device.deviceId}");
+            "Suppressing this notification because there is another device which has been active recently!\nThe device which was active is: ${device.displayName} : ${device.deviceId}",
+          );
 
-          onNotificationRejected
-              ?.call("Another device has been active within the last minute");
+          onNotificationRejected?.call(
+            "Another device has been active within the last minute",
+          );
           return null;
         }
       }
