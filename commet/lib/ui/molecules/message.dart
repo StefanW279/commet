@@ -227,23 +227,21 @@ class _MessageState extends State<Message> {
   Widget timeStamp() {
     final use24HourTime = preferences.use24HourTime.value;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-      child: SizedBox(
-        child: tiamat.Text.labelLow(
-          widget.showDetailed
-              ? MediaQuery.of(context).alwaysUse24HourFormat
-                    ? intl.DateFormat.yMMMMd().add_Hms().format(
-                        widget.sentTimeStamp.toLocal(),
-                      )
-                    : intl.DateFormat.yMMMMd().add_jms().format(
-                        widget.sentTimeStamp.toLocal(),
-                      )
-              : MediaQuery.of(context).alwaysUse24HourFormat
-              ? intl.DateFormat.Hm().format(widget.sentTimeStamp.toLocal())
-              : intl.DateFormat.jm().format(widget.sentTimeStamp.toLocal()),
-        ),
-      ),
-    );
+        padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+        child: SizedBox(
+            child: tiamat.Text.labelLow(widget.showDetailed
+                ? use24HourTime
+                    ? intl.DateFormat.yMMMMd()
+                        .add_Hms()
+                        .format(widget.sentTimeStamp.toLocal())
+                    : intl.DateFormat.yMMMMd()
+                        .add_jms()
+                        .format(widget.sentTimeStamp.toLocal())
+                : use24HourTime
+                    ? intl.DateFormat.Hm()
+                        .format(widget.sentTimeStamp.toLocal())
+                    : intl.DateFormat.jm()
+                        .format(widget.sentTimeStamp.toLocal()))));
   }
 
   Widget body() {
