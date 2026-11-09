@@ -231,14 +231,14 @@ class _MessageState extends State<Message> {
       child: SizedBox(
         child: tiamat.Text.labelLow(
           widget.showDetailed
-              ? MediaQuery.of(context).alwaysUse24HourFormat
+              ? use24HourTime
                     ? intl.DateFormat.yMMMMd().add_Hms().format(
                         widget.sentTimeStamp.toLocal(),
                       )
                     : intl.DateFormat.yMMMMd().add_jms().format(
                         widget.sentTimeStamp.toLocal(),
                       )
-              : MediaQuery.of(context).alwaysUse24HourFormat
+              : use24HourTime
               ? intl.DateFormat.Hm().format(widget.sentTimeStamp.toLocal())
               : intl.DateFormat.jm().format(widget.sentTimeStamp.toLocal()),
         ),

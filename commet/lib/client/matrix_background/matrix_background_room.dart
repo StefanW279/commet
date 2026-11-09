@@ -200,9 +200,6 @@ class MatrixBackgroundRoom implements Room {
     String cipherText,
     StoredInboundGroupSession session,
   ) async {
-    var key = jsonDecode(session.content);
-    var sessionKey = key["session_key"];
-
     if (vod.isInitialized() == false) {
       await vod.init();
     }
