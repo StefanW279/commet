@@ -52,7 +52,6 @@ final class MultiDatabaseServer {
 }
 
 class DatabaseIsolate {
-  static final receiveConnectPort = ReceivePort();
   static SendPort? connectToServer;
   static String get isolateName => isHeadless
       ? "chat.commet.commetapp.database_isolate.background_worker"
@@ -63,14 +62,21 @@ class DatabaseIsolate {
 
     connectToServer = IsolateNameServer.lookupPortByName(isolateName);
     if (connectToServer == null) {
-      Isolate.spawn(
-        (SendPort port) {
-          final server = MultiDatabaseServer();
-          port.send(server._receiveConnections.sendPort);
-        },
-        receiveConnectPort.sendPort,
-        debugName: "Database Isolate",
-      );
+      final receiveConnectPort = ReceivePort();
+
+      try {
+        await Isolate.spawn(
+          (SendPort port) {
+            final server = MultiDatabaseServer();
+            port.send(server._receiveConnections.sendPort);
+          },
+          receiveConnectPort.sendPort,
+          debugName: "Database Isolate",
+        );
+        connectToServer = await receiveConnectPort.first as SendPort;
+      } finally {
+        receiveConnectPort.close();
+      }
     }
   }
 
