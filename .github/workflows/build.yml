@@ -449,6 +449,11 @@ jobs:
           sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
           cat /etc/apt/apt-mirrors.txt
 
+      - name: Add Jammy repos for WPE WebKit
+        run: |
+          echo "deb http://archive.ubuntu.com/ubuntu/ jammy main universe" | sudo tee /etc/apt/sources.list.d/jammy-legacy.list
+          echo "deb http://security.ubuntu.com/ubuntu jammy-security main universe" | sudo tee -a /etc/apt/sources.list.d/jammy-legacy.list
+
       - name: Setup Tools
         timeout-minutes: 5
         run: |
