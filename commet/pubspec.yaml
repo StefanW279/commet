@@ -127,7 +127,7 @@ dependencies:
   rust_lib_commet:
     path: ../rust/rust_builder
   flutter_rust_bridge: 2.13.0
-  flutter_inappwebview_windows: ^0.7.0-beta.3
+  flutter_inappwebview: 6.1.5
   flutter_inappwebview_web: ^1.2.0-beta.3
   flutter_inappwebview_macos: ^1.2.0-beta.3
   flutter_inappwebview_ios: ^1.2.0-beta.3
