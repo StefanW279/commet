@@ -51,10 +51,10 @@ This repo currently has a monorepo structure, containing two flutter projects: C
 ### 2. Install Libraries
 Commet requires some additional libraries to be built 
 ```bash
-sudo apt-get install -y cmake clang ninja-build rustup libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev libwebkit2gtk-4.1-dev keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev libwpewebkit-1.0-dev
+sudo apt-get install -y cmake clang ninja-build rustup libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev libwebkit2gtk-4.1-dev keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev libwpewebkit-1.0-dev libwpebackend-fdo-1.0-dev
 ```
 > [!NOTE]
-> On Ubuntu `libwpewebkit-1.0-dev` is only available in the Jammy (22.04) Repositorys
+> On Ubuntu `libwpewebkit-1.0-dev` and `libwpebackend-fdo-1.0-dev` are only available in the Jammy (22.04) Repositorys
 
 > [!NOTE]
 > On arch linux you can use  `sudo pacman -Syu cmake clang ninja rustup gtk3 mpv ffmpeg mimalloc webkit2gtk-4.1 libkeybinder3 libayatana-appindicator ayatana-ido wpewebkit` to install all reqired packages
