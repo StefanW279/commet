@@ -848,7 +848,7 @@ jobs:
 
             cd ${{ secrets.FDROID_PATH }}
 
-            ./update_metadata.sh
+            eval ${{ secrets.FDROID_PATH }}/update_metadata.sh
 
             cd ${{ secrets.FDROID_PATH }}/repo
 
