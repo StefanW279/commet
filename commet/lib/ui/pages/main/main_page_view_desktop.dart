@@ -179,87 +179,86 @@ class MainPageViewDesktop extends StatelessWidget {
               ),
             ),
           ),
-        if (state.currentRoom != null) roomChatView(),
+        if (state.currentRoom != null)
+          Expanded(child: roomChatView()),
       ],
     );
   }
 
   Widget roomChatView() {
-    return Expanded(
+    return Column(
       key: ValueKey("room-chat-view-${state.currentRoom!.localId}"),
-      child: Column(
-        children: [
-          Tile.low(
-            caulkPadBottom: true,
-            caulkPadLeft: true,
-            caulkClipBottomLeft: true,
-            caulkBorderLeft: true,
-            caulkBorderBottom: true,
-            child: ScaledSafeArea(
-              top: true,
-              bottom: false,
-              child: SizedBox(
-                height: 50,
-                child: RoomHeader(
-                  state.currentRoom!,
-                  onTap: state.currentRoom?.permissions.canEditAnything == true
-                      ? () => state.navigateRoomSettings()
-                      : null,
-                  menu: RoomQuickAccessMenuViewDesktop(
-                    room: state.currentRoom!,
-                  ),
+      children: [
+        Tile.low(
+          caulkPadBottom: true,
+          caulkPadLeft: true,
+          caulkClipBottomLeft: true,
+          caulkBorderLeft: true,
+          caulkBorderBottom: true,
+          child: ScaledSafeArea(
+            top: true,
+            bottom: false,
+            child: SizedBox(
+              height: 50,
+              child: RoomHeader(
+                state.currentRoom!,
+                onTap: state.currentRoom?.permissions.canEditAnything == true
+                    ? () => state.navigateRoomSettings()
+                    : null,
+                menu: RoomQuickAccessMenuViewDesktop(
+                  room: state.currentRoom!,
                 ),
               ),
             ),
           ),
-          Expanded(
-            child: Flex(
-              direction: Axis.horizontal,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Tile(
+        ),
+        Expanded(
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Tile(
+                  caulkPadLeft: true,
+                  caulkClipTopLeft: true,
+                  caulkClipTopRight: true,
+                  caulkBorderRight: true,
+                  caulkPadBottom: true,
+                  caulkClipBottomLeft: true,
+                  caulkClipBottomRight: true,
+                  caulkBorderLeft: true,
+                  child: RoomPrimaryView(
+                    state.currentRoom!,
+                    bypassSpecialRoomTypes: state.showAsTextRoom,
+                  ),
+                ),
+              ),
+              RoomSidePanel(
+                key: ValueKey(
+                  "room-sidepanel-key-${state.currentRoom!.localId}",
+                ),
+                state: state,
+                builder: (state, child) {
+                  Widget result = Tile.surfaceContainer(
                     caulkPadLeft: true,
-                    caulkClipTopLeft: true,
-                    caulkClipTopRight: true,
-                    caulkBorderRight: true,
                     caulkPadBottom: true,
                     caulkClipBottomLeft: true,
-                    caulkClipBottomRight: true,
-                    caulkBorderLeft: true,
-                    child: RoomPrimaryView(
-                      state.currentRoom!,
-                      bypassSpecialRoomTypes: state.showAsTextRoom,
-                    ),
-                  ),
-                ),
-                RoomSidePanel(
-                  key: ValueKey(
-                    "room-sidepanel-key-${state.currentRoom!.localId}",
-                  ),
-                  state: state,
-                  builder: (state, child) {
-                    Widget result = Tile.surfaceContainer(
-                      caulkPadLeft: true,
-                      caulkPadBottom: true,
-                      caulkClipBottomLeft: true,
-                      caulkClipTopLeft: true,
-                      child: child,
-                    );
+                    caulkClipTopLeft: true,
+                    child: child,
+                  );
 
-                    if (state == SidePanelState.thread ||
-                        state == SidePanelState.calendar) {
-                      result = Flexible(child: result);
-                    }
+                  /* if (state == SidePanelState.thread ||
+                      state == SidePanelState.calendar) {
+                    result = Flexible(child: result);
+                  } */
 
-                    return result;
-                  },
-                ),
-              ],
-            ),
+                  return result;
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -292,35 +291,39 @@ class MainPageViewDesktop extends StatelessWidget {
 
   Widget mainView(BuildContext context) {
     if (state.currentView == MainPageSubView.home ||
-        state.currentView == MainPageSubView.rooms)
-      return Flexible(child: homeView());
-    if (state.currentRoom != null && state.currentView != MainPageSubView.home)
+        state.currentView == MainPageSubView.rooms) {
+      return homeView();
+    }
+
+    if (state.currentRoom != null &&
+        state.currentView != MainPageSubView.home) {
       return roomChatView();
-    if (state.currentSpace != null && state.currentRoom == null)
-      return Expanded(
-        child: Tile(
-          caulkPadTop: true,
-          caulkPadBottom: true,
-          caulkPadLeft: true,
-          caulkClipTopLeft: true,
-          caulkBorderLeft: true,
-          caulkClipBottomLeft: true,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              SpaceSummary(
-                key: ValueKey(
-                  "space-summary-key-${state.currentSpace!.localId}",
-                ),
-                space: state.currentSpace!,
-                onRoomTap: (room) => state.selectRoom(room),
-                onSpaceTap: (space) => state.selectSpace(space),
-                onLeaveRoom: state.clearRoomSelection,
+    }
+
+    if (state.currentSpace != null && state.currentRoom == null) {
+      return Tile(
+        caulkPadTop: true,
+        caulkPadBottom: true,
+        caulkPadLeft: true,
+        caulkClipTopLeft: true,
+        caulkBorderLeft: true,
+        caulkClipBottomLeft: true,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            SpaceSummary(
+              key: ValueKey(
+                "space-summary-key-${state.currentSpace!.localId}",
               ),
-            ],
-          ),
+              space: state.currentSpace!,
+              onRoomTap: (room) => state.selectRoom(room),
+              onSpaceTap: (space) => state.selectSpace(space),
+              onLeaveRoom: state.clearRoomSelection,
+            ),
+          ],
         ),
       );
+    }
 
     return Placeholder();
   }
