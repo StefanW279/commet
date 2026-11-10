@@ -179,8 +179,7 @@ class MainPageViewDesktop extends StatelessWidget {
               ),
             ),
           ),
-        if (state.currentRoom != null)
-          Expanded(child: roomChatView()),
+        if (state.currentRoom != null) Expanded(child: roomChatView()),
       ],
     );
   }
@@ -205,9 +204,7 @@ class MainPageViewDesktop extends StatelessWidget {
                 onTap: state.currentRoom?.permissions.canEditAnything == true
                     ? () => state.navigateRoomSettings()
                     : null,
-                menu: RoomQuickAccessMenuViewDesktop(
-                  room: state.currentRoom!,
-                ),
+                menu: RoomQuickAccessMenuViewDesktop(room: state.currentRoom!),
               ),
             ),
           ),
@@ -312,9 +309,7 @@ class MainPageViewDesktop extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             SpaceSummary(
-              key: ValueKey(
-                "space-summary-key-${state.currentSpace!.localId}",
-              ),
+              key: ValueKey("space-summary-key-${state.currentSpace!.localId}"),
               space: state.currentSpace!,
               onRoomTap: (room) => state.selectRoom(room),
               onSpaceTap: (space) => state.selectSpace(space),
