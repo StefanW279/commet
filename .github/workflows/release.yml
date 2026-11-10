@@ -473,16 +473,11 @@ jobs:
           sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
           cat /etc/apt/apt-mirrors.txt
 
-      - name: Add Jammy repos for WPE WebKit
-        run: |
-          echo "deb http://archive.ubuntu.com/ubuntu/ jammy main universe" | sudo tee /etc/apt/sources.list.d/jammy-legacy.list
-          echo "deb http://security.ubuntu.com/ubuntu jammy-security main universe" | sudo tee -a /etc/apt/sources.list.d/jammy-legacy.list
-
       - name: Setup Tools
         timeout-minutes: 5
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev webkit2gtk-4.1 libasound2-dev keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev libwpewebkit-1.0-dev libwpebackend-fdo-1.0-dev
+          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev webkit2gtk-4.1 libasound2-dev keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev
         
       - name: Code Generation
         run: |
@@ -574,16 +569,11 @@ jobs:
           sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
           cat /etc/apt/apt-mirrors.txt
 
-      - name: Add Jammy repos for WPE WebKit
-        run: |
-          echo "deb http://archive.ubuntu.com/ubuntu/ jammy main universe" | sudo tee /etc/apt/sources.list.d/jammy-legacy.list
-          echo "deb http://security.ubuntu.com/ubuntu jammy-security main universe" | sudo tee -a /etc/apt/sources.list.d/jammy-legacy.list
-
       - name: Setup Tools
         timeout-minutes: 5
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev flatpak-builder flatpak webkit2gtk-4.1 keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev libwpewebkit-1.0-dev libwpebackend-fdo-1.0-dev
+          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev flatpak-builder flatpak webkit2gtk-4.1 keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev
         
       - name: Code Generation
         run: |
@@ -678,16 +668,11 @@ jobs:
           sudo sed -i -E '\@^https?://azure\.archive\.ubuntu\.com/ubuntu/([[:space:]]|$)@d' /etc/apt/apt-mirrors.txt
           cat /etc/apt/apt-mirrors.txt
 
-      - name: Add Jammy repos for WPE WebKit
-        run: |
-          echo "deb http://archive.ubuntu.com/ubuntu/ jammy main universe" | sudo tee /etc/apt/sources.list.d/jammy-legacy.list
-          echo "deb http://security.ubuntu.com/ubuntu jammy-security main universe" | sudo tee -a /etc/apt/sources.list.d/jammy-legacy.list
-
       - name: Setup Tools
         timeout-minutes: 5
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev webkit2gtk-4.1 keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev libwpewebkit-1.0-dev libwpebackend-fdo-1.0-dev
+          sudo apt-get install -y ninja-build libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev webkit2gtk-4.1 keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev
         
       - name: Code Generation
         run: |

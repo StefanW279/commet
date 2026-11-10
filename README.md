@@ -51,13 +51,11 @@ This repo currently has a monorepo structure, containing two flutter projects: C
 ### 2. Install Libraries
 Commet requires some additional libraries to be built 
 ```bash
-sudo apt-get install -y cmake clang ninja-build rustup libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev libwebkit2gtk-4.1-dev keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev libwpewebkit-1.0-dev libwpebackend-fdo-1.0-dev
+sudo apt-get install -y cmake clang ninja-build rustup libgtk-3-dev libmpv-dev mpv ffmpeg libmimalloc-dev libwebkit2gtk-4.1-dev keybinder-3.0 libayatana-appindicator3-dev libayatana-ido3-dev 
 ```
-> [!NOTE]
-> On Ubuntu `libwpewebkit-1.0-dev` and `libwpebackend-fdo-1.0-dev` are only available in the Jammy (22.04) Repositorys
 
 > [!NOTE]
-> On arch linux you can use  `sudo pacman -Syu cmake clang ninja rustup gtk3 mpv ffmpeg mimalloc webkit2gtk-4.1 libkeybinder3 libayatana-appindicator ayatana-ido wpewebkit` to install all reqired packages
+> On arch linux you can use  `sudo pacman -Syu cmake clang ninja rustup gtk3 mpv ffmpeg mimalloc webkit2gtk-4.1 libkeybinder3 libayatana-appindicator ayatana-ido` to install all reqired packages
 
 ### 3. Fetch Dependencies
 You will need to change directory in to the project, then fetch dependencies
@@ -98,7 +96,7 @@ flutter run --dart-define BUILD_MODE=debug --dart-define PLATFORM=linux
 > [!WARNING]
 > On arch linux, do not use `flutter-bin (AUR)`, use `fvm` instead.
 >
-> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.41.9`) in order to select the flutter version of the project.
+> Now, if no flutter version is configured, run `fvm use <flutter version>` (currently: `3.47.9`) in order to select the flutter version of the project.
 > Or you can just run `fvm install` in the root of the repository to use the configured version, which should match the version mentioned before. 
 >
 > Then prefix every command with fvm.
