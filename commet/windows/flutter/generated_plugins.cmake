@@ -22,7 +22,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_retriever_windows
   tray_manager
   url_launcher_windows
-  webcrypto
   win_toast
   window_manager
   window_to_front
