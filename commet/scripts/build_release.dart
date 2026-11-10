@@ -105,6 +105,9 @@ Future<void> main(List<String> args) async {
     if (buildDetail != null) "--dart-define",
     if (buildDetail != null) "BUILD_DETAIL=$buildDetail",
     if (platform == "web") "--dart-define",
+    if (platform == "android") "--target-platform",
+    if (platform == "android") "android-arm64,android-x64",
+    if (platform == "android") "--split-per-abi",
     if (platform == "web") "FLUTTER_WEB_CANVASKIT_URL=canvaskit/",
     if (platform == "web") "--source-maps",
   ], runInShell: true);

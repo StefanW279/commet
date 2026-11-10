@@ -308,8 +308,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: commet-android-beta.apk
-          path: commet/build/app/outputs/flutter-apk/app-release.apk
+          name: commet-android-beta-apks
+          path: commet/build/app/outputs/flutter-apk/app-*-release.apk
           retention-days: 1
           overwrite: true
 
@@ -396,7 +396,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: commet-android-google-services-beta.apk
-          path: commet/build/app/outputs/flutter-apk/app-release.apk
+          path: commet/build/app/outputs/flutter-apk/app-*-release.apk
           retention-days: 1
           overwrite: true
 

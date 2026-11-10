@@ -284,23 +284,34 @@ jobs:
           cd $PROJECT_PATH
           dart run scripts/build_release.dart --platform android --version_tag ${{ github.event.release.tag_name || 'v0.0.0-artifact' }} --git_hash ${{ github.sha }}
                     
-      - name: Upload to release
+      - name: Upload ARM64 APK to release
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: commet/build/app/outputs/flutter-apk/app-release.apk
-          asset_name: commet-android.apk
+          asset_path: commet/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          asset_name: commet-arm64.apk
           asset_content_type: application/vnd.android.package-archive
 
-      - name: Upload Artifact
+      - name: Upload x86_64 APK to release
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: commet/build/app/outputs/flutter-apk/app-x86_64-release.apk
+          asset_name: commet-x86_64.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload architecture APKs artifact
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v7
         with:
-          name: commet-android.apk
-          path: commet/build/app/outputs/flutter-apk/app-release.apk
+          name: commet-android-apks
+          path: commet/build/app/outputs/flutter-apk/app-*-release.apk
           overwrite: true
 
   release-android-google-services:
@@ -380,24 +391,34 @@ jobs:
           cd $PROJECT_PATH
           dart run scripts/build_release.dart --platform android --version_tag ${{ github.event.release.tag_name || 'v0.0.0-artifact' }} --git_hash ${{ github.sha }} --enable_google_services true --build_detail google_services
                     
-      - name: Upload to release
+      - name: Upload ARM64 APK to release (Google Services)
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: commet/build/app/outputs/flutter-apk/app-release.apk
-          asset_name: commet-android-google-services.apk
+          asset_path: commet/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          asset_name: commet-android-google-services-arm64.apk
           asset_content_type: application/vnd.android.package-archive
 
+      - name: Upload x86_64 APK to release (Google Services)
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: commet/build/app/outputs/flutter-apk/app-x86_64-release.apk
+          asset_name: commet-android-google-services-x86_64.apk
+          asset_content_type: application/vnd.android.package-archive
 
-      - name: Upload Artifact
+      - name: Upload architecture APKs artifact (Google Services)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v7
         with:
-          name: commet-android-google-services.apk
-          path: commet/build/app/outputs/flutter-apk/app-release.apk
+          name: commet-android-google-services-apks
+          path: commet/build/app/outputs/flutter-apk/app-*-release.apk
           overwrite: true
 
   release-linux-debian:
@@ -847,7 +868,7 @@ jobs:
             cd ${{ secrets.FDROID_PATH }}/repo
 
             echo "Downloading latest APK Release..."
-            wget -q -O ${{ secrets.FDROID_PATH }}/repo/commet-android-google-services-${{ github.event.release.tag_name }}.apk https://github.com/StefanW279/commet/releases/latest/download/commet-android-google-services.apk
+            wget -q -O ${{ secrets.FDROID_PATH }}/repo/commet-android-google-services-${{ github.event.release.tag_name }}.apk https://github.com/StefanW279/commet/releases/latest/download/commet-android-google-services-arm64.apk
             
             cd ${{ secrets.FDROID_PATH }}
 
