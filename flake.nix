@@ -39,7 +39,6 @@
           ndkVersions = [ "21.4.7075529" ];
           cmakeVersions = [ "3.18.1" ];
           abiVersions = [
-            "armeabi-v7a"
             "arm64-v8a"
           ];
         };
