@@ -1,0 +1,67 @@
+# Only use labels that already exist in this repository.
+buildscript:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "commet/buildscripts/**"
+          - "**/build.gradle"
+          - "**/build.gradle.kts"
+          - "**/settings.gradle"
+          - "**/settings.gradle.kts"
+          - "**/gradle.properties"
+          - "**/gradlew"
+          - "**/gradlew.bat"
+
+dart:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.dart"
+          - "**/pubspec.yaml"
+          - "**/pubspec.lock"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/pubspec.yaml"
+          - "**/pubspec.lock"
+          - "**/package.json"
+          - "**/package-lock.json"
+          - "**/pnpm-lock.yaml"
+          - "**/yarn.lock"
+          - "**/Cargo.toml"
+          - "**/Cargo.lock"
+          - "**/gradle.lockfile"
+          - "**/flake.nix"
+          - "**/flake.lock"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+
+github_actions:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/actions/**"
+
+java:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.java"
+          - "**/gradle.lockfile"
+          - "**/*.gradle"
+          - "**/*.gradle.kts"
+
+nix:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.nix"
+          - "**/flake.lock"
+
+rust:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.rs"
+          - "**/Cargo.toml"
+          - "**/Cargo.lock"
