@@ -1,35 +1,20 @@
-# Automatically applied to pull requests based on changed paths.
-# Labels are created automatically by the workflow if they do not exist.
-area/commet:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "commet/**"
-
-area/tiamat:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "tiamat/**"
-
-documentation:
-  - changed-files:
-      - any-glob-to-any-file:
-          - "**/*.md"
-          - "docs/**"
-
-build:
+# Only use labels that already exist in this repository.
+buildscript:
   - changed-files:
       - any-glob-to-any-file:
           - "commet/buildscripts/**"
-          - "**/Dockerfile"
-          - "**/Dockerfile.*"
-          - "**/*.gradle"
-          - "**/*.gradle.kts"
-          - "**/CMakeLists.txt"
+          - "**/build.gradle"
+          - "**/build.gradle.kts"
+          - "**/settings.gradle"
+          - "**/settings.gradle.kts"
+          - "**/gradle.properties"
+          - "**/gradlew"
+          - "**/gradlew.bat"
 
-ci:
+dart:
   - changed-files:
       - any-glob-to-any-file:
-          - ".github/**"
+          - "**/*.dart"
 
 dependencies:
   - changed-files:
@@ -39,3 +24,32 @@ dependencies:
           - "**/pnpm-lock.yaml"
           - "**/yarn.lock"
           - "**/Cargo.lock"
+          - "**/gradle.lockfile"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+
+github_actions:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/actions/**"
+
+java:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.java"
+
+nix:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.nix"
+          - "**/flake.lock"
+
+rust:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.rs"
