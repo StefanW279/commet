@@ -15,16 +15,23 @@ dart:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.dart"
+          - "**/pubspec.yaml"
+          - "**/pubspec.lock"
 
 dependencies:
   - changed-files:
       - any-glob-to-any-file:
+          - "**/pubspec.yaml"
           - "**/pubspec.lock"
+          - "**/package.json"
           - "**/package-lock.json"
           - "**/pnpm-lock.yaml"
           - "**/yarn.lock"
+          - "**/Cargo.toml"
           - "**/Cargo.lock"
           - "**/gradle.lockfile"
+          - "**/flake.nix"
+          - "**/flake.lock"
 
 documentation:
   - changed-files:
@@ -42,6 +49,9 @@ java:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.java"
+          - "**/gradle.lockfile"
+          - "**/*.gradle"
+          - "**/*.gradle.kts"
 
 nix:
   - changed-files:
@@ -53,3 +63,5 @@ rust:
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.rs"
+          - "**/Cargo.toml"
+          - "**/Cargo.lock"
