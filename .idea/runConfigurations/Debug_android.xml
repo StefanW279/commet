@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Debug android" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="-d android-arm64 --dart-define=PLATFORM=android --dart-define=BUILD_MODE=debug" />
+    <option name="envs">
+      <entry key="ORG_GRADLE_PROJECT_disable-abi-filtering" value="true" />
+    </option>
+    <option name="filePath" value="$PROJECT_DIR$/commet/lib/main.dart" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Codegen" run_configuration_type="ShConfigurationType" />
+    </method>
+  </configuration>
+</component>
