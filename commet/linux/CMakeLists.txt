@@ -112,6 +112,14 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+foreach(ffi_plugin ${FLUTTER_FFI_PLUGIN_LIST})
+  if(TARGET ${ffi_plugin})
+    target_compile_options(${ffi_plugin} PRIVATE
+      -Wno-incompatible-pointer-types
+    )
+  endif()
+endforeach()
+
 target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIB})
 
 # === Installation ===

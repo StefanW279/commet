@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Debug windows" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="-d windows --dart-define=PLATFORM=windows --dart-define=BUILD_MODE=debug" />
+    <option name="filePath" value="$PROJECT_DIR$/commet/lib/main.dart" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Codegen" run_configuration_type="ShConfigurationType" />
+    </method>
+  </configuration>
+</component>

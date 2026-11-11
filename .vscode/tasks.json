@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Codegen",
+            "type": "flutter",
+            "command": "dart",
+            "args": [
+                "run",
+                "scripts/codegen.dart"
+            ],
+            "detail": "commet",
+            "options": {
+                "cwd": "${workspaceFolder}/commet"
+            }
+        },
+        {
+            "label": "Apply Google Services Patch",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "apply",
+                "scripts/apply_google_services.patch"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/commet"
+            },
+            "problemMatcher": [],
+            "detail": "commet (android)"
+        },
+        {
+            "label": "Remove Google Services Patch",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "apply",
+                "-R",
+                "scripts/apply_google_services.patch"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/commet"
+            },
+            "problemMatcher": [],
+            "detail": "commet (android)"
+        },
+        {
+            "type": "flutter",
+            "command": "flutter",
+            "args": [
+                "pub",
+                "get"
+            ],
+            "problemMatcher": [],
+            "label": "flutter: flutter pub get",
+            "detail": "commet"
+        },
+        {
+            "label": "Prepare Android Google Services Debug",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Apply Google Services Patch",
+                "flutter: flutter pub get",
+                "Codegen"
+            ],
+            "problemMatcher": []
+        },
+    ]
+}

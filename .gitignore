@@ -11,7 +11,6 @@ build/.last_build_id
 widgets/matrix_widget_api/build/.last_build_id
 widgets/calendar/android/local.properties
 .vscode/settings.json
-.idea/
 /build
 /target
 commet/.livekit/
@@ -22,3 +21,10 @@ devtools_options.yaml
 
 # FVM Version Cache
 .fvm/
+
+.idea/*
+!.idea/
+.idea/*
+!.idea/runConfigurations/
+.idea/runConfigurations/*
+!.idea/runConfigurations/**
