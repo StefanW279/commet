@@ -42,14 +42,14 @@ dependencies:
   provider: ^6.0.0
   scrollable_positioned_list: ^0.3.8
   shared_preferences: ^2.5.2
-  sqflite: ^2.3.0
+  sqflite: ^2.4.6
   sqflite_common_ffi: ^2.3.0+4
   unifiedpush: ^6.2.0
   universal_html: ^2.2.4
   url_launcher: ^6.1.11
   win_toast: ^0.4.0
   window_manager: ^0.5.1
-  tray_manager: ^0.5.1
+  tray_manager: ^0.7.0
   flutter: 
     sdk: flutter
   flutter_highlighter: 
@@ -87,9 +87,9 @@ dependencies:
   fuzzy: ^0.5.1
   sqlite3: ^3.0.0
   drift: ^2.34.0
-  archive: ^3.6.1
+  archive: ^4.7.1
   exif: ^3.3.0
-  image: ^4.2.0
+  image: ^4.13.0
   livekit_client: ^2.13.2
   flutter_webrtc: ^1.6.3
   file_picker: ^10.2.0
@@ -108,7 +108,7 @@ dependencies:
   ## End Google Services Dependencies
   ## ----
   ## ----
-  markdown: any
+  markdown: 7.3.1
   collection: any
   webrtc_interface: any
   uuid: any
@@ -130,7 +130,7 @@ dependencies:
   flutter_inappwebview: 6.1.5
   network_info_plus: ^7.0.0
   pretty_qr_code: ^3.6.0
-  basic_utils: ^5.7.0
+  basic_utils: ^5.8.2
   
   launcher_entry:
     git: https://github.com/commetchat/launcher_entry.git
