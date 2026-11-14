@@ -21,7 +21,7 @@ class PickerUtils {
         return PickerResultXFile(result);
       }
     } else {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['bmp', 'gif', 'jpg', 'jpeg', 'png', 'webp', 'apng'],
       );

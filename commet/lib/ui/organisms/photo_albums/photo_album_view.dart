@@ -370,7 +370,7 @@ class _PhotoAlbumViewState extends State<PhotoAlbumView> {
           )
           .toList();
     } else {
-      var files = await FilePicker.platform.pickFiles(
+      var files = await FilePicker.pickFiles(
         allowMultiple: true,
         withReadStream: true,
       );
