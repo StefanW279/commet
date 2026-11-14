@@ -527,7 +527,7 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
             tiamat.Button(
               text: "Dump Databases",
               onTap: () async {
-                var folder = await FilePicker.platform.getDirectoryPath();
+                var folder = await FilePicker.getDirectoryPath();
                 var dbDir = Directory(await AppConfig.getDatabasePath());
 
                 var files = await dbDir

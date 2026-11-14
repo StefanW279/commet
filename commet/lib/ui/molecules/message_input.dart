@@ -1316,7 +1316,7 @@ class MessageInputState extends State<MessageInput> {
         icon: Icons.attach_file,
         label: "File",
         execute: () async {
-          FilePickerResult? result = await FilePicker.platform.pickFiles(
+          FilePickerResult? result = await FilePicker.pickFiles(
             type: FileType.any,
             withData: true,
             allowMultiple: true,

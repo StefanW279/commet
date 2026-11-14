@@ -191,7 +191,7 @@ class _ThemeListWidgetState extends State<ThemeListWidget> {
               tiamat.CircleButton(
                 icon: Icons.add,
                 onPressed: () async {
-                  var result = await FilePicker.platform.pickFiles(
+                  var result = await FilePicker.pickFiles(
                     type: FileType.custom,
                     allowedExtensions: ["zip"],
                     dialogTitle: "Pick theme archive file",

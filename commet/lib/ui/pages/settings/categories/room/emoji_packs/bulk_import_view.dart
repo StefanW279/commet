@@ -182,7 +182,7 @@ class _EmoticonBulkImportDialogState extends State<EmoticonBulkImportDialog> {
   }
 
   Future<void> pickFolder() async {
-    var files = await FilePicker.platform.pickFiles(
+    var files = await FilePicker.pickFiles(
       type: FileType.image,
       withData: true,
       allowMultiple: true,
