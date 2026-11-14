@@ -14,7 +14,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  calendar_view: ^1.4.0
+  calendar_view: ^2.0.0
   matrix_widget_api:
     path: ../matrix_widget_api
   tiamat:
