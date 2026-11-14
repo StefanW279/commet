@@ -7,7 +7,7 @@ environment:
 resolution: workspace
 
 dependencies: 
-  webcrypto: ^0.6.1
+  webcrypto: ^0.6.2
   build: any
   build_config: ^1.1.1
   commet_calendar_widget:
@@ -49,7 +49,7 @@ dependencies:
   url_launcher: ^6.1.11
   win_toast: ^0.4.0
   window_manager: ^0.5.1
-  tray_manager: ^0.5.1
+  tray_manager: ^0.7.0
   flutter: 
     sdk: flutter
   flutter_highlighter: 
@@ -85,11 +85,11 @@ dependencies:
   starfield: 
     git: https://github.com/lagmachine-com/starfield.git
   fuzzy: ^0.5.1
-  sqlite3: ^3.0.0
+  sqlite3: ^3.9.1
   drift: ^2.34.0
-  archive: ^3.6.1
+  archive: ^4.7.1
   exif: ^3.3.0
-  image: ^4.2.0
+  image: ^4.13.0
   livekit_client: ^2.13.2
   flutter_webrtc: ^1.6.3
   file_picker: ^10.2.0
@@ -108,7 +108,7 @@ dependencies:
   ## End Google Services Dependencies
   ## ----
   ## ----
-  markdown: any
+  markdown: 7.3.1
   collection: any
   webrtc_interface: any
   uuid: any
@@ -130,7 +130,7 @@ dependencies:
   flutter_inappwebview: 6.1.5
   network_info_plus: ^7.0.0
   pretty_qr_code: ^3.6.0
-  basic_utils: ^5.7.0
+  basic_utils: ^5.8.2
   
   launcher_entry:
     git: https://github.com/commetchat/launcher_entry.git

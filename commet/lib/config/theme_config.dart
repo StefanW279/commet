@@ -55,7 +55,7 @@ class ThemeConfig {
       path.basenameWithoutExtension(file.path),
     ));
 
-    final archive = ZipDecoder().decodeBuffer(inputStream);
+    final archive = ZipDecoder().decodeStream(inputStream);
 
     if (!archive.files.any((file) => file.name == "theme.json")) {
       await inputStream.close();
